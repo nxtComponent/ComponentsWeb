@@ -1,0 +1,245 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../nxt-shared-styles.html">
+<link rel="import" href="../../bower_components/t-mystique-auth/t-mystique-auth.html">
+<link rel="import" href="../../bower_components/t-homepage-deal/t-homepage-deal.html">
+<link rel="import" href="../../bower_components/t-hotel-search/t-hotel-search.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="home-page">
+  <template>
+    <style include="shared-styles">
+      t-search {
+        --outer-container-color: #424d51;
+        --search-button-color: #4CB050;
+        --dropdown-element-link-color: #4CB050;
+        --button-color-for-rooms: #478BD7;
+        --border-color-for-cards: lightgray;
+        --background-color-for-traveller-card: white;
+        --color-for-calendar-dates: #4CB050;
+        --color-for-calendar-background: white;
+        --color-for-calendar-selected-range: #4CB050;
+        --background-img-for-selected-date: url('../bower_components/t-hotel-search/green-circle.svg');
+        --background-img-for-today-date: url('../bower_components/t-hotel-search/today-circle.svg');
+      }
+
+      .search-container {
+
+        @apply --layout-vertical;
+        @apply --layout-center-center;
+        height: calc(100vh - 64px);
+        padding: 0 16px;
+        background-image: url('/images/background.jpg');
+        background-size: cover;
+        color: white;
+      }
+
+
+      .search-heading {
+        font-size: 3em;
+        font-weight: bolder;
+      }
+
+      @media (max-width: 950px) {
+        .search-heading {
+          font-size: 2em;
+        }
+        t-hotel-search {
+          padding-left: 15px;
+        }
+      }
+
+      @media (max-width: 650px) {
+        .search-heading {
+          font-size: 25px;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .search-heading {
+          font-size: 15px;
+        }
+      }
+    </style>
+
+
+    <t-mystique-auth name="mystique" url="http://demo.travelnxt.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}"
+      auto>
+    </t-mystique-auth>
+
+    <div class="search-container">
+      <div class="search-heading">
+        THE EASIEST WAY TO FIND YOUR HOTEL
+      </div>
+      <t-hotel-search option=[[searchOptions]] resources=[[searchResources]] dataUrl="http://demo.travelnxt.com/api/content/autosuggest/"
+        token-response="{{tokenResponse}}" on-do-search="_onHotelSearchTrigger">
+      </t-hotel-search>
+    </div>
+
+    <div classs="homepage-deal-container">
+      <t-homepage-deal heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-homepage-deal>
+    </div>
+
+
+    <iron-ajax id="ajaxHotelSearch" url="[[apiBaseUrl]]/api/hotel/search/init" handle-as="json" last-response="{{searchRS}}" on-response="_onSearchRespone"></iron-ajax>
+
+  </template>
+
+  <script>
+    class HomePage extends Polymer.Element {
+      static get is() { return 'home-page'; }
+
+      static get properties() {
+        return {
+          pageLoader :{
+            type:Boolean,
+            notify: true
+          },
+          searchOptions: {
+            type: Object,
+            value: function () {
+              return {
+                "traveller": {
+                  "minAdultCount": 1,
+                  "maxAdultCount": 6,
+                  "minChildCount": 0,
+                  "maxChildCount": 6,
+                  "totalRoomPaxCount": 6,
+                  "minChildAge": 0,
+                  "maxChildAge": 12,
+                  "defaultAdultCount": 2,
+                  "defaultChildCount": 0,
+                  "defaultSelectOption": [{
+                    "room": 1,
+                    "adult": 1
+                  }, {
+                    "room": 1,
+                    "adult": 2
+                  }, {
+                    "room": 1,
+                    "adult": 3
+                  }, {
+                    "room": 2,
+                    "adult": 5
+                  }]
+                },
+                "maxRoomCount": 6,
+                "date": {
+                  "checkInAllowFromNow": 0,
+                  "maxStayDuration": 30,
+                  "defaultStayDuration": 6,
+                  "format": "MM/DD/YY"
+                }
+              };
+            }
+          },
+          searchResources: {
+            type: Object,
+            value: function () {
+              return {
+                "labels": {
+                  "adult": "Adult",
+                  "children": "Children",
+                  "child": "Child",
+                  "age": "Age",
+                  "room": "Room"
+                },
+                "watermark": {
+                  "checkIn": "MM/DD/YY",
+                  "checkOut": "MM/DD/YY",
+                  "hotelLocation": "City, Airport, Address or Point of Interest"
+                },
+                "errorMessage": {
+                  "destinationError": "Please enter your destination",
+                  "checkInError": "Please enter checkin date",
+                  "checkOutError": "Please enter checkout date"
+
+                }
+              };
+            }
+          },
+          dealData: {
+            type: Array,
+            value: function () {
+              return window.dealData;
+            }
+          },
+          apiBaseUrl:{
+            type:String,
+            value:''
+          }
+        }
+      }
+
+      //This method will get executed when user click on search button
+      _onHotelSearchTrigger(e) {
+        
+        this.set("pageLoader", true);
+
+        this.$.ajaxHotelSearch.body = this.__toAjaxSearchMode(e.detail);
+        this.$.ajaxHotelSearch.method = "POST";
+        this.$.ajaxHotelSearch.contentType = "application/json";
+        this.$.ajaxHotelSearch.generateRequest();
+
+      }
+
+
+      /**
+      *
+      **/
+      _onSearchRespone(e) {
+
+        if (this.searchRS && this.searchRS.status.isSuccessful) {
+
+          this.dispatchEvent(new CustomEvent("page-redirect", {
+            detail: {
+              url: "/hotel-result?sid=" + this.searchRS.searchId,
+              routeModel: e.detail
+            },
+            bubbles: true,
+            composed: true
+          }));
+
+        }
+
+      }
+
+      __toAjaxSearchMode(searchObj) {
+        if (!searchObj)
+          return null;
+
+        var geoCodes = searchObj.destination.geoCode.split(",");
+        var model = {
+          "geoCode": {
+            "lat": parseFloat(geoCodes[0]),
+            "long": parseFloat(geoCodes[1])
+          },
+          "checkIn": searchObj.checkIn,
+          "checkOut": searchObj.checkOut,
+          "rooms": []
+        }
+        searchObj.rooms.forEach(function (r) {
+          var occupants = [];
+          occupants.push({
+            "paxType": "Adult",
+            "count": r.adult
+          });
+          if (r.children && r.children > 0) {
+            occupants.push({
+              "paxType": "Child",
+              "count": r.children,
+              "ages": r.childAges
+            });
+          }
+          model.rooms.push({
+            "occupants": occupants
+          });
+        });
+
+        return model;
+      }
+
+    }
+
+    window.customElements.define(HomePage.is, HomePage);
+  </script>
+</dom-module>
