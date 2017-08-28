@@ -1,0 +1,138 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+`t-rating-stars`
+A component to show rating in terms of star count.
+
+
+Example:
+
+    <t-rating-stars value="3"></t-rating-stars>
+
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--t-rating-stars-unfilled-color` | Color of unrated star | `#bdbdbd`
+`--t-rating-stars-filled-color` | Color of rated star | `#f57c00`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="t-rating-stars">
+    <template>
+        <style>
+            :host{
+                --t-rating-stars-container-width: 100px;
+                --t-rating-stars-container-height: 26px;
+                --t-rating-stars-font-size: 20px;
+                --t-rating-stars-filled-color: #FCCD38;
+            }
+            .star{
+                unicode-bidi: bidi-override;
+                color: var(--t-rating-stars-unfilled-color, #DBDBDB);
+                font-size: var(--t-rating-stars-font-size);
+                height: var(--t-rating-stars-font-size);
+                width: var(--t-rating-stars-container-width);
+                margin: 0 auto;
+                position: relative;
+                padding: 0;
+
+                @apply(--t-rating-stars-host);
+            }
+            .star-top {
+                color: var(--t-rating-stars-filled-color);
+                padding: 0;
+                position: absolute;
+                z-index: 1;
+                display: block;
+                top: 0;
+                left: 0;
+                overflow: hidden;
+            }
+            .star-bottom {
+                padding: 0;
+                display: block;
+                z-index: 0;
+            }
+        </style>
+
+        <div class="star">
+            <div class="star-top" style$="width:[[percentage]]%">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+            <div class="star-bottom">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 't-rating-stars',
+            properties: {
+                initialized: {
+                    type: Boolean,
+                    value: false
+                },
+                value: {
+                    type: Number,
+                    reflectToAttribute: true,
+                    observer: '_propagateChange',
+                    notify: true
+                },
+                fontSize: {
+                    type: Number,
+                    value: 20,
+                    reflectToAttribute: true
+                },
+                percentage: {
+                    type: Number,
+                    value: 100
+                },
+                height: {
+                    type: Number,
+                    value: 20,
+                    reflectToAttribute: true
+                },
+                color: {
+                    type: String,
+                    value: '#FCCD38',
+                    reflectToAttribute: true
+                }
+            },
+            
+            _propagateChange: function(){
+              this.fresh();
+            },
+            
+            fresh: function () {
+                
+                if(!this.initialized) return;
+                
+                this.percentage = (this.value / 5) * 100;
+
+                // this.customStyle['--t-rating-stars-font-size'] = this.fontSize + "px";
+                // this.customStyle['--t-rating-stars-container-height'] = this.height + "px";
+                // this.customStyle['--t-rating-stars-container-width'] = (5 * this.fontSize) + "px";
+                // this.customStyle['--t-rating-stars-filled-color'] = this.color;
+                this.updateStyles({
+                    '--t-rating-stars-font-size' : this.fontSize + "px",
+                    '--t-rating-stars-container-height' :  this.height + "px",
+                    '--t-rating-stars-container-width' : (5 * this.fontSize) + "px",
+                    '--t-rating-stars-filled-color' : this.color
+                });
+            },
+            
+            attached: function () {
+                this.initialized = true;
+                this.fresh();
+            }
+        });
+    </script>
+</dom-module>

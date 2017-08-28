@@ -1,0 +1,713 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-style-utils/t-style-utils.html">
+<link rel="import" href="../t-font-icons/t-font-icons.html">
+<link rel="import" href="../iron-dropdown/iron-dropdown.html">
+<link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../paper-listbox/paper-listbox.html">
+<link rel="import" href="../paper-item/paper-item.html">
+
+<dom-module id="t-list-sort">
+    <template>
+        <style include="t-style-utils"></style>
+        <style include="t-font-icons"></style>
+        <style>
+            :host {
+                --paper-dropdown-input-color: rgba(0, 0, 0, 0.38);
+            } 
+            .sorting-container {
+                padding: 24px;
+                border-bottom: 1px solid #EBEBEB;
+            }
+            .view-buttons {
+                float: left;
+                margin-right: 24px;
+            }
+            .view-buttons a {
+                border: 1px solid #EBEBEB;
+                height: 48px;
+                line-height: 48px;
+                font-size: 14px;
+                color: rgba(0, 0, 0, 0.38);
+                background: #f5f5f5;
+                float: left;
+                box-sizing: border-box;
+                padding: 0 24px 0 22px;
+                text-decoration: none;
+                width: 108px;
+            }
+            .view-buttons a i {
+                font-size: 24px;
+                display: inline-block;
+                vertical-align: middle;
+                margin-right: 8px;
+            }
+            .view-buttons a:first-child {
+                border-right: none;
+            }
+            .view-buttons a.active {
+                background: white;
+                border-bottom: 2px solid #1976d2;
+                color: rgba(0, 0, 0, 0.87);
+            }
+            .sorting-buttons-wrapper {
+                background: #f5f5f5;
+                height: 48px;
+                border: 1px solid #EBEBEB;
+                float: left;
+                width: calc(100% - 240px);
+                box-sizing: border-box;
+                position: relative;
+            }
+            .sorting-buttons-wrapper a.top-links {
+                line-height: 48px;
+                height: 48px;
+                float: left;
+                padding: 0 24px;
+                color: rgba(0, 0, 0, 0.38);
+                text-decoration: none;
+                text-transform: capitalize;
+                box-sizing: border-box;
+                margin-top: -1px;
+                position: relative;
+                max-width: calc((100% - 60px) / 5);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .sorting-buttons-wrapper a.active {
+                color: #1976d2;
+                border-bottom: 2px solid #1976d2;
+            }
+            .filter-button {
+                display: none;
+            }
+            .w-100 {
+                width: 100%;
+            }
+            .more-btn-wrapper {
+                float: right;
+                height: 32px;
+                width: 32px;
+                text-align: center;
+                position: relative;
+                margin: 8px 10px 0 0;
+
+            }
+            .more-btn-wrapper i {
+                font-size: 24px;
+                line-height: 32px;
+                display: inline-block;
+            }
+            @media screen and (max-width: 1024px) {
+                .sorting-container {
+                    padding: 16px;
+                }
+                .filter-button {
+                    display: inline-block;
+                    border: 1px solid #EBEBEB;
+                    height: 48px;
+                    line-height: 48px;
+                    font-size: 24px;
+                    color: rgba(0, 0, 0, 0.38);
+                    background: #f5f5f5;
+                    float: left;
+                    box-sizing: border-box;
+                    padding: 0;
+                    width: 51px;
+                    text-align: center;
+                    margin-right: 32px;
+                }
+                .view-buttons {
+                    margin-right: 32px;
+                }
+                .view-buttons a {
+                    width: 51px;
+                    padding: 0;
+                    text-align: center;
+                }
+                .view-buttons a i {
+                    margin-right: 0;
+                }
+                .sorting-buttons-wrapper {
+                    width: calc(100% - 217px);
+                }
+                .sorting-buttons-wrapper a.top-links {
+                    padding: 0 12px;
+                }
+            }
+            @media screen and (max-width: 767px) {
+                .filter-button {
+                    margin-right: 8px;
+                }
+                .view-buttons {
+                    margin-right: 8px;
+                }
+                .sorting-buttons-wrapper {
+                    width: calc(100% - 169px);
+                }
+                .sorting-buttons-wrapper a.more {
+                    margin: 0;
+                    height: 100%;
+                    width: 100%;
+                    text-align: right;
+                    padding: 0 16px;
+                    box-sizing: border-box;
+                    line-height: 48px;
+                }
+                .sorting-buttons-wrapper a.more i {
+                    line-height: 40px;
+                    float: left;
+                }
+                .icon-sorting {
+                    font-size: 24px;
+                    position: absolute;
+                    left: 16px;
+                    line-height: 48px;
+                    z-index: 2;
+                }
+                .sorting-buttons-wrapper a.more span {
+                    color: #1976d2;
+                    font-size: 14px;
+                    text-transform: capitalize;
+                }
+                .sorting-dropdown {
+                    right: 0 !important;
+                    top: 48px !important;
+                    padding: 16px;
+                    left: 0 !important;
+                }
+                .sorting-dropdown a {
+                    text-align: right;
+                }
+                paper-item {
+                    flex-direction: row-reverse;
+                }
+            }
+            /*Dropdown styling*/
+            paper-dropdown-menu.custom {
+                float: left;
+                height: 48px;
+                margin-top: -1px;
+                box-sizing: border-box;
+                --paper-input-container-label: {
+                  color: rgba(0, 0, 0, 0.38);
+                  text-align: left;
+                  font-family: roboto;
+                  line-height: 48px;
+                  font-size: 14px;
+                  text-transform: capitalize;
+                  border-bottom: 1px solid #EBEBEB;
+                  padding: 0 24px;
+                  bottom: 0;
+                  z-index: 1;
+                  background: #f5f5f5;
+                  width: 75px;
+                };
+                --paper-input-container: {
+                    padding: 0;
+                    display: block;
+                }
+                --paper-input-container-input: {
+                    color: var(--paper-dropdown-input-color);
+                    font-style: normal;
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    line-height: 46px;
+                    border-bottom: 2px solid transparent;
+                    height: 44px;
+                    padding: 0 24px;
+                    -webkit-font-smoothing: inherit;
+                    width: 75px;
+                    padding-top: 1px;
+                }
+                /* no underline */
+                --paper-input-container-underline: {
+                  display: none;
+                };
+                --paper-input-container-underline-focus: {
+                    display: none !important;
+                }
+                /* --layout-horizontal: {
+                    display: inline-block;
+                } */
+                --paper-dropdown-menu-icon: {
+                    position: absolute;
+                    right: 0;
+                    top: 12px;
+                    z-index: 2;
+                }
+            }
+            paper-dropdown-menu.dd-active {
+                border-bottom: 2px solid #1976d2;
+                --paper-input-container-input: {
+                    color: #1976d2;
+                    font-style: normal;
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    line-height: 46px;
+                    border-bottom: 2px solid transparent;
+                    height: 44px;
+                    padding: 0 24px;
+                    -webkit-font-smoothing: inherit;
+                    width: 75px;
+                    padding-top: 1px;
+                }
+            }
+            .more-btn-wrapper.active {
+                background: #3083d6;
+                border-radius: 4px;
+            }
+            .more-btn-wrapper.active i{ 
+                color: white;
+            }
+
+            /* paper-dropdown-menu{
+                --layout-horizontal_-_display : block;
+            } */
+
+            @media screen and (min-width: 768px) and (max-width: 1024px) {
+                paper-dropdown-menu.custom {
+                    float: left;
+                    height: 48px;
+                    margin-top: -1px;
+                    box-sizing: border-box;
+                    --paper-input-container-label: {
+                      color: rgba(0, 0, 0, 0.38);
+                      text-align: left;
+                      font-family: roboto;
+                      line-height: 48px;
+                      font-size: 14px;
+                      text-transform: capitalize;
+                      border-bottom: 1px solid #EBEBEB;
+                      padding: 0 24px 0 12px;
+                      bottom: 0;
+                      z-index: 1;
+                      background: #f5f5f5;
+                      width: 75px;
+                    };
+                    --paper-input-container: {
+                        padding: 0;
+                        /* display: inline-block; */
+                    }
+                    --paper-input-container-input: {
+                        color: var(--paper-dropdown-input-color);
+                        font-style: normal;
+                        text-transform: capitalize;
+                        font-size: 14px;
+                        line-height: 46px;
+                        border-bottom: 2px solid transparent;
+                        height: 44px;
+                        padding: 0 24px 0 12px;
+                        -webkit-font-smoothing: inherit;
+                        width: 75px;
+                        padding-top: 1px;
+                    }
+                    /* no underline */
+                    --paper-input-container-underline: {
+                      display: none;
+                    };
+                    --paper-input-container-underline-focus: {
+                        display: none !important;
+                    }
+                    /* --layout-horizontal: {
+                        display: inline-block;
+                    } */
+                    --paper-dropdown-menu-icon: {
+                        position: absolute;
+                        right: 0;
+                        top: 12px;
+                        z-index: 2;
+                    }
+                }
+                paper-dropdown-menu.dd-active {
+                    border-bottom: 2px solid #1976d2;
+                    --paper-input-container-input: {
+                        color: #1976d2;
+                        font-style: normal;
+                        text-transform: capitalize;
+                        font-size: 14px;
+                        line-height: 46px;
+                        border-bottom: 2px solid transparent;
+                        height: 44px;
+                        padding: 0 24px 0 12px;
+                        -webkit-font-smoothing: inherit;
+                        width: 75px;
+                        padding-top: 1px;
+                    }
+                }
+            }
+            .more-btn-wrapper paper-dropdown-menu.custom {
+                float: none;
+                height: 32px;
+                width: 32px;
+                top: -8px;
+                left: 0;
+                position: absolute;
+                border-bottom: none;
+                /*width: 148px;*/
+                --paper-input-container-label: {
+                  color: rgba(0, 0, 0, 0.38);
+                  display: none !important;
+                };
+                --paper-input-container: {
+                    padding: 0;
+                    display: inline-block;
+                }
+                --paper-input-container-input: {
+                  color: #1976d2;
+                  font-style: normal;
+                  text-transform: capitalize;
+                  font-size: 14px;
+                  line-height: 46px;
+                  border-bottom: 2px solid #1976d2;
+                  height: 44px;
+                  padding: 0;
+                  -webkit-font-smoothing: inherit;
+                  width: 0;
+                  padding-top: 1px;
+                  visibility: hidden;
+                }
+                /* no underline */
+                --paper-input-container-underline: {
+                  display: none;
+                };
+                --paper-input-container-underline-focus: {
+                    display: none !important;
+                }
+                /* --layout-horizontal: {
+                    display: inline-block;
+                } */
+                --paper-dropdown-menu-icon: {
+                    display: none;
+                }
+                /*--t-iron-dropdown: {
+                    position: absolute !important;
+                    right: 0;
+                    top: 32px !important;
+                    left: auto !important;
+                }*/
+                --paper-menu-button-dropdown: {
+                    position: absolute !important;
+                    right: 0 !important;
+                    top: 41px !important;
+                    left: auto !important;
+                }
+            }
+            
+            paper-dropdown-menu.custom-mobile {
+                width: 100%;
+                --paper-input-container-label: {
+                    width: 100%;
+                    box-sizing: border-box;
+                    color: rgba(0, 0, 0, 0.38);
+                    text-align: right;
+                    font-family: roboto;
+                    line-height: 46px;
+                    font-size: 14px;
+                    text-transform: capitalize;
+                    border-bottom: 1px solid #EBEBEB;
+                    padding: 0 16px;
+                    bottom: 0;
+                    z-index: 1;
+                    background: #f5f5f5;
+                }
+                --paper-input-container: {
+                    padding: 0;
+                    /* display: inline-block; */
+                    width: 100%;
+                }
+                --paper-input-container-input: {
+                    color: #1976d2;
+                    font-style: normal;
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    line-height: 46px;
+                    border-bottom: none;
+                    height: 46px;
+                    padding: 0 16px;
+                    -webkit-font-smoothing: inherit;
+                    width: 100%;
+                    padding-top: 0;
+                    box-sizing: border-box;
+                    text-align: right;
+                    width: 100%;
+                }
+                --paper-dropdown-menu-icon: {
+                    display: none;
+                }
+                --paper-menu-button-iron-dropdown: {
+                    position: absolute;
+                }
+                --paper-input-container-underline: {
+                  display: none;
+                };
+                --paper-input-container-underline-focus: {
+                    display: none !important;
+                }
+                /* --layout-horizontal: {
+                    display: inline-block;
+                } */
+                --paper-menu-button-dropdown: {
+                    position: absolute !important;
+                    right: 0 !important;
+                    top: 48px !important;
+                    left: 0 !important;
+                }
+            }
+        </style>
+        <div class="container">
+            <div class="sorting-container clearfix">
+                <a class="filter-button" on-tap="_filterShow"><i class="icon-filter"></i></a>
+                
+                <div class="view-buttons">
+                    <template is="dom-repeat" as="view" items="[[settings.views]]">
+                        <a href="#" on-tap="_changeParam" data-type="view" class$="{{_viewClasses(view)}}">
+                            <i class$="{{_getIconClass(view)}}" data-type="view"></i><span data-type="view" class="hidden-md">[[view.title]]</span>
+                        </a>
+                    </template>
+                </div>
+                
+                
+                <div class="sorting-buttons-wrapper">
+                    <!-- sorting for Desktop -->
+                    <div class="hidden-xs w-100">
+                        <template is="dom-repeat" id="sortModel" as="sort" items="[[settings.sorting]]">
+                            <template is="dom-if" if="[[!sort.isExtra]]">
+                                <template is="dom-if" if="[[sort.options]]">
+                                    <paper-dropdown-menu class$="{{_sortIsActive(sort)}} custom top-links" label="[[sort.title]]" no-label-float>
+                                        <paper-listbox slot="dropdown-content" class="dropdown-content">
+                                            <template is="dom-repeat" as="sortitem" id="optionsModel" items="[[sort.options]]">
+                                                <paper-item class$="{{_sortIsActive(sort)}}" on-tap="_sortList">[[sortitem.title]]</paper-item>
+                                            </template>
+                                        </paper-listbox>
+                                    </paper-dropdown-menu>
+                                </template>
+                                <template is="dom-if" if="[[!sort.options]]">
+                                    <a href="#." class$="{{_sortClass(sort)}}" class="top-links" on-tap="_sortList">
+                                        [[sort.title]]
+                                    </a>
+                                </template>
+                            </template>
+                            <template is="dom-if" if="[[sort.isExtra]]">
+                                <div class="more-btn-wrapper" id="moreBtn">
+                                    <i class="icon-more-vert"></i>
+                                    <template is="dom-if" if="[[sort.options]]">
+                                        <paper-dropdown-menu class$="{{_sortIsActive(sort)}}" class="custom top-links" label="[[sort.title]]" no-label-float>
+                                            <paper-listbox slot="dropdown-content" class="dropdown-content">
+                                                <template is="dom-repeat" as="sortitem" id="optionsModel1" items="[[sort.options]]">
+                                                    <paper-item class$="{{_sortIsActive(sort)}}" on-tap="_sortList">[[sortitem.title]]</paper-item>
+                                                </template>
+                                            </paper-listbox>
+                                        </paper-dropdown-menu>
+                                    </template>
+                                    <template is="dom-if" if="[[!sort.options]]">
+                                        <a href="#." class$="{{_sortClass(sort)}}" class="top-links" on-tap="_sortList">
+                                            [[sort.title]]
+                                        </a>
+                                    </template>
+                                </div>
+                            </template>
+                        </template>
+
+                    </div>
+                    <!-- sorting for mobile -->
+                    <div class="visible-xs w-100">
+                        <i class="icon-sorting"></i>
+                        <paper-dropdown-menu class="custom-mobile" label="Sorting" no-label-float>
+                            <paper-listbox slot="dropdown-content" class="dropdown-content">
+                                <template is="dom-repeat" id="mobileSortModel" as="sort" items="[[settings.sorting]]">
+                                    <template is="dom-if" if="[[sort.options]]">
+                                        <template is="dom-repeat" id="mobileModal-[[index]]" as="sortitem" items="[[sort.options]]">
+                                            <paper-item on-tap="_sortList">[[sortitem.title]]</paper-item>
+                                        </template>
+                                    </template>
+                                    <template is="dom-if" if="[[!sort.options]]">
+                                       <paper-item on-tap="_sortList">[[sort.title]]</paper-item>
+                                    </template>
+                                </template>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: 't-list-sort',
+            properties: {
+                mobileSortItems: Array,
+                outOfFold: Array,
+                inTheFold: Array,
+                settings: {
+                    notify: true,
+                    type: Object
+                },
+                resources: {
+                    type: Object
+                }
+            },
+            
+            _viewClasses: function(view){
+                if(view.selected){
+                    return "list-button active";
+                }
+                return "list-button";
+            },
+            
+            _sortIsActive: function (sort) {
+                if(sort.selected){
+                    this.updateStyles({'--paper-dropdown-input-color': '#1976d2'});
+                    return "dd-active custom top-links";
+                }
+                this.updateStyles({'--paper-dropdown-input-color': 'rgba(0, 0, 0, 0.38)'});
+                return "custom top-links";
+            },
+            
+            _sortClass: function(sort){
+               if(sort.selected){
+                    return "top-links active";
+                }
+                return "top-links";      
+            },
+            
+            _getIconClass: function(view){
+                return "icon-" + view.iconName;
+            },
+            
+            _sortList: function(e){
+                var model, templateId, option, modelTarget, clickedSortIndex, clickedOptionIndex, updatedSortingVal;
+                
+                // Extract data
+                // For desktop view
+                model = e.model;// this.$.sortModel.modelForElement(e.target);
+                
+                // For mobile view
+                // if(!model) {
+                //     model = this.$.mobileSortModel.modelForElement(e.target);
+                // }
+                
+                // templateId = e.target._templateInstance.dataHost.id;
+                // if(model.sort.options){
+                //     modelTarget = this.$$("#" + templateId);
+                //     option = modelTarget && modelTarget.modelForElement && modelTarget.modelForElement(e.target).sortitem;
+                //     model.sortBy = option.sortBy;
+                // }
+                
+                // Select the clicked one
+                // Unselect all except the clicked one.
+                clickedSortIndex = this.settings.sorting.indexOf(model.sort);
+                clickedOptionIndex = model.sort.options ? this.settings.sorting[clickedSortIndex].options.indexOf(model.sortitem) : -1;
+                
+                this.settings.sorting.forEach(function(itm, i){
+                    
+                    // If this sort index is the clicked one
+                    if(i === clickedSortIndex){
+                        
+                        if(!itm.singleState && !itm.options && itm.selected){
+                            itm.sortBy = (itm.sortBy === "asc") ?  "dsc" : "asc";
+                            
+                        } else if(itm.options){
+                            
+                            itm.options.forEach(function(optionItem, optionIndex){
+                                
+                                if(optionIndex === clickedOptionIndex){
+                                    optionItem.selected = true;
+                                    itm.sortBy = optionItem.sortBy;
+                                    itm.selectedIndex = optionIndex;
+                                } else {
+                                    optionItem.selected = false;
+                                }
+                            });
+                        }
+                        
+                        itm.selected = true;
+                    } else {
+                        
+                        // Unselect all except the clicked one.
+                        // If sort item do not have options i.e dropdown view
+                        itm.selected = false;
+                        
+                        if(itm.options){
+    
+                            // If sort item do have options i.e dropdown view
+                            itm.options.forEach(function(optionItem){
+                                optionItem.selected = false;
+                            })
+                        }
+                    }
+                });
+                
+                updatedSortingVal = JSON.parse(JSON.stringify(this.settings.sorting));
+                
+                // Fire for listeners
+                this.set('settings.sorting', []);
+                this.set('settings.sorting', updatedSortingVal);
+                this.fire("t-hotel-list-sort", this.settings.sorting[clickedSortIndex]);
+            },
+            
+            _changeParam: function(evt){
+                evt.model.view.selected = true;
+                this.fire("t-list-view-tap", {
+                    "code": evt.model.view.code
+                });
+            },
+            
+            ready: function(){
+                
+                // Create dropdown data if sorting has more than 5 elements
+                if(this.settings && this.settings.sorting && (this.settings.sorting.length > 5)){
+                    var ddSortData = [], sortItem;
+                    for(var i = 5; i < this.settings.sorting.length; i++){
+                        sortItem = this.settings.sorting[i];
+                        
+                        if(!sortItem.options){
+                            ddSortData.push(sortItem);
+                        } else {
+                            sortItem.options.forEach(function(item){
+                               ddSortData.push({
+                                   title: item.title,
+                                   property: sortItem.property,
+                                   sortBy: item.sortBy,
+                                   selected: item.selected
+                               });
+                            });
+                        }
+                    }
+                }
+                
+                this.splice('settings.sorting', 5, this.settings.sorting.length - 5, {
+                    title: "Extras",
+                    options: ddSortData,
+                    isExtra: true
+                });
+
+                document.querySelector("body").addEventListener("touchstart", this.clickHandler.bind(this));
+                document.querySelector("body").addEventListener("click", this.clickHandler.bind(this));
+            },
+            clickHandler: function(e) {
+                if(e.target.classList.contains('paper-dropdown-menu')) {
+                    this.shadowRoot.querySelector("#moreBtn").classList.add('active');
+                    // document.querySelector('#moreBtn').classList.add('active');
+                } else {
+                    this.shadowRoot.querySelector("#moreBtn").classList.remove('active');
+                    // document.querySelector('#moreBtn').classList.remove('active');
+                }
+            },
+
+            _showSortingDropDown: function(e) {
+                this.$.showSortingDropdown.toggle();
+            },
+            
+            _applySorting: function(e) {
+                var text = Polymer.dom(e.target).node.innerHTML;
+                this.$.selectedSortingText.innerHTML = text;
+                this.$.showSortingDropdown.toggle();
+            },
+
+            _filterShow: function(e) {
+                document.getElementById('tFilter').style.display = 'block';
+            }
+        });
+    </script>
+</dom-module>

@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>t-filter test</title>
+
+    <script src="../demo/mock-data.js"></script>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../demo/t-emulator.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <t-emulator></t-emulator>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<t-filter>', function() {
+        
+        setup(function () {
+            tFilter = fixture('basic').querySelector("t-filter");
+        });
+
+        test('Instantiation of element works', function (done) {
+            assert.equal(tFilter.tagName, 't-filter'.toUpperCase());
+            done();
+        });
+
+        test('Filter title rendered', function (done) {
+            flush(function () {
+                assert.equal(tFilter.querySelector(".filter-top-header").innerText.trim(), _mocks.resources.title);
+                done();
+            });
+        });
+
+        test('All filter blocks are rendered', function (done) {
+            flush(function () {
+                assert.equal(tFilter.querySelectorAll(".filter-item").length, _mocks.filterData.length);
+                done();
+            });
+        });
+
+        test('All filter blocks are rendered', function (done) {
+            flush(function () {
+                assert.equal(tFilter.querySelectorAll(".filter-item").length, _mocks.filterData.length);
+                done();
+            });
+        });
+
+        test('All filters are expanded and collapsed properly', function (done) {
+          flush(function(){
+            
+            var filterEls = tFilter.querySelectorAll(".filter-item");
+            
+            _mocks.filterData.forEach(function(filter, index){
+              
+              var isHidden = filterEls[index].querySelector(".filter-content").attributes.hidden;
+              if(filter.isOpen){
+                assert.isUndefined(isHidden);
+              } else {
+                assert.isDefined(isHidden);
+              }
+            });
+
+            done();
+          });
+        });
+
+        test('getState method', function (done) {
+          flush(function(){
+
+            assert.isDefined(tFilter.getState);
+            assert.equal(tFilter.getState(), _mocks.filterData);
+            done();
+          });
+        });
+
+        test('Update state through event', function (done) {
+          flush(function(){
+            var clonedData = _.cloneDeep(_mocks.filterData);
+            clonedData[0].selected = clonedData[0].data[2];
+            tFilter.fire("t-filter-update-state", clonedData);
+            assert.equal(tFilter.getState(), clonedData);
+            done();
+          });
+        });
+
+        test('Reset single filter state through event', function (done) {
+          flush(function(){
+            var clonedData = _.cloneDeep(_mocks.filterData);
+            clonedData[0].selected = clonedData[0].data[2];
+            tFilter.fire("t-filter-update-state", clonedData);
+
+            tFilter.fire("t-filter-item-reset", {
+              index: 0
+            });
+
+            assert.equal(_.isEqual(tFilter.getState(), _mocks.filterData), true);
+            done();
+          });
+        });
+
+        test('Reset whole filter state through event', function (done) {
+          flush(function(){
+            
+            var clonedData = _.cloneDeep(_mocks.filterData);
+            clonedData[0].selected = clonedData[0].data[2];
+            tFilter.fire("t-filter-update-state", clonedData);
+
+            tFilter.fire("t-filter-reset");
+
+            assert.equal(_.isEqual(tFilter.getState(), _mocks.filterData), true);
+            done();
+          });
+        });
+
+        test('Get filter state on change through listener', function (done) {
+          flush(function(){
+
+            tFilter.addEventListener("t-filter-item-tap", function(event){
+              assert.include(Object.keys(event.detail), "code");
+              assert.include(Object.keys(event.detail), "selected");
+              done();
+            });
+
+            tFilter.querySelector("paper-radio-button").click()            
+          });
+        });
+
+        test('Get filter state with code name on change through listener', function (done) {
+          flush(function(){
+
+            tFilter.addEventListener("t-filter-nearby-item-apply", function(event){
+              assert.include(Object.keys(event.detail), "code");
+              assert.include(Object.keys(event.detail), "selected");
+              done();
+            });
+
+            tFilter.querySelector("#nearby").querySelector("paper-radio-button").click()            
+          });
+        });
+
+
+        test('Apply Button Click', function (done) {
+          flush(function(){
+
+            tFilter.addEventListener("t-filter-apply", function(event){
+              assert.isArray(event.detail);
+              done();
+            });
+
+            tFilter.querySelector("#applyBtnTop").click();
+          });
+        });
+
+
+      });
+    </script>
+  </body>
+</html>

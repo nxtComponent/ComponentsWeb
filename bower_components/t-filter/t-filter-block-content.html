@@ -1,0 +1,434 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-style-utils/t-style-utils.html">
+<link rel="import" href="../t-font-icons/t-font-icons.html">
+
+<link rel="import" href="../paper-autocomplete/paper-autocomplete.html">
+<link rel="import" href="../paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../t-rating-stars/t-rating-stars.html">
+<link rel="import" href="../paper-range-slider/paper-range-slider.html">
+<link rel="import" href="../paper-radio-group/paper-radio-group.html">
+<link rel="import" href="../paper-radio-button/paper-radio-button.html">
+<link rel="import" href="../paper-dropdown-input/paper-dropdown-input.html">
+
+<!--
+`t-filter`
+A filter component
+
+@demo demo/index.html 
+-->
+
+<dom-module id="t-filter-block-content">
+  <template>
+    
+    <style include="t-style-utils"></style>
+    <style include="t-font-icons"></style>
+    <style>
+      :host {
+        --v-t-hotel-info-anchor-color: #1976d2;
+        --v-t-font-dark: rgba(0,0,0,0.87);
+        --v-t-font-light: rgba(0,0,0,0.54);
+        --v-t-font-lighter: rgba(0,0,0,0.38);
+        --v-t-border-color: #e5e5e5;
+      }
+      a{
+        color: #1b76d1;
+        text-decoration: none;
+        text-transform: uppercase;
+        margin-right: 10px;
+      }
+      .filter-content{
+        padding: 20px 24px;
+      }
+
+      .filter-content .filter-content{
+        padding: 0;
+      }
+      /* paper autocomplete style*/
+      paper-autocomplete{
+        --paper-input-container-focus-color: var(--v-t-hotel-info-anchor-color);
+        --paper-input-container-color: var(--v-t-border-color);
+        --paper-input-container-label: {
+          color: var(--v-t-font-lighter);
+          font-size: 14px;
+        }
+      }
+      /*checkbox style */
+      paper-checkbox {
+        width: 100%;
+        margin-bottom: 10px;
+        --paper-checkbox-label: {
+          width: calc(100% - 18px);
+          box-sizing: border-box;
+          padding-left: 15px;
+          /*color: rgba(0,0,0,0.54);*/
+        };
+        --paper-checkbox-checked-color: var(--v-t-hotel-info-anchor-color);
+        --paper-checkbox-unchecked-color: #a4a4a4;
+        --paper-checkbox-label-color: rgba(0,0,0,0.54);
+      }
+      paper-checkbox ::content :last-child {
+        margin-bottom: 0;
+      }
+      paper-checkbox .option-primary {
+        float: left;
+      }
+      paper-checkbox .option-secondary {
+        float: right;
+      }
+      paper-checkbox.star-checkbox .option-primary {
+        margin-top: -5px;
+      }
+      /*radio button style*/
+      paper-radio-group {
+        width: 100%;
+        margin-top: -10px;
+      }
+      paper-radio-group .option-primary {
+        float: left;
+      }
+      paper-radio-group .option-secondary {
+        float: right;
+      }
+      paper-radio-button{
+        width: 100%;
+        padding: 0;
+        --paper-radio-button-unchecked-color: #a4a4a4;
+        --paper-radio-button-checked-color: var(--v-t-hotel-info-anchor-color);
+        --paper-radio-button-label-color: var(--v-t-font-light);
+        --paper-radio-button-label: {
+          width: calc(100% - 18px);
+          padding-left: 15px;
+          margin-left: 0;
+          box-sizing: border-box;
+        }
+      }
+      paper-radio-button {
+        margin-top: 10px;
+      }
+      /*Range slider */
+      paper-range-slider{
+        --paper-range-slider-knob-color:              var(--v-t-hotel-info-anchor-color);;
+        --paper-range-slider-pin-color:               var(--v-t-hotel-info-anchor-color);;
+        --paper-range-slider-higher-color:            #e5e5e5;
+        --paper-range-slider-lower-color:             #e5e5e5;
+        --paper-range-slider-active-color:            var(--v-t-hotel-info-anchor-color);;
+        --paper-range-slider-knob-start-color:        #e5e5e5;
+        --paper-range-slider-knob-start-border-color: #e5e5e5;
+        margin-left: -16px;
+        margin-right: -16px;
+      }
+      .slider-max-min-text {
+        color: var(--v-t-font-light);
+      }
+      paper-single-range-slider{
+        margin: 0;
+      }
+
+      /*paper input dropdown*/
+      paper-dropdown-input{
+        width: 100%;
+        
+        --paper-menu-button-dropdown: {
+          position: absolute !important;
+          right: 0 !important;
+          top: 54px !important;
+          left: 0 !important;
+        }
+        --paper-input-container-color: var(--v-t-border-color);
+      }
+      paper-dropdown-input .option-primary {
+        padding: 5px 0 5px 20px;
+        float: left;
+      }
+      paper-dropdown-input .option-secondary {
+        padding: 5px 20px 5px 0;
+        float: right;
+      }
+      .group-title {
+        font-size: 14px;
+        color: var(--v-t-font-dark);
+        font-weight: normal;
+      }
+      .show-more-link{
+        margin-top: 16px;
+        display: block;
+        text-transform: none;
+      }
+    </style>
+
+    <section class="filter-content" hidden$={{!item.isOpen}}>
+
+      <paper-input hidden$={{!item.allowSearch}} value="{{searchString::input}}" no-label-float="true"></paper-input>
+      
+      <!--If text box-->
+      <template is="dom-if" if="{{_ofType(item.type, 'Text')}}">
+        <paper-autocomplete text="{{item.selected}}" on-autocomplete-reset-blur="_onChange" on-autocomplete-selected="_onChange" label="{{item.helpText}}" id="[[item.__id]]" source="{{item.data}}" no-label-float="true"></paper-autocomplete>
+      </template>
+
+      <!--If options-->
+      <template is="dom-if" if="{{_ofType(item.type, 'Option')}}">
+        
+        <!--If checkbox-->
+        <template is="dom-if" if="{{_ofType(item.allowMultiSelect, 'true')}}">
+          <template  is="dom-repeat" as="option" items={{item.data}} filter="{{_computeFilter(searchString)}}">
+            
+            <paper-checkbox id="[[option.__id]]" hidden$="{{option.hidden}}" checked$="{{_isSelected('checkbox', option, item, index)}}" on-change="_onChange" disabled$={{_toDisable(option.isEnabled)}} id="[[item.__id]]">
+              <template is="dom-if" if="{{option.primary}}">
+                <div class="option-primary">{{option.primary}}</div>
+              </template>
+              <template is="dom-if" if="{{option.secondary}}">
+                <div class="option-secondary">({{option.secondary}})</div>
+              </template>
+            </paper-checkbox>
+
+          </template>
+          <!-- <a href="#" class="show-more-link" hidden$="{{_toToggleMoreLessText(item, 'show_more')}}" on-tap="_showMoreLink">[[resources.moreLinkText]]</a>
+          <a href="#" class="show-more-link" hidden$="{{_toToggleMoreLessText(item, 'show_less')}}" on-tap="_showLessLink">[[resources.lessLinkText]]</a> -->
+        </template>
+        
+        <!--If radio-->
+        <template is="dom-if" if="{{_ofType(item.allowMultiSelect, 'false')}}">
+          <paper-radio-group id="[[item.__id]]" selected="{{item.selected}}">
+            <template  is="dom-repeat" as="option" items={{item.data}} filter="{{_computeFilter(searchString)}}">
+                <paper-radio-button name="[[index]]" hidden$="{{option.hidden}}" on-change="_onChange" id="[[option.__id]]" disabled$={{_toDisable(option.isEnabled)}}>
+                  <template is="dom-if" if="{{option.primary}}">
+                    <div class="option-primary">{{option.primary}}</div>
+                  </template>
+                  <template is="dom-if" if="{{option.secondary}}">
+                    <div class="option-secondary">({{option.secondary}})</div>
+                  </template>
+                </paper-radio-button>
+            </template>
+          </paper-radio-group>
+          <!-- <a href="#" class="show-more-link" hidden$="{{_toToggleMoreLessText(item, 'show_more')}}" on-tap="_showMoreLink">[[resources.moreLinkText]]</a>
+          <a href="#" class="show-more-link" hidden$="{{_toToggleMoreLessText(item, 'show_less')}}" on-tap="_showLessLink">[[resources.lessLinkText]]</a> -->
+        </template>
+      </template>
+
+      <!--If ratings -->
+      <template is="dom-if" if="{{_ofType(item.type, 'Rating')}}">
+        <template  is="dom-repeat" as="option" items={{item.data}} filter="{{_computeFilter(searchString)}}">
+          <paper-checkbox class="star-checkbox" checked$="{{_isSelected('checkbox', option, item, index)}}" on-change="_onChange" id="[[option.__id]]">
+            <t-rating-stars class="option-primary" value="{{option.primary}}" height="20" font-size="18"></t-rating-stars>
+            <template is="dom-if" if="{{option.secondary}}">
+              <div class="option-secondary">({{option.secondary}})</div>
+            </template>
+          </paper-checkbox>
+        </template>
+      </template>
+
+      <!--If Range -->
+      <template is="dom-if" if="{{_ofType(item.type, 'Range')}}">
+        <div class="clearfix slider-max-min-text">
+          <span class="float-left">{{item.minValue}}</span>
+          <span class="float-right">{{item.maxValue}}</span>
+        </div>
+        <paper-range-slider id="[[item.__id]]" on-change="_onChange" value-min$="{{_getValue('min', item)}}" value-max$="{{_getValue('max', item)}}" always-show-pin$={{item.isSingleMarker}} single-slider$={{item.isSingleMarker}} step="{{item.step}}" slider-width="100%" max="{{item.maxValue}}" min="{{item.minValue}}"></paper-range-slider>
+      </template>
+
+      <!--If select-->
+      <template is="dom-if" if="{{_ofType(item.type, 'Select')}}">
+        <paper-dropdown-input no-search selected-item-label="{{_getSelectedDropDownLabel(item)}}" on-change="_onChange" items='{{item.data}}' id="[[item.__id]]">
+          <template>
+            <template is="dom-repeat" items="{{item.data}}" as="option">
+                <div class="clearfix" label="{{option.primary}}" on-tap="_onChange">
+                  <div class="option-primary">{{option.primary}}</div> <div class="option-secondary">({{option.secondary}})</div>
+                </div>
+            </template>
+          </template>
+        </paper-dropdown-input>
+      </template>
+
+      <template is="dom-if" if="{{_ofType(item.type, 'Group')}}">
+        <template is="dom-repeat" items="{{item.options}}" as="option">
+          <h3 class="group-title">{{option.title}}</h3>
+          <t-filter-block-content item={{option}}></t-filter-block-content>
+        </template>
+      </template>
+
+    </section>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 't-filter-block-content',
+      properties: {
+        isOpen: Boolean,
+        item: Object,
+        resources: Object
+      },
+      listener: {
+        'autocomplete-change': "_onChange"
+      },
+      _computeFilter: function(string){
+        
+        if (!string) {
+          return null;
+        } else {
+
+          string = string.toLowerCase();
+          return function(item) {
+            var first = item.primary.toLowerCase();
+            var last = item.secondary.toLowerCase();
+            return (first.indexOf(string) != -1 || last.indexOf(string) != -1);
+          };
+        }
+      },
+      _getSelectedDropDownLabel: function(item){
+        if(typeof item.selected === "number"){
+          return item.data[item.selected] ? item.data[item.selected].primary : "";
+        }
+        return "";
+      },
+      _isSelected: function(type, option, item, index){
+
+        if(item && Object.keys(item).length === 0) return;
+        if(typeof item.selected === "undefined") return;
+        
+        if(type === "checkbox" && (item.selected.indexOf(index) > -1)){
+          return true;
+        } else if(type === "checkbox"){
+          return false;
+        } else if(type === "radio"){
+
+          // Check the last item only
+          if(item.selected[item.selected.length - 1] === index){
+            return true;
+          }
+          return false;
+
+        } else {
+          return false;
+        }
+      },
+      _toDisable: function(isEnabled){
+        if(typeof isEnabled !== "undefined"){
+          return !isEnabled;
+        } else {
+          return false;
+        }
+      },
+      _ofType: function(type, text){
+        if(typeof type === "boolean" && type && text === "true"){
+          return true;
+        }
+        
+        if(typeof type === "boolean" && !type && text === "false"){
+          return true;
+        }
+
+        return type === text;
+      },
+      _getValue: function(type, item){
+        if(typeof item.selected !== "undefined" && type === "min"){
+          return item.selected[0];
+        } else if(typeof item.selected !== "undefined" && type === "max"){
+          return item.selected[1];
+        } else {
+          return 0;
+        }
+      },
+      _onChange: function(e){
+        var oItem = this.item,
+            index = e.model.index,
+            item = e.model.item,
+            option = e.model.option,
+            id;
+
+        if(item && item.__id){
+          id = item.__id;
+        } else {
+          id = option.__id;
+        }
+        
+        if(this.item.type === "Text"){
+          this.fire("t-filter-block-changed", {
+            item: oItem,
+            id: id,
+            value: e.currentTarget.text
+          });
+        }
+
+        if(this.item.type === "Option"){
+          this.fire("t-filter-block-changed", {
+            item: oItem,
+            index: index,
+            id: id,
+            value: e.currentTarget.checked
+          });
+        }
+
+        if(this.item.type === "Rating"){
+         this.fire("t-filter-block-changed", {
+            item: oItem,
+            index: index,
+            id: id,
+            value: e.currentTarget.checked
+          });
+        }
+
+        if(this.item.type === "Range"){
+         this.fire("t-filter-block-changed", {
+            item: oItem,
+            id: id,
+            index: index,
+            maxValue: e.currentTarget.valueMax,
+            minValue: e.currentTarget.valueMin
+          });
+        }
+
+        if(this.item.type === "Select"){
+          this.fire("t-filter-block-changed", {
+            item: oItem,
+            index: index,
+            id: id,
+            option: option
+          });
+        }
+      },
+      // _toToggleMoreLessText: function(item, type){
+      //   if(!item.data) return;
+
+      //   var isAnyHidden = item.data.find(function(i){
+      //     return (i.hidden === true);
+      //   });
+      //   if(type === "show_less" && isAnyHidden){
+      //     return true;
+      //   } else if(type === "show_more" && !isAnyHidden){
+      //     return true;
+      //   } else if(item.data.length < item.defaultOptions) {
+      //     return true;
+      //   } else {
+      //     return false;
+      //   }
+
+      // },
+      // _showMoreLink: function(e){
+      //   e.preventDefault();
+      //   var options = this._toggleMore(e.model.item, true);
+      //   options.isOpen = this.isOpen;
+      //   e.model.item = [];
+      //   e.model.item = options;
+      // },
+      // _showLessLink: function(e){
+      //   e.preventDefault();
+      //   var options = this._toggleMore(e.model.item, false);
+      //   e.model.item = [];
+      //   e.model.item = options;
+      // },
+      // _toggleMore: function(item, toShow){
+      //   if(!item.data) return;
+      //   var options = JSON.parse(JSON.stringify(item));
+      //   for (var i = options.defaultOptions; i < options.data.length; i++){
+      //     options.data[i].hidden = toShow ? false : true;
+      //   }
+      //   return options;
+      // },
+      // attached: function(){
+      //   var itemData = this._toggleMore(this.item, false);
+      //   this.item = itemData;
+      // }
+    });
+  </script>
+</dom-module>

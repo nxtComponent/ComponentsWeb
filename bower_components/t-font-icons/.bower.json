@@ -1,0 +1,24 @@
+{
+  "name": "t-font-icons",
+  "description": "Common fonts",
+  "main": "t-font-icons.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://github.com/nxtComponent/t-font-icons",
+  "_release": "dae6a60bcf",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "dae6a60bcf83d2fe5f28e69b0a59b790b8b0ec3b"
+  },
+  "_source": "ssh://git@github.com/nxtComponent/t-font-icons.git",
+  "_target": "*",
+  "_originalSource": "git+ssh://git@github.com/nxtComponent/t-font-icons.git"
+}

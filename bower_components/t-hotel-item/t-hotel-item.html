@@ -1,0 +1,535 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../iron-image/iron-image.html">
+<link rel="import" href="../paper-tooltip/paper-tooltip.html">
+<link rel="import" href="../t-rating-stars/t-rating-stars.html">
+<link rel="import" href="../t-style-utils/t-style-utils.html">
+<link rel="import" href="../t-font-icons/t-font-icons.html">
+<link rel="import" href="../t-clamp/t-clamp.html">
+
+
+<link rel="import" href="./t-hotel-item-styles.html">
+
+<!--
+A Polymer element for hotel info card. This accepts **data** and **resources** attributes.
+
+Here **data** should contain these mandatory attributes to display data properly:
+
+    id
+    name
+    rating
+    location
+    phoneNumber
+    distance
+    image
+    amenities
+    room
+    fare
+    discount
+    deal
+    attractions
+    userReview
+
+
+Sample data
+
+    {
+        "id": "55610",
+        "name": "THE WESTIN LAKE LAS VEGAS RESORT & SPA & THE WESTIN LAKE LAS VEGAS RESORT & SPA & THE WESTIN LAKE LAS VEGAS RESORT & SPA",
+        "rating": 3,
+        "location": "Metropolitan area",
+        "phoneNumber": "702 567 1234",
+        "distance": {
+            "value": 13.86,
+            "unit": "Miles"
+        },
+        "image": "http://d3mj096p5q0e20.cloudfront.net/ti/HBD/55610/043509a_hb_a_001.jpg",
+        "amenities": [
+            {name: "Restaurant"},
+            {name: "Wifi"},
+            {name: "Parking"}
+        ],
+        "room": {
+            "name": "Delux room-Twin bed",
+            "occupancy": "Max. 4 guests",
+            availableRoomCount : 3,
+            roomRate : {
+                rateType:"Negotiated",
+                refundability:"Refundable",
+                isPrepaid: true
+            }
+            
+        },
+        "fare": {
+            "baseFare" : 402.86,
+            "totalFare": 402.86,
+            "discount": [{
+                "amount": 57.0,
+                "text": "Today 20% off"
+            }],
+            "currency": "USD"
+        },
+        
+        "deal": "Limited Time: 1 night free on 3 nights booking",
+        "attractions": [
+            {
+                "name": "Transport",
+                "message": "Close to public transport"
+            },
+            {
+                "name": "Family",
+                "message": "Excellent choice for family Excellent choice for family"
+            }
+        ],
+        "userReview": {
+            "rating": "3.4",
+            "count": 500,
+            "type": "Excellent"
+        }
+    }
+
+Here **resources** should contain these mandatory attributes to display data properly:
+
+    primaryAmenities
+    currencySymbols
+    attractions
+    defaultImage
+    buttonText
+
+
+Sample data
+
+    {
+        "primaryAmenities": [
+            {
+                "name": "Restaurant",
+                "ïcon": "food"
+            },
+            {
+                "name": "Pool",
+                "ïcon": "pool"
+            },
+            {
+                "name": "Wifi",
+                "icon": "wifi"
+            },
+            {
+                "name": "Parking",
+                "icon": "parking"
+            },
+            {
+                "name": "Gym",
+                "icon": "health"
+            }
+        ],
+        "currencySymbols": [
+            {
+                "code": "USD",
+                "symbol": "$"
+            },
+            {
+                "code": "INR",
+                "symbol": "₹"
+            }
+        ],
+        "attractions": [
+            {
+                "name": "Transport",
+                "icon": "transport"
+            },
+            {
+                "name": "Family",
+                "icon": "family"
+            }
+        ],
+        "defaultImage": "",
+        "buttonText": "SEE AVAILABLE ROOMS"
+    };
+
+
+### Example:
+
+    <t-hotel-item
+            data="[[item]]"
+            on-t-hotel-item-hero-img-tap="logClick"
+            on-t-hotel-item-title-tap="logClick"
+            on-t-hotel-item-show-details-tap="logClick"
+    ></t-hotel-item>
+
+
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+We prefix variable property with --v and mixins with --m followed by component name.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--v-t-hotel-item-font-color` | Font color for all elements present in result card. | `#999`
+`--v-t-hotel-item-font-size` | Font size for all elements present in result card. | `14px`
+`--v-t-hotel-item-anchor-color` | Font color for all anchor elements present in result card. | `Defaults to page anchor color`
+`--v-t-hotel-item-bg-color` | Background color for  result card component | `#fff`
+`--v-t-hotel-item-hero-offer-bg` | Background Color of offer label present over hero image  | `#f54339`
+`--v-t-hotel-item-hero-offer-color` | Font Color of offer label present over hero image  | `#fff`
+`--v-t-hotel-item-offer-color` | Color for offer text present over hotel name  | `#f54339`
+`--v-t-hotel-item-label-bg` | Background Color for label  | `#6dbb70`
+`--v-t-hotel-item-label-color` | Font Color for label  | `white`
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="t-hotel-item">
+    <template>
+
+        <!--t-hotel-item-styles import-->
+        <style include="t-hotel-item-styles"></style>
+        <style include="t-font-icons"></style>
+
+        <!--view template for t-hotel-item-->
+        <section class="container">
+            <template is="dom-if" if="[[data.attractions]]">
+                <div class="room-for-transportation">
+                    <template is="dom-repeat" items="[[data.attractions]]">
+                        <span id$="for_{{item.name}}"><i
+                                class$="[[_getAttractionIcon(item.name)]] icon-{{item.icon}}"></i></span>
+                    </template>
+                </div>
+                <template is="dom-repeat" items="[[data.attractions]]">
+                    <paper-tooltip for="for_{{item.name}}" position="top" class="img-tooltip">[[item.message]]
+                    </paper-tooltip>
+                </template>
+            </template>
+            <!--Hero image container-->
+            <div class="content-img" on-tap="_heroImageTap">
+                <iron-image class="hero-image" sizing="cover" src="[[data.heroImageUrl]]" id="heroCover"></iron-image>
+                <div class="image-container">
+                    <div class="image-container-inside" id="imagecontainer">
+                        <img src="[[data.heroImageUrl]]" id="heroimage" />
+                    </div>
+                </div>
+                <template is="dom-if" if="[[_discountText]]">
+                    <div class="hero-offer">
+                        <!-- <span class="hidden-xs">[[data.otherDiscount.day]]</span>  -->
+                        [[_discountText]]
+                    </div>
+                </template>
+            </div>
+
+            <!--Hotel Details-->
+            <div class="content">
+                <div class="hotel-content-section">
+                    <template is="dom-if" if="[[_room.roomRate.offer]]">
+                        <div class="offer-text clearfix">
+                            <i class="icon-label"></i>
+                            <div>[[_room.roomRate.offer.desc]]</div>
+                        </div>
+                    </template>
+                    <h3 id="hotelName" class="itinerary-title">
+                        <a href="#" on-tap="_titleTap" class="hotel-details">
+                            <t-clamp lines="2">[[data.name]]</t-clamp>
+                        </a>
+                    </h3>
+                    <paper-tooltip for="hotelName" position="top">[[data.name]]</paper-tooltip>
+                    <t-rating-stars value="{{data.rating}}" height="20" font-size="18"></t-rating-stars>
+                    <div class="location">
+                        <span id="locationArea" class="location-area" id="loction_area">[[_getLocationName(data)]]</span>
+                        <template if="dom-if"> if="[[data.distance]]">
+                            <span class="pipeline hidden-md">|</span>
+                            <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]] <i
+                                    class="icon-map-pin"></i></span>
+                        </template>
+                        <paper-tooltip for="loction_area" position="top">[[data.address]]</paper-tooltip>
+                    </div>
+                    <paper-tooltip for="locationArea" position="top">[[data.address]]</paper-tooltip>
+                    <div class="phone">[[supportNumber]]</div>
+                    <div class="room">
+                        <span class="room-name">[[_room.name]]</span>
+                        <template is="dom-if" if="[[_room.maxOccupancy]]">
+                            <span class="pipeline hidden-xs">|</span>
+                            <span class="occupancy">Max [[_room.maxOccupancy]] guest(s)</span>
+                        </template>
+                    </div>
+                    <template is="dom-if" if="[[_breakfast]]">
+                            <span>[[_breakfast]]</span>
+                        </template>
+                    <template is="dom-if" if="[[_room.roomRate.inclusions]]">
+                        <div class="facilities">                           
+                            <template is="dom-repeat" items="[[_room.roomRate.inclusions]]">
+                                <span class="pipeline">|</span>
+                                <span>[[item]]</span>
+                            </template>
+                        </div>
+                    </template>
+                    <div class="amenities hidden-xs">
+                        <template is="dom-repeat" items="[[_getPrimaryAmenities(data.amenities)]]">
+                            <span id$="amenities_{{index}}" class="amenities-content">
+                                <i class$="[[_getAmenitiesIcon(item.name)]]"></i>
+                                <em class="visible-lg">[[item.name]]</em>
+                            </span>
+                            <paper-tooltip for="amenities_{{index}}" position="top" class="hidden-lg">
+                                [[item.name]]
+                            </paper-tooltip>
+                        </template>
+                    </div>
+                </div>
+                <div class="hotel-price-section">
+                    <template is="dom-if" if="[[data.userReview]]">
+                        <div class="user-review-section">
+                            <div class="inline-block clearfix">
+                                <span class="review float-left">[[data.userReview.rating]]</span>
+                                <div class="star-rating float-left left">
+                                    <p>[[data.userReview.type]] <img class="hidden-xs" src="./assets/review-icon.png">
+                                    </p>
+                                    <div class="review-stars hidden-xs ">
+                                        <t-rating-stars height="18" font-size="14" value="{{data.userReview.rating}}" color="#7cb342"></t-rating-stars>
+                                    </div>
+                                    <span class="total-reviews hidden-xs">[[data.userReview.count]] [[resources.reviewText]]</span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[data.room.availability]]">
+                        <div class="in-demand right">[[data.room.availability]]</div>
+                    </template>
+
+                    <div class="room-price right">
+                        <div class="price-component">
+                            <template is="dom-if" if="[[_discountText]]">
+                                <span class="price-off">-[[offPercent]]%</span>
+                                <span class="actual-price">[[calculatedActualPrice]]</span>
+                            </template>
+                            <span class="price"><span>[[data.fare.currency]]</span> [[_toFixed(data.fare.totalFare)]]</span>
+                        </div>
+                        <span class="text-lighter">avg. per night</span>
+                    </div>
+                    <template is="dom-if" if="[[data.room.benefits]]">
+                        <div class="other-facility right">
+                            <template is="dom-repeat" items="[[data.room.benefits]]">
+                                <br/><span>[[item]]</span>
+                            </template>
+                        </div>
+                    </template>
+                    <template is="dom-if" if="[[_payLater]]">
+                        <div class="right">
+                            Reserve Now, Pay Later
+                        </div>
+                    </template>
+                    <div class="right hidden-xs">
+                        <a href="#" on-tap="_showDetails" class="btn btn-default">[[resources.buttonText]]</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <!--Register t-hotel-item-->
+    <script>
+        Polymer({
+
+            is: 't-hotel-item',
+
+            properties: {
+                initialized: {
+                    type: Boolean,
+                    value: false
+                },
+                _discountText: {
+                    type: String,
+                    value: ""
+                },
+                currencyIcon: String,
+                calculatedActualPrice: Number,
+                fromattedAmount: Number,
+                offPercent: Number,
+                data: {
+                    notify: true,
+                    type: Object,
+                    value: {},
+                    observer: '_propagateChange'
+                },
+                resources: {
+                    type: Object,
+                    value: {}
+                },
+                supportNumber: String,
+                _room: {
+                    type: Object,
+                    value: null,
+                    computed: "_getFirstRoom(data.rooms)"
+                },
+                _payLater: {
+                    type: Boolean,
+                    value: false,
+                    computed: "_isPayLater(_room)"
+                },
+                _breakfast: {
+                    type: String,
+                    value: null,
+                    computed: "_breakfastAvailable(data.amenities)"
+                }
+            },
+
+            _propagateChange: function () {
+                this.fresh();
+            },
+
+            listeners: {
+                'heroimage.error': 'imageLoadError'
+            },
+            _isPayLater: function (room) {               
+                  return room && room.roomRate && !room.roomRate.isPrepaid;
+            },
+            _breakfastAvailable: function (amenities) {
+                if (!amenities) return null;             
+
+                var breakfast = amenities.find(function (amenity) {
+                    return amenity.category && amenity.category.toLowerCase() === 'breakfast';
+                });               
+                return breakfast ? breakfast.name : null;               
+
+            },
+            _toFixed: function (amount) {
+                if (!amount)
+                    return "";
+                return amount.toFixed(2);
+            },
+
+            _getLocationName: function (hotel) {
+                return hotel.location || hotel.address;
+            },
+
+            _getAttractionIcon: function (name) {
+                var icon = this.resources.attractions.find(function (sym) {
+                    return sym.name === name;
+                }).icon;
+
+                return "icon-" + icon;
+            },
+
+            _getPrimaryAmenities: function (amenityList) {
+                var lst = [], _this = this;
+
+                if (amenityList) {
+                    amenityList.forEach(function (itm) {
+                        if (itm.category) {
+                            var amenity = _this._getPrimaryAmenity(itm.category);
+                            if (amenity)
+                                lst.push(amenity);
+                        }
+                    });
+                }
+
+                return lst;
+            },
+
+            _getPrimaryAmenity: function (amenity) {
+                return this.resources.primaryAmenities.find(function (sym) {
+                    return sym.name === amenity;
+                });
+            },
+
+            _getAmenitiesIcon: function (name) {
+                var icon = this.resources.primaryAmenities.find(function (sym) {
+                    return sym.name === name;
+                });
+
+                if (icon)
+                    return "icon-" + icon.icon;
+                return "";
+            },
+
+            imageLoadError: function (e) {
+                if (this.resources.defaultImage && !this.imageLoadAttempted) {
+                    this.$.heroimage.src = this.resources.defaultImage;
+                    this.$.heroCover.src = this.resources.defaultImage;
+                    this.imageLoadAttempted = true;
+                } else {
+                    this.$.heroimage.remove();
+                    this.toggleClass("onerror", true, this.$.imagecontainer);
+                }
+            },
+
+            fresh: function () {
+                if (!this.initialized) return;
+
+                var self = this;
+
+                if (!this.data.heroImageUrl) {
+                    this.$.heroimage.src = this.resources.defaultImage;
+                    this.$.heroCover.src = this.resources.defaultImage;
+                }
+
+                try {
+                    this.currencyIcon = this.resources.currencySymbols.find(function (sym) {
+                        return sym.code === self.data.fare.currency;
+                    }).symbol;
+                } catch (e) {
+                    this.currencyIcon = self.data.fare ? self.data.fare.currency : "";
+                }
+
+                if (this.data && this.data.fare && this.data.fare.totalFare) {
+                    if (this.data.fare.discount != null && this.data.fare.discount.length > 0) {
+                        this._discountText = this.data.fare.discount[0].text;
+                        this.calculatedActualPrice = Math.round((+this.data.fare.amount) + (+this.data.fare.fare.discount[0].amount)).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                        this.offPercent = Math.round(((+this.data.fare.discount[0].amount) / ((+this.data.fare.totalFare) + (+this.data.fare.discount[0].amount))) * 100).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                    } else {
+                        this.calculatedActualPrice = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                        this.offPercent = Math.round(0).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                    }
+
+                    this.fromattedAmount = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                }
+
+
+
+                this.notifyPath('data.rating');
+            },
+
+            _getFirstRoom: function (roomList) {
+                if (roomList && roomList.length > 0) {
+                    return roomList[0];
+                }
+                return null;
+            },
+
+            attached: function () {
+                this.initialized = true;
+                this.fresh();
+            },
+
+            /**
+             * Fired when the hero image is clicked/tapped.
+             * Also passes id of the result item.
+             *
+             * @event t-hotel-item-hero-img-tap
+             */
+            _heroImageTap: function (e) {
+                e.preventDefault();
+                this.fire("t-hotel-item-hero-img-tap", this.data.id);
+            },
+
+            /**
+             * Fired when the Hotel name/title header is clicked/tapped.
+             * Also passes id of the result item.
+             *
+             * @event t-hotel-item-title-tap
+             */
+            _titleTap: function (e) {
+                e.preventDefault();
+                this.fire("t-hotel-item-title-tap", this.data.id);
+            },
+
+
+            /**
+             * Fired when the show detail label is clicked/tapped.
+             * Also passes id of the result item.
+             *
+             * @event t-hotel-item-show-details-tap
+             */
+            _showDetails: function (e) {
+                e.preventDefault();
+                this.fire("t-hotel-item-show-details-tap", this.data.id);
+            }
+        });
+    </script>
+</dom-module>
