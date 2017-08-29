@@ -21,11 +21,11 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/nxtComponent/t-hotel-list",
-  "_release": "9e6ecb0497",
+  "_release": "477dc60e77",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "9e6ecb04975a9a50564260600d97d0ebbc4a55de"
+    "commit": "477dc60e778719743fded7781a2629f224bbde3e"
   },
   "_source": "https://github.com/nxtComponent/t-hotel-list.git",
   "_target": "*",

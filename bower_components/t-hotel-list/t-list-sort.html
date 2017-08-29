@@ -676,11 +676,13 @@
                     }
                 }
                 
+                if(this.settings.sorting.length>5){
                 this.splice('settings.sorting', 5, this.settings.sorting.length - 5, {
                     title: "Extras",
                     options: ddSortData,
                     isExtra: true
                 });
+            }
 
                 document.querySelector("body").addEventListener("touchstart", this.clickHandler.bind(this));
                 document.querySelector("body").addEventListener("click", this.clickHandler.bind(this));
