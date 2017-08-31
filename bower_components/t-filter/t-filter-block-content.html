@@ -331,15 +331,20 @@ A filter component
       },
       _onChange: function(e){
         var oItem = this.item,
+        index,item,option,id;
+        
+        if(e.model){
             index = e.model.index,
             item = e.model.item,
-            option = e.model.option,
-            id;
+            option = e.model.option;           
 
-        if(item && item.__id){
-          id = item.__id;
-        } else {
-          id = option.__id;
+          if(item && item.__id){
+            id = item.__id;
+          } else {
+            id = option.__id;
+          }
+        }else{
+          id= oItem.code;
         }
         
         if(this.item.type === "Text"){

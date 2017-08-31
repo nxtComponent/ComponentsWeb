@@ -24,11 +24,11 @@
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
   "homepage": "https://github.com/nxtComponent/t-filter",
-  "_release": "df5859ab39",
+  "_release": "72e040dacd",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "df5859ab39dcc70b81cff13acb8e8a9b815f828e"
+    "commit": "72e040dacd1567c9007d506301f3310c75a038ae"
   },
   "_source": "https://github.com/nxtComponent/t-filter.git",
   "_target": "*",

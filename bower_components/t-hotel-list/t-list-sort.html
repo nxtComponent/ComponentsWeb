@@ -655,39 +655,43 @@
             
             ready: function(){
                 
+                document.querySelector("body").addEventListener("touchstart", this.clickHandler.bind(this));
+                document.querySelector("body").addEventListener("click", this.clickHandler.bind(this));
+
                 // Create dropdown data if sorting has more than 5 elements
-                if(this.settings && this.settings.sorting && (this.settings.sorting.length > 5)){
-                    var ddSortData = [], sortItem;
-                    for(var i = 5; i < this.settings.sorting.length; i++){
-                        sortItem = this.settings.sorting[i];
-                        
-                        if(!sortItem.options){
-                            ddSortData.push(sortItem);
-                        } else {
-                            sortItem.options.forEach(function(item){
-                               ddSortData.push({
-                                   title: item.title,
-                                   property: sortItem.property,
-                                   sortBy: item.sortBy,
-                                   selected: item.selected
-                               });
+                if(!this.settings || !this.settings.sorting || (this.settings.sorting.length <=5)){
+                    return;
+                }
+                var ddSortData = [], sortItem;
+                for(var i = 5; i < this.settings.sorting.length; i++){
+                    sortItem = this.settings.sorting[i];
+                    
+                    if(!sortItem.options){
+                        ddSortData.push(sortItem);
+                    } else {
+                        sortItem.options.forEach(function(item){
+                            ddSortData.push({
+                                title: item.title,
+                                property: sortItem.property,
+                                sortBy: item.sortBy,
+                                selected: item.selected
                             });
-                        }
+                        });
                     }
                 }
-                
-                if(this.settings.sorting.length>5){
+               
                 this.splice('settings.sorting', 5, this.settings.sorting.length - 5, {
                     title: "Extras",
                     options: ddSortData,
                     isExtra: true
                 });
-            }
+            
 
-                document.querySelector("body").addEventListener("touchstart", this.clickHandler.bind(this));
-                document.querySelector("body").addEventListener("click", this.clickHandler.bind(this));
+              
             },
             clickHandler: function(e) {
+                if(!this.shadowRoot.querySelector("#moreBtn")) return;
+                
                 if(e.target.classList.contains('paper-dropdown-menu')) {
                     this.shadowRoot.querySelector("#moreBtn").classList.add('active');
                     // document.querySelector('#moreBtn').classList.add('active');
