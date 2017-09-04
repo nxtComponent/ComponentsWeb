@@ -42,5 +42,6 @@ exclude:
   - "bower.json"
  # - "node_modules"
   - "package.json"
+  - "gulpfile.js"
 include:
   - .nojekyll
