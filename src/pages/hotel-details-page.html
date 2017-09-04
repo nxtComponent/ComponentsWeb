@@ -1,0 +1,36 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../nxt-shared-styles.html">
+
+<dom-module id="hotel-details-page">
+  <template>
+    <style include="shared-styles">
+
+    </style>
+
+    <h2>Hotel Details page</h2>
+
+  </template>
+
+  <script>
+    class HotelDetailsPage extends Polymer.Element {
+      static get is() { return 'hotel-details-page'; }
+
+      static get properties() {
+        return {
+          pageLoader: {
+            type: Boolean,
+            notify: true
+          }
+        }
+      }
+
+      connectedCallback(){
+        super.connectedCallback();
+        this.set("pageLoader", false);
+      }
+
+    }
+
+    window.customElements.define(HotelDetailsPage.is, HotelDetailsPage);
+  </script>
+</dom-module>

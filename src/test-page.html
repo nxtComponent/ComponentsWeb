@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>Test</title>
+
+  <script src="asset/jquery.min.js"></script> 
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../bower_components/t-homepage-deal/t-homepage-deal.html">
+
+  <style>
+    body {
+      font-family: 'Roboto';
+      padding: 0;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+    <h2>test</h2>
+  
+    <t-homepage-deal id="deal" ></t-homepage-deal>
+  
+  <script>
+    var t = document.querySelector('#deal');
+    // t.addEventListener('dom-change', function () {
+      t.heading = 'EXPLORE POPULAR DESTINATIONS';
+      t.data = [
+        {
+          category: 'City & Shopping',
+          deals: [
+            {
+              heading: 'Heading is long my man',
+              subHeading: 'Sub Heading is long too my man',
+              url: 'https://google.com',
+              type: 11,
+              description: "lore dsfjsnf ",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              priceText: 'from',
+              priceValue: '$255',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 21,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              url: 'https://google.com',
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 12,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              priceText: 'from',
+              priceValue: '$255',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            }
+          ]
+        },
+        {
+          category: 'Island & Beach',
+          deals: [
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              priceText: 'from',
+              priceValue: '$255',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 21,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              url: 'https://google.com',
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 12,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              priceText: 'from',
+              priceValue: '$255',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            }
+          ]
+        },
+        {
+          category: 'Disney',
+          deals: [
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              priceText: 'from',
+              priceValue: '$255',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 21,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              url: 'https://google.com',
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 12,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              priceText: 'from',
+              priceValue: '$255',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            }
+          ]
+        },
+        {
+          category: 'Romantic',
+          deals: [
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              priceText: 'from',
+              priceValue: '$255',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 21,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              url: 'https://google.com',
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 12,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              priceText: 'from',
+              priceValue: '$255',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            }
+          ]
+        },
+        {
+          category: 'Tours & Safaries',
+          deals: [
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              priceText: 'from',
+              priceValue: '$255',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 21,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              url: 'https://google.com',
+              type: 22,
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              priceText: 'from',
+              priceValue: '$255',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 12,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              type: 11,
+              priceText: 'from',
+              priceValue: '$255',
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            },
+            {
+              heading: 'Heading',
+              subHeading: 'Sub Heading',
+              imageSize: 'cover',
+              url: 'https://google.com',
+              priceText: 'from',
+              priceValue: '$255',
+              type: 11,
+              description: "Amet facilis dolor dignissimos nulla accusantium debitis? Possimus est voluptas esse placeat sit enim harum voluptas. Consectetur odio velit suscipit corporis qui Molestias voluptatibus accusamus recusandae autem libero maiores? Natus!",
+              button: 'See more',
+              image: 'http://lorempixel.com/600/600'
+            }
+          ]
+        }
+      ];
+    // })
+  </script>
+</body>
+
+</html>

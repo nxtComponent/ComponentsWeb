@@ -1,0 +1,676 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-style-utils/t-style-utils.html">
+<link rel="import" href="../t-font-icons/t-font-icons.html">
+<link rel="import" href="./t-filter-block-content.html">
+
+<!--
+`t-filter`
+A filter component which generates UI from configuration and listens for changes trigered by user to emit event with filter detail.
+
+A t-filter component can consist of any of these types of filter:
+- Text 
+
+
+    {
+      "type": "Text", // Type of the filter
+      "isOpen": true, // If to keep filter expanded or in collapsed state.
+      "selected": "Holiday Inn", // type should be "text"
+      "helpText": "Search by activity/hotel name", // Acts as the placeholder for input
+      "filterBy": "item.name.indexOf(this.selected) > -1", // This can be any expression which is to be evaluated to filter the data
+      "data": [
+        "Howard Johnson",
+        "Hilton Delux",
+        "Holiday Inn"
+      ] // Search suggestion
+    }
+
+- Option
+
+
+    {
+      "type": "Option", // Type of the filter
+      "isOpen": true, // If to keep filter expanded or in collapsed state.
+      "selected": [0, 2]/1, // type should be "array" in case of checkboxes and number(index) in case of radio buttons
+      "allowMultiSelect": true, //when multi select is allowd then checkboxes are shown else radio buttons
+      "data": [
+        {
+          "primary": "Less than $400",
+          "secondary": "150",
+          "filterBy": "item.fare.amount < 400"
+        },
+        {
+          "primary": "$75 to $124",
+          "secondary": "85",
+          "filterBy": "(item.fare.amount > 75) && (item.fare.amout < 124)"
+        },
+        {
+          "primary": "$125 to $199",
+          "secondary": "250",
+          //this will show as disabled where user will not be abel to click it
+          "isEnabled": false,
+          "filterBy": "(item.fare.amount > 125) && (item.fare.amout < 199)"
+        }
+      ]
+    }
+
+- Rating
+
+
+    {
+      "type": "Rating",
+      "isOpen": false,
+      "selected": [], // type should be "array" in case of checkboxes and number(index) in case of radio buttons
+      "allowMultiSelect": true, //when multi select is allowd then checkboxes are shown else radio buttons
+      "data": [
+        {
+          "primary": 5,
+          "secondary": "150",
+          "filterBy": "item.rating === 5"
+        },
+        {
+          "primary": 4,
+          "secondary": "85",
+          "filterBy": "item.rating === 4"
+        }
+      ]
+    }
+
+
+- Range
+
+
+    {
+      "type": "Range",
+      "isOpen": false,
+      "selected": [], // Contains one value of the marker incase its  "isSingleMarker" else two values. type should be "array"
+      "minValue": 1,
+      "maxValue": 245,
+      "step": 0.5,
+      "filterBy": "(item.distance.value >= this.selected[0]) && (item.distance.value <= this.selected[1])",
+      "isSingleMarker": false // Shows 2 markers in case its true else 1
+    }
+
+
+
+- Select Box
+
+
+    {
+      "type": "Select", //This shows as a dropdown
+      "isOpen": true,
+      "selected": 2, // Index of the selected item
+      "data": [
+        {
+          "primary": "United States",
+          "secondary": "USD",
+          "filterBy": "item.fare.currency === 'USD'"
+        },
+        {
+          "primary": "India",
+          "secondary": "INR",
+          "filterBy": "item.fare.currency === 'INR'"
+        },
+        {
+          "primary": "Canada",
+          "secondary": "CAD",
+          "filterBy": "item.fare.currency === 'CAD'"
+        }
+      ] // Select items
+    }
+
+
+
+- Group
+
+It can be any combination of above metioned types.
+
+
+    {
+      //Any number of known filter types (Text,Option,Rating,Range,Select) can be used inside a group  
+      "type": "Group",
+      "isOpen": false,
+      "options": [
+        {
+          "title": "Price",
+          "code": "dp-price",
+          "type": "Range",
+          "selected": [],
+          "minValue": 100,
+          "maxValue": 545,
+          "step": 10,
+          "isOpen": true,
+          "isSingleMarker": false
+        },
+        {
+          "title": "Distance from city center",
+          "code": "dp-dist",
+          "type": "Range",
+          "selected": [],
+          "minValue": 0,
+          "maxValue": 10,
+          "step": 0.5,
+          "isOpen": true,
+          "isSingleMarker": true
+        }
+      ]
+    }
+
+How filterBy works
+-------------------
+In any of the filterBy expression, we need to understand what "item" and "this" means.
+- "item" in the expression points to individual item present in the array.
+- "this" points to the current filter in consideration.
+
+Lets check the example to understand this
+"filterBy": "item.fare.currency === 'CAD'"
+
+Here "item" refers to each item in hotel list, example: 
+
+
+    {
+        "id": "55613",
+        "name": "Express Inn",
+        "rating": 2,
+        "location": "Metropolitan area",
+        "phoneNumber": "702 567 1234",
+        "distance": {
+            "value": 10.86,
+            "unit": "Miles"
+        },
+        "image": "https://media-cdn.tripadvisor.com/media/photo-s/09/25/4b/78/park-hotel-clarke-quay.jpg",
+        "amenities": [
+            {name: "Restaurant"},
+            {name: "Wifi"},
+            {name: "Parking"}
+        ],
+        "room": {
+            "name": "Delux room-Twin bed",
+            "occupancy": "Max. 4 guests",
+            "inclusions": [
+                "Breakfast included",
+                "Pets allowed"
+            ],
+            "availability": "In demand - only 3 rooms left",
+            "benefits": [
+                "RESERVE NOW, PAY LATER",
+                "FREE CANCELLATION"
+            ]
+        },
+        "fare": {
+            "amount": 907.86,
+            "currency": "USD"
+        },
+        "discount": {
+            "amount": 57.0,
+            "currency": "USD"
+        },
+        "deal": "Limited Time: 1 night free on 3 nights booking",
+        "attractions": [
+            {
+                "name": "Transport",
+                "message": "Close to public transport"
+            },
+            {
+                "name": "Family",
+                "message": "Excellent choice for family Excellent choice for family"
+            }
+        ],
+        "userReview": {
+            "rating": "3.2",
+            "count": 500,
+            "type": "Excellent"
+        }
+    }
+
+Here "this" refers to the filter item, like:
+
+
+    {
+      "code": "hotel",
+      "title": "Hotel Name",
+      "type": "Text",
+      "helpText": "Search by activity/hotel name",
+      "isOpen": true,
+      "selected": "Holiday Inn",
+      "filterBy": "item.name.indexOf(this.selected) > -1",
+      //If data is present it is used for providing autosuggest else no  
+      "data": [
+        "Howard Johnson",
+        "Hilton Delux",
+        "Holiday Inn"
+      ]
+    }
+
+Other Attributes
+------------------
+
+A t-filter component accepts data and resources attributes. An example of **resources** object which t-filter expects:
+
+    {
+      "title": "Filter hotels by",
+      "resetButtonText": "Reset",
+      "applyButtonText": "Apply",
+      "moreLinkText": "Show more",
+      "lessLinkText": "Show less",
+      "optionResetText": "reset"
+    }
+
+An example of **resources** object which t-filter expects:
+
+    {
+      "title": "Filter hotels by",
+      "resetButtonText": "Reset",
+      "applyButtonText": "Apply",
+      "moreLinkText": "Show more",
+      "lessLinkText": "Show less",
+      "optionResetText": "reset"
+    }
+
+
+Events
+------------------
+Raises
+
+    t-filter-item-tap - { "code": "price","selected": []}
+    t-filter-apply    - [{"code": "curr","selected": []},{"code": "price","selected": [{"primary": "$75 to $124"}]}]
+    t-filter-{item code}-item-apply
+
+
+Listens
+
+    t-filter-item-reset - {"code":"price", "index":2} (any one can be provided)
+    t-filter-reset
+    t-filter-update-state - (data as returned from getState())  -- will be fired for dependent filter data update
+
+
+### Styling
+
+The following custom properties and mixins are available for styling:
+We prefix variable property with --v and mixins with --m followed by component name.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--v-t-hotel-info-anchor-color` | Font color for all anchor elements present in Filter | `#1976d2`
+`--v-t-font-dark` | Primary black color | `rgba(0,0,0,0.87)`
+`--v-t-font-light` | Secondary black color | `rgba(0,0,0,0.54)`
+`--v-t-font-lighter` | Lighter black color | `rgba(0,0,0,0.38)`
+
+
+### Example:
+
+    <t-filter
+        data=[[filterData]] 
+        settings=[[settings]]
+        resources=[[resources]]>
+        <span slot="filterplaceholder"></span>
+    </t-filter>
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="t-filter">
+  <template>
+    
+    <style include="t-style-utils"></style>
+    <style include="t-font-icons"></style>
+    <style>
+      :host {
+        --v-t-hotel-info-anchor-color: #1976d2;
+        --v-t-font-dark: rgba(0,0,0,0.87);
+        --v-t-font-light: rgba(0,0,0,0.54);
+        --v-t-font-lighter: rgba(0,0,0,0.38);
+      }
+      a{
+        color: var(--v-t-hotel-info-anchor-color,#1976d2);
+        text-decoration: none;
+        text-transform: uppercase;
+        margin-right: 10px;
+      }
+      
+      .filter-item{
+        border: 1px solid #e5e5e5;
+        margin-bottom: 16px;
+      }
+      
+      .filter-header{
+        color: var(--v-t-font-dark,rgba(0,0,0,0.87));
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #e5e5e5;
+      }
+      
+      .filter-header{
+        padding: 0 24px;
+        height: 48px;
+        line-height: 48px;
+      }
+
+      .filter-header h3{
+        padding: 0;
+        margin: 0;
+        font-weight: 400;
+        font-size: 16px;
+      }
+      
+      .chevron{
+        font-size: 24px;
+        cursor: pointer;
+        color: #717171;
+        display: inline-block;
+        line-height: 52px;
+      }
+      .filter-top-header {
+        font-size: 20px;
+        color: rgba(0,0,0,0.87);
+        font-weight: normal;
+        margin: 0;
+        padding: 0 0;
+        line-height: 48px;
+      }
+      .reset-apply-top-btn{
+        padding: 0 0 0;
+        margin: 0 0 0 24px;
+        line-height: 48px;
+      }
+      .filter-back {
+        float: left;
+        font-size: 24px;
+        color: var(--v-t-font-light, rgba(0,0,0,0.54));
+        line-height: 48px;
+        margin-right: 24px;
+      }
+      .filter-top-header-section {
+        padding-top: 15px;
+        margin-bottom: 10px;
+      }
+      @media screen and (max-width: 1024px) {
+        .filter-overlay{
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          background: rgba(255,255,255,0.7);
+        }
+        .filter-wrapper{
+          position: relative;
+          z-index: 1;
+          width: 325px;
+          padding: 0 16px;
+          box-shadow: 0 0 2px rgba(0,0,0,0.2);
+          height: 100%;
+          overflow: auto;
+          background: white;
+          box-sizing: border-box;
+        }
+        .filter-top-header-section {
+          padding-top: 5px;
+          margin-bottom: 5px;
+        }
+      }
+      @media screen and (max-width: 767px) {
+        .filter-wrapper {
+          width: 100%;
+        }
+        .filter-top-header-section {
+          border-top: 1px solid #e5e5e5;
+          border-bottom: 1px solid #e5e5e5;
+          margin-left: -16px;
+          box-sizing: border-box;
+          padding: 0 16px;
+          width: calc(100% + 32px);
+          margin-bottom: 20px;
+          padding-top: 0;
+        }
+      }
+    </style>
+    <div class="filter-overlay" on-tap="_filterHide"></div>
+    <div class="filter-wrapper">
+      <div class="clearfix filter-top-header-section">
+        <i class="icon-arrow-left filter-back visible-xs" on-tap="_filterHide"></i>
+        <h1 class="float-left filter-top-header hidden-xs">{{resources.title}}</h1>
+        <h1 class="float-left filter-top-header visible-xs">Filter</h1>
+        <a href="#." id="applyBtnTop" class="reset-apply-top-btn float-right visible-xs" on-tap="_applyFilters">{{resources.applyButtonText}}</a>
+        <a href="#." id="resetBtnTop" class="reset-apply-top-btn float-right" on-tap="_resetAllFilter">{{resources.resetButtonText}}</a>
+      </div>
+      <slot name="filterplaceholder"></slot>
+      <template is="dom-repeat" items={{data}}>
+        <div class=filter-item>
+          
+          <header class="filter-header clearfix">
+            
+            <h3 class="float-left">{{item.title}}</h3>
+
+            <span class="float-right chevron" on-tap="_toggleView" hidden$="[[!settings.collapsableHeader]]"><i class$="{{_chevronClass(item.isOpen)}}"></i></span>  
+
+            <span class="float-right reset-filter-link" hidden$="[[!settings.optionLevelReset]]" on-tap="_resetView"><a href="#">{{resources.optionResetText}}</a></span>
+            
+          </header>
+
+          <t-filter-block-content
+            resources="[[resources]]" 
+            on-t-filter-block-changed="_onChange" 
+            item="{{item}}"
+            is-open={{item.isOpen}}>
+          </t-filter-block-content>
+          
+        </div>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 't-filter',
+
+      properties: {
+        settings: Object,
+        _origData: {
+          type: Array,
+          value: []
+        },
+        data: Array,
+        resources: Object
+      },
+
+      listeners: {
+        't-filter-item-reset': '_resetView',
+        't-filter-reset': '_resetAllFilter',
+        't-filter-update-state': '_setState'
+      },
+
+      _clone: function(dataToClone){
+        return JSON.parse(JSON.stringify(dataToClone));
+      },
+
+      _setState: function(evt, data){
+        this.data = data;
+      },
+
+      getState: function(){
+        return this.data;
+      },
+
+      _getFormattedDataForFilter: function(filters, accArr){
+        var arr = accArr || [],
+            self = this;
+
+        filters.forEach(function(filter){
+
+          if(filter.type === "Group"){
+            self._getFormattedDataForFilter(filter.options, arr);
+          } else {
+            arr.push({
+              code: filter.code,
+              selected: filter.selected
+            });            
+          }
+        });
+
+        return arr;
+      },
+
+      _applyFilter: function(evt, data){
+        this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
+      },
+
+      _resetAllFilter: function(evt, data){
+        try{
+          evt.preventDefault();
+        } catch(e){
+
+        }
+        
+        this.data = this._clone(this._origData);
+        this.fire("t-filter-changed", this.data);
+      },
+      
+      // Show Hide Filter Block
+      _toggleView: function(evt){
+        var isOpenState = !evt.model.get("item").isOpen;
+        evt.model.set("item.isOpen", isOpenState);
+        this.updateStyles();
+      },
+      
+      // Reset Filter
+      _resetView: function(evt, resetData){
+        try{
+          evt.preventDefault();
+        } catch(e){
+
+        }
+
+        evt.preventDefault();
+        var index,
+            clonedFilterData;
+
+        // When reset custom event is triggered
+        if(resetData && typeof resetData.index === "number"){
+
+          index = resetData.index;
+          this._origData[index].isOpen = this.data[index].isOpen;
+          clonedFilterData = this._clone(this.data);
+          clonedFilterData[index] = this._origData[index];
+          this.set("data", []);
+          this.set("data", clonedFilterData);
+
+        } else {
+
+          // For reset from DOM, to make diff more efficient
+          index = evt.model.get("index");
+          this._origData[index].isOpen = this.data[index].isOpen;
+          evt.model.set("item", {});
+          evt.model.set("item", JSON.parse(JSON.stringify(this._origData[index])));
+        }
+
+        this.fire("t-filter-changed", this.data);
+      },
+
+      // Return Class for filter expand/collapse icon
+      _chevronClass: function(isOpen){
+        if(isOpen){
+          return 'icon-drop-up';
+        }
+        return 'icon-drop-down';
+      },
+
+      _assignId: function(data, code, index){
+        var self = this;
+
+        if(Array.isArray(data)){
+          data.forEach(function(dataItem, index){
+            if(dataItem.data || dataItem.options){
+              dataItem.__id = dataItem.code;
+              return self._assignId(dataItem.data || dataItem.options, dataItem.code, index);
+            } else {
+              dataItem.__id = dataItem.code || code + "_" + index;
+            }
+          })
+        } else {
+          data.__id = data.code || code + "_" + index;
+        }
+      },
+
+      _onChange: function(e, data){
+
+        if(data.item.type === "Text"){
+          // No action required, model updates automatically
+        }
+
+        if(data.item.type === "Option"){
+          // If checkbox
+          if(data.item.allowMultiSelect){
+            if(data.item.selected.indexOf(data.index) < 0 && data.value === true){
+              data.item.selected.push(data.index);
+            } else if(data.item.selected.indexOf(data.index) > -1 && data.value === false){
+              var foundAt = data.item.selected.indexOf(data.index);
+              data.item.selected.splice(foundAt, 1);
+            }
+          } else {
+            
+            // If radio
+            if(data.value){
+              data.item.selected = data.index;
+            } else {
+              data.item.selected = -1;
+            }
+          }
+        }
+
+        if(data.item.type === "Rating"){
+         if(data.item.selected.indexOf(data.index) < 0 && data.value === true){
+            data.item.selected.push(data.index);
+          } else if(data.item.selected.indexOf(data.index) > -1 && data.value === false){
+            var foundAt = data.item.selected.indexOf(data.index);
+            data.item.selected.splice(foundAt, 1);
+          }
+        }
+
+        if(data.item.type === "Range"){
+          if(data.item.isSingleMarker){
+            data.item.selected = [data.minValue];
+          } else {
+            data.item.selected = [data.minValue, data.maxValue];
+          }
+        }
+
+        if(data.item.type === "Select"){
+          data.item.selected = data.item.data.indexOf(data.option);
+        }
+
+        var evtData = {
+          code: data.item.code,
+          selected: data.item.selected
+        };
+        
+        this.fire("t-filter-item-tap", evtData);
+        this.fire("t-filter-"+data.item.code+"-item-apply", evtData);
+        this.fire("t-filter-changed", this.data);
+      },
+
+      ready: function(){
+
+        if(!this.data) return;
+
+        // create __id
+        this._assignId(this.data);
+
+        // Keep original data for reset
+        this._origData = JSON.parse(JSON.stringify(this.data));
+        this.fire("t-filter-changed", this.data);
+      },
+
+      _applyFilters: function(e) {
+        
+        try{
+          evt.preventDefault();
+          document.getElementById('tFilter').style.display = 'none';
+        } catch(e){
+
+        }
+
+        this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
+      }
+    });
+  </script>
+</dom-module>

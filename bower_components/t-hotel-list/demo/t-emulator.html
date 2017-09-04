@@ -1,0 +1,48 @@
+<link rel="import" href="../../polymer/polymer.html">
+<link rel="import" href="../t-hotel-list.html">
+
+<dom-module id="t-emulator">
+    <style>
+        :host {
+            /*--m-t-list-border: {*/
+            /*    border: 1px solid red;*/
+            /*};*/
+            /*--v-t-list-header-color: red;*/
+        }
+    </style>
+    <template>
+        <t-hotel-list
+            items=[[items]] 
+            settings=[[settings]] 
+            resources=[[resources]]>
+            
+            <!-- template to render when no data is present-->
+            <!-- Styling and content is not part of t-list component, should be done by consumer.-->
+            <span slot="noresults">
+                <div>{{resources.noResultsFound}}</div>
+                <div>Try a new search</div>
+                <!--<t-search></t-search>-->
+            </span>
+
+        </t-hotel-list>
+    </template>
+    <script>
+        Polymer({
+            is: "t-emulator",
+            properties: {
+                items: {
+                    type: Array,
+                    value: window._mocks.items
+                },
+                settings: {
+                    type: Object,
+                    value: window._mocks.settings
+                },
+                resources: {
+                    type: Object,
+                    value: window._mocks.resources
+                }
+            }
+        })
+    </script>
+</dom-module>

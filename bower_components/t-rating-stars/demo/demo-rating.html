@@ -1,0 +1,34 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-rating-stars.html">
+
+<dom-module id="demo-rating">
+    <template>
+        <style>
+            :host{
+                --t-rating-stars-filled-color: #7DB343;
+                --t-rating-stars-host: {
+                    background: red;
+                    margin: 0;
+                }
+            }
+        </style>
+
+        <t-rating-stars value="0.5" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="1" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="1.5" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="2.0" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="2.5" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="3" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="3.5" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="4" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="4.5" height="20" font-size="14"></t-rating-stars>
+        <t-rating-stars value="5" height="20" font-size="14"></t-rating-stars>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'demo-rating'
+        });
+    </script>
+
+</dom-module>

@@ -1,0 +1,31 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-hotel-result-loader.html">
+
+<dom-module id="t-emulator">
+    <template>
+        <t-hotel-result-loader
+          data=[[filterData]] 
+          settings=[[settings]]
+          resources=[[resources]]>
+        </t-hotel-result-loader>
+    </template>
+    <script>
+        Polymer({
+            is: "t-emulator",
+            properties: {
+                filterData: {
+                    type: Array,
+                    value: window._mocks.filterData
+                },
+                settings: {
+                    type: Object,
+                    value: window._mocks.settings
+                },
+                resources: {
+                    type: Object,
+                    value: window._mocks.resources
+                }
+            }
+        })
+    </script>
+</dom-module>
