@@ -1,0 +1,17 @@
+language: node_js
+node_js:
+- 6.9.5
+install:
+- "./scripts/ci/install.sh"
+script:
+- "./scripts/ci/deploy.sh"
+before_install:
+- openssl aes-256-cbc -K $encrypted_0d46ef0a66d9_key -iv $encrypted_0d46ef0a66d9_iv
+  -in deploy_key.enc -out deploy_key -d
+
+- chmod +x ./scripts/ci/install.sh
+- chmod +x ./scripts/ci/deploy.sh
+env:
+  global:
+  - ENCRYPTION_LABEL: "0d46ef0a66d9"
+  - COMMIT_AUTHOR_EMAIL: "loveprem073@gmail.com"
