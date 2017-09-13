@@ -8,8 +8,8 @@
     "bower": "*",
     "install": "^1.0.4",
     "paper-tags-input": "^1.2.6",
-    "t-hotel-item": "git+ssh://git@github.com/nxtComponent/t-hotel-item.git",
-    "t-tags-input": "git+ssh://git@github.com/nxtComponent/t-tags-input.git",
+    "t-hotel-item": "https://github.com/nxtComponent/t-hotel-item.git",
+    "t-tags-input": "https://github.com/nxtComponent/t-tags-input.git",
     "paper-dropdown-menu": "^1.5.1",
     "paper-listbox": "^1.1.3",
     "paper-item": "^1.2.2"
