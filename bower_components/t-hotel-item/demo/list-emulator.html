@@ -1,0 +1,41 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-hotel-item.html">
+
+<dom-module id="list-emulator">
+    <template>
+
+        <style>
+            :host {
+
+            }
+        </style>
+
+        <template is="dom-repeat" items="{{hotelList}}">
+            <t-hotel-item data="[[item]]"
+                          resources="[[resources]]"
+                          on-t-hotel-item-hero-img-tap="logClick"
+                          on-t-hotel-item-title-tap="logClick"
+                          on-t-hotel-item-show-details-tap="logClick"
+            ></t-hotel-item>
+        </template>
+
+    </template>
+    <script>
+        Polymer({
+            is: "list-emulator",
+            properties: {
+                hotelList: {
+                    type: Object,
+                    value: window._mocks.hotelList
+                },
+                resources: {
+                    type: Object,
+                    value: window._mocks.resources
+                }
+            },
+            logClick: function (evt, data) {
+                console.log(evt.type, data);
+            }
+        })
+    </script>
+</dom-module>

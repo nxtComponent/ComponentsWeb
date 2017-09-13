@@ -1,0 +1,20 @@
+{
+  "name": "t-homepage-deal",
+  "description": "Home page deal",
+  "main": "t-homepage-deal.html",
+  "dependencies": {    
+    "paper-tabs": "PolymerElements/paper-tabs#^2.0.0",
+    "iron-pages": "PolymerElements/iron-pages#^2.0.0",
+    "iron-media-query": "PolymerElements/iron-media-query#^2.0.0",
+    "iron-image": "PolymerElements/iron-image#^2.0.0",
+    "neon-animation": "PolymerElements/neon-animation#^2.0.0",
+    "paper-button": "PolymerElements/paper-button#^2.0.0",
+    "paper-spinner": "PolymerElements/paper-spinner#^2.0.0",
+    "iron-resizable-behavior": "PolymerElements/iron-resizable-behavior#^2.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs"
+  }
+}

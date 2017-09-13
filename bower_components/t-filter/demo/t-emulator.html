@@ -1,0 +1,37 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-filter.html">
+
+<dom-module id="t-emulator">
+    <template>
+        <t-filter
+            data=[[filterData]] 
+            settings=[[settings]]
+            resources=[[resources]]>
+
+            <!-- template to show placeholder just before filters start-->
+            <span slot="filterplaceholder">
+
+            </span>
+
+        </t-filter>
+    </template>
+    <script>
+        Polymer({
+            is: "t-emulator",
+            properties: {
+                filterData: {
+                    type: Array,
+                    value: window._mocks.filterData
+                },
+                settings: {
+                    type: Object,
+                    value: window._mocks.settings
+                },
+                resources: {
+                    type: Object,
+                    value: window._mocks.resources
+                }
+            }
+        })
+    </script>
+</dom-module>

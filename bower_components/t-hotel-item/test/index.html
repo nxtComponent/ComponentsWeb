@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>t-result-card test</title>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../t-hotel-item.html">
+
+    <script>
+
+    </script>
+</head>
+<body>
+
+<test-fixture id="basic">
+    <template>
+        <t-hotel-item></t-hotel-item>
+    </template>
+</test-fixture>
+
+<script>
+    suite('<t-hotel-item>', function () {
+
+        setup(function () {
+            hotelResult = fixture('basic');
+
+            mockEvent = {
+                preventDefault: function () {
+
+                }
+            };
+
+            sampleData = {
+                "id": "55610",
+                "name": "THE WESTIN LAKE LAS VEGAS RESORT & SPA",
+                "rating": 3,
+                "location": "Metropolitan area",
+                "phoneNumber": "702 567 1234",
+                "distance": {
+                    "value": 13.86,
+                    "unit": "Miles"
+                },
+                "image": "http://d3mj096p5q0e20.cloudfront.net/ti/HBD/55610/043509a_hb_a_001.jpg",
+                "amenities": [
+                    {name: "Restaurant", icon: "restaurant"},
+                    {name: "Wifi", icon: "wifi"},
+                    {name: "Parking", icon: "parking"}
+                ],
+                "room": {
+                    "name": "Delux room-Twin bed",
+                    "occupancy": "Max. 4 guests",
+                    "inclusions": [
+                        "Breakfast included",
+                        "Pets allowed"
+                    ],
+                    "availability": "In demand - only 3 rooms left",
+                    "benefits": [
+                        "RESERVE NOW, PAY LATER",
+                        "FREE CANCELLATION"
+                    ]
+                },
+                "fare": {
+                    "amount": 402.86,
+                    "currency": "USD"
+                },
+                "discount": {
+                    "amount": 57.0,
+                    "percent": '20%',
+                    "currency": "USD",
+                    "text": "Today 20% off"
+                },
+                "deal": "Limited Time: 1 night free on 3 nights booking",
+                "attractions": [
+                    {
+                        "name": "Transport",
+                        "message": "Close to public transport"
+                    },
+                    {
+                        "name": "Family",
+                        "message": "Excellent choice for family Excellent choice for family"
+                    }
+                ],
+                "userReview": {
+                    "rating": "3.4",
+                    "count": 500,
+                    "type": "Excellent"
+                }
+            };
+
+            sampleResource = {
+                "primaryAmenities": [
+                    {
+                        "name": "Restaurant",
+                        "ïcon": "food"
+                    },
+                    {
+                        "name": "Pool",
+                        "ïcon": "pool"
+                    },
+                    {
+                        "name": "Wifi",
+                        "icon": "wifi"
+                    },
+                    {
+                        "name": "Parking",
+                        "icon": "parking"
+                    },
+                    {
+                        "name": "Gym",
+                        "icon": "health"
+                    }
+                ],
+                "currencySymbols": [
+                    {
+                        "code": "USD",
+                        "symbol": "$"
+                    },
+                    {
+                        "code": "INR",
+                        "symbol": "₹"
+                    }
+                ],
+                "attractions": [
+                    {
+                        "name": "Transport",
+                        "icon": "transport"
+                    },
+                    {
+                        "name": "Family",
+                        "icon": "family"
+                    }
+                ],
+                "defaultImage": "",
+                "buttonText": "SEE AVAILABLE ROOMS"
+            };
+
+
+            hotelResult.data = Object.assign({}, sampleData);
+            hotelResult.resources = Object.assign({}, sampleResource);
+
+        });
+
+        test('Instantiation of element works', function () {
+            var element = fixture('basic');
+            assert.equal(element.tagName, 't-hotel-item'.toUpperCase());
+        });
+
+
+        // name [Done]
+        // location [Done]
+        // phoneNumber [Done]
+        // distance [Done]
+        // image [Done]
+        // amenities [Done]
+        // room [Done]
+        // Display of few cases can not be tested
+        // https://github.com/Polymer/polymer/issues/3507
+
+        // t-hotel-item-hero-img-tap [Done]
+        // t-hotel-item-show-details-tap [Done]
+        // t-hotel-item-title-tap [Done]
+
+
+        test('Displayed: hotel name', function () {
+            assert.equal(hotelResult.querySelector(".hotel-details.t-hotel-item").innerText.trim(), sampleData.name);
+        });
+
+        test('Displayed: images', function () {
+            // Two images will be rendered
+            // 1. Cover & 2.Inside image
+            assert.equal(hotelResult.querySelectorAll(".content-img img").length, 2);
+        });
+
+        test('Displayed: location', function () {
+            assert.equal(hotelResult.querySelector(".location-area").innerText.trim(), sampleData.location);
+        });
+
+        test('Displayed: phoneNumber', function () {
+            assert.equal(hotelResult.querySelector(".phone").innerText.trim(), sampleData.phoneNumber);
+        });
+
+        test('Displayed: distance', function () {
+            assert.equal(hotelResult.querySelector(".location-distance").innerText.trim(), "City Center: " + sampleData.distance.value + " " + sampleData.distance.unit);
+        });
+
+        test('Displayed: amenities', function (done) {
+            hotelResult.data = Object.assign({}, sampleData);
+            hotelResult.resources = Object.assign({}, sampleResource);
+
+            setTimeout(function () {
+                assert.equal(hotelResult.querySelectorAll("#amenities_Restaurant").length, 1);
+                assert.equal(hotelResult.querySelectorAll("#amenities_Wifi").length, 1);
+                assert.equal(hotelResult.querySelectorAll("#amenities_Parking").length, 1);
+                done();
+            });
+        });
+
+        test('Displayed: room name and occupancy', function (done) {
+            hotelResult.data = Object.assign({}, sampleData);
+            hotelResult.resources = Object.assign({}, sampleResource);
+            setTimeout(function () {
+                assert.equal(hotelResult.querySelector(".room-name").innerText.trim(), sampleData.room.name);
+                assert.equal(hotelResult.querySelector(".occupancy").innerText.trim(), sampleData.room.occupancy);
+                done();
+            });
+        });
+
+
+        test('Event Triggered: t-hotel-item-hero-img-tap', function (done) {
+            hotelResult.data = Object.assign({}, sampleData);
+
+            hotelResult.addEventListener('t-hotel-item-hero-img-tap', function (event) {
+                assert.equal(event.detail, sampleData.id);
+                done();
+            });
+
+            hotelResult._heroImageTap(mockEvent);
+        });
+
+        test('Event Triggered: t-hotel-item-show-details-tap', function (done) {
+            hotelResult.data = Object.assign({}, sampleData);
+
+            hotelResult.addEventListener('t-hotel-item-show-details-tap', function (event) {
+                assert.equal(event.detail, sampleData.id);
+                done();
+            });
+
+            hotelResult._showDetails(mockEvent);
+        });
+
+        test('Event Triggered: t-hotel-item-title-tap', function (done) {
+            hotelResult.data = Object.assign({}, sampleData);
+
+            hotelResult.addEventListener('t-hotel-item-title-tap', function (event) {
+                assert.equal(event.detail, sampleData.id);
+                done();
+            });
+
+            hotelResult._titleTap(mockEvent);
+        });
+    });
+</script>
+</body>
+</html>

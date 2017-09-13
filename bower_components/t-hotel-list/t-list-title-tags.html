@@ -1,0 +1,119 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../t-tags-input/t-tags-input.html">
+
+<dom-module id="t-list-title-tags">
+    <template>
+        <style>
+            .container {
+                padding: 24px;
+                border-bottom: 1px solid #EBEBEB;
+            }
+            h2.list-title {
+                margin: 0;
+                font-size: 24px;
+                font-weight: 400;
+                color: var(--v-t-list-header-color, rgba(0,0,0,0.87));
+            }
+            t-tags-input {
+                margin-left: -10px;
+                padding-top: 0px;
+            }
+            @media screen and (max-width: 1024px) {
+                .container {
+                    padding: 16px;
+                }
+                h2.list-title {
+                    font-size: 20px;
+                    font-weight: 300;
+                }
+            }
+            @media screen and (max-width: 767px) {
+                h2.list-title {
+                    margin-bottom: 0;
+                }
+                .hidden-xs {
+                    display: none;
+                }
+            }
+
+            .filter-error-message {
+              background: #37474f;
+              color: white;
+              margin: 6px 0 6px 10px;
+              padding: 0 24px;
+              font-size: 16px;
+              font-weight: normal;
+              -webkit-font-smoothing: antialiased;
+              line-height: 48px;
+            }
+            .filter-error-message i {
+              font-size: 24px;
+              display: inline-block;
+              vertical-align: middle;
+              line-height: 48px;
+              margin-right: 10px;
+            }
+        </style>
+
+        <div class="container">
+            <h2 class="list-title">{{compiledTitle}}</h2>
+            <h3 class="filter-error-message" hidden$="{{!showNoResultBar}}"><i class="icon-alert"></i>No results meet your filter criteria. Try removing some filters to see more results. <a href="#.">Remove all</a></h3>
+            <t-tags-input on-tag-item-remove="_removedTag" class="hidden-xs" tags="{{tags}}" size="medium" tag-color="#E6F0FA" font-color="#90959C">
+            </t-tags-input>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 't-list-title-tags',
+            properties: {
+                showNoResultBar: Boolean,
+                total: Number,
+                compiledTitle: String,
+                filteredtitle: String,
+                title: String,
+                filteredItemCount: Number,
+                enableAdd: {
+                    type: Boolean,
+                    value: false
+                },
+                tags: {
+                    type: Array,
+                    observer: '_tagsChanged',
+                    notify: true,
+                    value: []
+                }
+            },
+            _removedTag: function(e, data){
+                this.fire("t-tags-input-updated", data.index);
+            },
+            template: function(markup, tmplvars, prefix) {
+                if(!markup) return "";
+                for (var key in tmplvars) {
+                    if (tmplvars[key] instanceof Object) {
+                        markup = this.template(markup, tmplvars[key], prefix ? (prefix + "." + key) : key);
+                    } else {
+                        markup = markup.replace(new RegExp("\{\{" + (prefix ? (prefix + "." + key) : key) + "\}\}", "gi"), tmplvars[key])
+                    };
+                }
+                return markup;
+            },
+            _tagsChanged: function(){
+                if (this.tags.length) {
+                    this.compiledTitle = this.template(this.filteredtitle, {
+                        current: this.filteredItemCount,
+                        total: this.total
+                    });
+                } else {
+                    this.compiledTitle = this.template(this.title, {
+                        total: this.total
+                    });
+                }
+            },
+            attached: function() {
+                this._tagsChanged();
+            }
+        });
+    </script>
+</dom-module>

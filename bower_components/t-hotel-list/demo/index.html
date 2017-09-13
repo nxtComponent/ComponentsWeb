@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+  <title>t-list demo</title>
+
+  <!--To Load mock data-->
+  <!--TODO: Remove this-->
+  <script src="./mock-data.js"></script>
+
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+  <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+  <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+  <link rel="import" href="./t-emulator.html">
+
+  <style>
+    .vertical-section-container {
+      max-width: 1024px !important;
+    }
+    demo-snippet {
+      box-shadow: none !important;
+    }
+    .demo.demo-snippet{
+      box-shadow: none !important;
+      padding: 0 !important;
+    }
+    @media screen and (max-width: 767px) {
+      body {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+      }
+    }
+  </style>
+
+  <style is="custom-style" include="demo-pages-shared-styles">
+
+  </style>
+</head>
+
+<body>
+  <div class="vertical-section-container centered">
+    <h3>Basic t-list demo</h3>
+    <demo-snippet>
+      <template>
+        <t-emulator></t-emulator>
+      </template>
+    </demo-snippet>
+  </div>
+</body>
+
+</html>

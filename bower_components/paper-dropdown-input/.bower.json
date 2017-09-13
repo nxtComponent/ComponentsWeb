@@ -1,0 +1,45 @@
+{
+  "name": "paper-dropdown-input",
+  "description": "A paper-input that provides the user with input suggestions",
+  "main": "paper-dropdown-input.html",
+  "authors": [
+    "Glenn Dirkx <glenn.dirkx@gmail.com>"
+  ],
+  "license": "MIT",
+  "keywords": [
+    "web-components",
+    "Polymer",
+    "dropdown",
+    "search"
+  ],
+  "homepage": "https://github.com/Juravenator/paper-dropdown-input",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#1.9 - 2",
+    "iron-icon": "^2.0.0",
+    "iron-icons": "^2.0.1",
+    "paper-item": "^2.0.0",
+    "paper-listbox": "^2.0.0",
+    "paper-input": "^2.0.1",
+    "paper-dropdown-menu": "^2.0.0",
+    "iron-input": "^2.0.0",
+    "paper-icon-button": "^2.0.0",
+    "web-animations-js": "web-animations/web-animations-js#^2.3.1"
+  },
+  "version": "2.5.1",
+  "_release": "2.5.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "2.5.1",
+    "commit": "13ca9c0b65eede289630236096a7d58131b93b0f"
+  },
+  "_source": "https://github.com/Juravenator/paper-dropdown-input.git",
+  "_target": "^2.4.1",
+  "_originalSource": "Juravenator/paper-dropdown-input"
+}

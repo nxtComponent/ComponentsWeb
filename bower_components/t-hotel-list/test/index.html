@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>t-filter test</title>
+
+    <script src="../demo/mock-data.js"></script>
+
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="../../web-component-tester/browser.js"></script>
+
+    <link rel="import" href="../demo/t-emulator.html">
+  </head>
+  <body>
+    <test-fixture id="basic">
+      <template>
+        <t-emulator></t-emulator>
+      </template>
+    </test-fixture>
+
+    <script>
+      suite('<t-hotel-list>', function() {
+          resourceData = _mocks.settings;
+          settingsData = _mocks.resources;
+          hotelData = _mocks.items;
+
+        setup(function () {
+            tResult = fixture('basic').querySelector("t-hotel-list");
+        });
+
+        test('If items are filtered properly or not, based on filtered criteria', function (done) {
+          
+          assert.equal(tResult._getFilteredItem().filtersApplied, false);
+          assert.equal(tResult._getFilteredItem().data, undefined);
+
+          tResult.filters = [{
+            "code": "hotel",
+            "title": "Hotel Name",
+            "type": "Text",
+            "helpText": "Search by activity/hotel name",
+            "isOpen": true,
+            "selected": "Holiday Inn",
+            "filterBy": "item.name.indexOf(this.selected) > -1",
+            "data": [
+              "Howard Johnson",
+              "Hilton Delux",
+              "Holiday Inn"
+            ]
+          }];
+          assert.equal(tResult._getFilteredItem().filtersApplied, true);
+          assert.equal(tResult._getFilteredItem().data.length, 1);
+          assert.equal(tResult._getFilteredItem().data[0].name, "Holiday Inn");
+
+          tResult.filters = [{
+            "code": "hotel",
+            "title": "Hotel Name",
+            "type": "Text",
+            "helpText": "Search by activity/hotel name",
+            "isOpen": true,
+            "selected": "Lorem Ipsum",
+            "filterBy": "item.name.indexOf(this.selected) > -1",
+            "data": [
+              "Howard Johnson",
+              "Hilton Delux",
+              "Holiday Inn"
+            ]
+          }];
+          assert.equal(tResult._getFilteredItem().filtersApplied, true);
+          assert.equal(tResult._getFilteredItem().data.length, 0);
+
+          tResult.filters = [{
+            "code": "hotel",
+            "title": "Hotel Name",
+            "type": "Text",
+            "helpText": "Search by activity/hotel name",
+            "isOpen": true,
+            "selected": "Holiday Inn",
+            "filterBy": "item.name.indexOf(this.selected) > -1",
+            "data": [
+              "Howard Johnson",
+              "Hilton Delux",
+              "Holiday Inn"
+            ]
+          }];
+          assert.equal(tResult._getFilteredItem().filtersApplied, true);
+          assert.equal(tResult._getFilteredItem().data[0].name, "Holiday Inn");
+
+          tResult.filters = [{
+            "code": "price",
+            "title": "Budget/Price",
+            "type": "Option",
+            "isOpen": false,
+            "defaultOptions": 5,
+            "selected": [0],
+            "allowMultiSelect": true,
+            "enableSelectionOveride": true,
+            "data": [
+              {
+                "primary": "Less than $400",
+                "secondary": "150",
+                "filterBy": "item.fare.amount < 400"
+              },
+              {
+                "primary": "$75 to $124",
+                "secondary": "85",
+                "filterBy": "(item.fare.amount > 75) && (item.fare.amout < 124)"
+              },
+              {
+                "primary": "$125 to $199",
+                "secondary": "250",
+                "isEnabled": false,
+                "filterBy": "(item.fare.amount > 125) && (item.fare.amout < 199)"
+              }
+            ],
+            "allowSearch": true
+          }];
+          assert.equal(tResult._getFilteredItem().data.length, 9);
+
+          tResult.filters = [{
+            "title": "Rating",
+            "type": "Rating",
+            "code": "rating",
+            "isOpen": false,
+            "defaultOptions": 5,
+            "selected": [0],
+            "allowMultiSelect": true,
+            "enableSelectionOveride": true,
+            "data": [
+              {
+                "primary": 5,
+                "secondary": "150",
+                "filterBy": "item.rating === 5"
+              },
+              {
+                "primary": 4,
+                "secondary": "85",
+                "filterBy": "item.rating === 4"
+              },
+              {
+                "primary": 3.5,
+                "secondary": "250",
+                "filterBy": "item.rating === 3.5"
+              },
+              {
+                "primary": 3,
+                "secondary": "270",
+                "filterBy": "item.rating === 3"
+              },
+              {
+                "primary": 0,
+                "secondary": "10",
+                "filterBy": "item.rating === 0"
+              }
+            ],
+            "allowSearch": false
+          }];
+          assert.equal(tResult._getFilteredItem().data.length, 2);
+          done();
+        });
+
+        test('If items are sorted properly or not, based on sort option selected', function (done) {
+            flush(function(){
+              var ascSortedData = ["Express Inn", "FabHotel Rajwada", "Holiday Inn", "Novotel", "Novotel Inn", "Prisma Inn", "Rahee", "Sheraton Grand", "Sheraton Hotel"];
+
+              tResult.filters = [];
+              tResult._reflectSortedView("name", "asc");
+              ascSortedData.forEach(function(name, index){
+                assert.equal(tResult._itemsToShow[index].name, name);
+              });
+
+              
+              setTimeout(function(){
+                document.querySelector(".show-more-div").click();
+                assert.equal(tResult._itemsToShow.length, 12);
+
+                setTimeout(function(){
+                  document.querySelector(".show-more-div").click();
+                  assert.equal(tResult._itemsToShow.length, 15);
+                  done();
+                }, 1000);
+              }, 1000);
+
+            });
+        });
+
+      });
+    </script>
+  </body>
+</html>

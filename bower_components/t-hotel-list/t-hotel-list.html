@@ -1,0 +1,746 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="./t-list-title-tags.html">
+<link rel="import" href="./t-list-sort.html">
+<link rel="import" href="../t-hotel-item/t-hotel-item.html">
+<link rel="import" href="../iron-list/iron-list.html">
+<link rel="import" href="../t-font-icons/t-font-icons.html">
+
+<!--
+PENDING: 
+
+    1. All functionality/feature related to filter is yet to do with filter component.
+    2. Test cases
+
+
+`t-hotel-list` displays the result component which consists Title, Tags, View Changer, Sort and List Component (of t-hotel-item).
+
+This accepts **items**, **settings** and **resources** attributes.
+
+Here **items** should contain an array of item which is required to create a list of t-hotel-item component. It shoud follow the contract of t-hotel-item component.
+
+Here **settings** should contain these mandatory attributes to display data properly:
+
+    "pageSize"
+    "showPage"
+    "enableScrollTop"
+    "views"
+    "sorting"
+    
+Sample data:
+
+    {
+        "pageSize": 3,
+        "showPage": 3,
+        "enableScrollTop": true,
+        "views": [
+            {
+                "title": "List",
+                "code": "lst",
+                "iconName": "list",
+                "selected": true
+            },
+            {
+                "title": "Map",
+                "iconName": "map",
+                "code": "map"
+            }
+        ],
+        "sorting": [
+            {
+                "title": "Hotel Name",
+                "property": "name",
+                "sortBy": "asc"
+            },
+            {
+                "title": "Star rating", 
+                "property": "rating",
+                "options": [
+                    {
+                        "title": "Rating (1-5)",
+                        "sortBy": "asc"
+                    },
+                    {
+                        "title": "Rating (5-1)",
+                        "sortBy": "dsc",
+                        "selected": true
+                    }
+                ]
+            },
+            {
+                "title": "Recommended",
+                "property": "relevance",
+                "sortBy": "dsc",
+                "selected": true,
+                //in this case the sort will not allow multiple clicks for toggle
+                "singleState": true
+            }
+        ]
+    };
+    
+Here **resources** should contain these mandatory attributes to display data properly (This requires all the resources required by t-hotel-item as well):
+
+    primaryAmenities
+    currencySymbols
+    attractions
+    defaultImage
+    buttonText
+
+Sample data:
+
+    {
+        "title": "We found {{total}} hotels for your search",
+        "filteredTitle": "We found {{current}}/{{total}} hotels for your search",
+        "loadMoreResultsText": "SHOW MORE RESULTS",
+        "loadingMoreResultsText": "LOADING ...",
+        "noResultsFound": "Oops! no results found for your search. Pelase try again",
+        "noFilteredResults": "Sorry no results found for your applied filters.",
+        "listUpdateText": "Updating results",
+        "icons": {
+            "list": "list-icon",
+            "map": "map"
+        },
+        "primaryAmenities": [
+            {
+                "name": "Restaurant",
+                "icon": "food"
+            },
+            {
+                "name": "Pool",
+                "ïcon": "pool"
+            },
+            {
+                "name": "Wifi",
+                "icon": "wifi"
+            },
+            {
+                "name": "Parking",
+                "icon": "parking"
+            },
+            {
+                "name": "Gym",
+                "icon": "health"
+            }
+        ],
+        "currencySymbols": [
+            {
+                "code": "USD",
+                "symbol": "$"
+            },
+            {
+                "code": "INR",
+                "symbol": "₹"
+            }
+        ],
+        "attractions": [
+            {
+                "name": "Transport",
+                "icon": "transport"
+            },
+            {
+                "name": "Family",
+                "icon": "family"
+            }
+        ],
+        "defaultImage": "",
+        "buttonText": "SEE AVAILABLE ROOMS"
+    };
+    
+    
+### Example:
+
+    <t-hotel-list
+        items=[[items]] 
+        settings=[[settings]] 
+        resources=[[resources]]
+        on-t-hotel-item-hero-img-tap="logClick"
+        on-t-hotel-item-title-tap="logClick"
+        on-t-hotel-item-show-details-tap="logClick">
+        
+        <span slot="noresults">
+            <div>{{resources.noResultsFound}}</div>
+            <div>Try a new search</div>
+            <t-search></t-search>
+        </span>
+    </t-hotel-list>
+    
+### Styling
+
+The following custom properties and mixins are available for styling:
+We prefix variable property with --v and mixins with --m followed by component name.
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--m-t-list-border` | Mixin for defining border details. | ``
+`--v-t-list-header-color` | Variable for defining header text colour | `#000`
+
+
+
+@demo demo/index.html 
+-->
+
+<dom-module id="t-hotel-list">
+    <template>
+
+        <style include="t-font-icons"></style>
+
+        <style>
+             :host {
+                display: block;
+                border: 1px solid #EBEBEB;
+                @apply --m-t-list-border;
+            }
+
+            .list-container {
+                padding: 24px;
+            }
+
+            .marginer {
+                padding: 0;
+            }
+
+            .scroll-to-top {
+                position: fixed;
+                bottom: 130px;
+                right: 40px;
+                background: #1976d2;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                text-align: center;
+                display: none;
+            }
+
+            .scroll-to-top.show {
+                display: block;
+            }
+
+            .scroll-to-top i {
+                font-size: 24px;
+                color: white;
+                line-height: 40px;
+                cursor: pointer;
+            }
+
+            .show-more-div {
+                box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+                padding: 10px;
+                text-align: center;
+                color: rgba(0, 0, 0, 0.54);
+                cursor: pointer;
+            }
+
+            @media screen and (max-width: 1024px) {
+                .list-container {
+                    padding: 16px;
+                }
+            }
+        </style>
+
+        <div class="container">
+
+            <t-list-title-tags filtered-item-count="{{_itemsToShow.length}}" show-no-result-bar="{{showNoResultBar}}" on-t-tags-input-updated="_tagsUpdated"
+                tags="{{filterTags}}" title="[[resources.title]]" total="[[items.length]]" filteredtitle="[[resources.filteredTitle]]">
+            </t-list-title-tags>
+
+            <div class="utility-bar">
+
+                <t-list-sort settings=[[settings]] resources=[[resources]] on-t-hotel-list-sort="_sortListView">
+                </t-list-sort>
+
+            </div>
+            <div class="list-container">
+                <template is="dom-if" if="[[!items.length]]">
+                    <slot name="noresults"></slot>
+                </template>
+                <iron-list id="list" items="[[_itemsToShow]]" as="item" scroll-target="document" on-scroll-to="scrollToIndex">
+                    <template>
+                        <t-hotel-item class="marginer" data="[[item]]" support-number="[[supportNumber]]" resources="[[resources]]" on-t-hotel-item-hero-img-tap="_hotelInfoHeroImgTap"
+                            on-t-hotel-item-title-tap="_hotelInfoTitleTap" on-t-hotel-item-show-details-tap="_hotelInfoShowDetailsTap">
+                        </t-hotel-item>
+                    </template>
+                </iron-list>
+                <template is="dom-if" if="[[showLoadMore]]">
+                    <div class="load-more" on-tap="_loadMore">
+                        <div class="show-more-div">[[resources.loadMoreResultsText]]</div>
+                        <div class="loader"></div>
+                    </div>
+                </template>
+                <div class="scroll-to-top" id="scrollToTop" on-tap="_scrollToTop"><i class="icon-arrow-up"></i>
+                </div>
+            </div>
+        </div>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 't-hotel-list',
+            properties: {
+                filterTags: Array,
+                showNoResultBar: {
+                    type: Boolean,
+                    value: false
+                },
+
+                filters: {
+                    type: Array,
+                    observer: '_filtersChanged',
+                    value: [],
+                    notify: true
+                },
+
+                items: Array,
+                _sortedItems: Array,
+                _itemsToShow: Array,
+                sortDetails: Object,
+
+                showLoadMore: Boolean,
+                currentPage: Number,
+                settings: {
+                    type: Object
+                },
+                resources: {
+                    type: Object
+                },
+                supportNumber:String
+            },
+
+            listeners: {
+                't-list-set-filter': '_filtersChanged'
+            },
+
+            _compareStringsAsc: function (first, second) {
+                var a = first.toUpperCase();
+                var b = second.toUpperCase();
+                if (a < b) return -1;
+                if (a > b) return 1;
+                return 0;
+            },
+
+            _compareStringsDsc: function (first, second) {
+                var a = first.toUpperCase();
+                var b = second.toUpperCase();
+                if (a < b) return 1;
+                if (a > b) return -1;
+                return 0;
+            },
+
+            _compareNumberAsc: function (first, second) {
+                return (first - second);
+            },
+
+            _compareNumberDsc: function (first, second) {
+                return (second - first);
+            },
+
+            _sortData: function (dataArr, attr, type) {
+                var sortedArray = dataArr.slice();
+                var self = this;
+
+                // If nested keys
+                // Support 2 levels of nesting only
+                if (attr.indexOf(".") > -1) {
+                    if (type === "dsc") {
+                        var keys = attr.split(".");
+                        sortedArray.sort(function (a, b) {
+                            var aValue = a[keys[0]][keys[1]],
+                                bValue = b[keys[0]][keys[1]];
+
+                            if (typeof aValue === "string") return self._compareStringsDsc(aValue, bValue);
+                            if (typeof aValue === "number") return self._compareNumberDsc(aValue, bValue);
+                        });
+                    } else {
+                        var keys = attr.split(".");
+                        sortedArray.sort(function (a, b) {
+                            var aValue = a[keys[0]][keys[1]],
+                                bValue = b[keys[0]][keys[1]];
+
+                            if (typeof aValue === "string") return self._compareStringsAsc(aValue, bValue);
+                            if (typeof aValue === "number") return self._compareNumberAsc(aValue, bValue);
+                        });
+                    }
+                } else {
+                    if (type === "dsc") {
+                        sortedArray.sort(function (a, b) {
+                            var aValue = a[attr],
+                                bValue = b[attr];
+
+                            if (typeof aValue === "string") return self._compareStringsDsc(aValue, bValue);
+                            if (typeof aValue === "number") return self._compareNumberDsc(aValue, bValue);
+                        });
+                    } else {
+                        sortedArray.sort(function (a, b) {
+                            var aValue = a[attr],
+                                bValue = b[attr];
+
+                            if (typeof aValue === "string") return self._compareStringsAsc(aValue, bValue);
+                            if (typeof aValue === "number") return self._compareNumberAsc(aValue, bValue);
+                        });
+                    }
+                }
+
+                return sortedArray;
+            },
+
+            _setLoadMoreFlag: function () {
+                this.showLoadMore = this._sortedItems.length > this._itemsToShow.length ? true : false;
+            },
+
+            _loadMore: function () {
+
+                if (!this.showLoadMore) return;
+
+                var startIndex = this.settings.pageSize * this.currentPage;
+                ++this.currentPage;
+                var endIndex = this.settings.pageSize * this.currentPage;
+
+                for (var i = startIndex; i < endIndex; i++) {
+                    this.$.list.push('items', this._sortedItems[i]);
+                }
+
+                this._setLoadMoreFlag();
+                this.fire("t-list-more-results-tap", this.currentPage);
+            },
+
+            _scrollToTop: function () {
+
+                var scrollDuration = 300,
+                    cosParameter = window.scrollY / 2,
+                    scrollCount = 0,
+                    oldTimestamp = performance.now();
+
+                function step(newTimestamp) {
+                    scrollCount += Math.PI / (scrollDuration / (newTimestamp - oldTimestamp));
+                    if (scrollCount >= Math.PI) window.scrollTo(0, 0);
+                    if (window.scrollY === 0) return;
+                    window.scrollTo(0, Math.round(cosParameter + cosParameter * Math.cos(scrollCount)));
+                    oldTimestamp = newTimestamp;
+                    window.requestAnimationFrame(step);
+                }
+
+                window.requestAnimationFrame(step);
+            },
+
+            _arrayContains: function (arr, key, val) {
+                return arr.find(function (item) {
+                    return item[key] === val;
+                });
+            },
+
+            _arayUnique: function (arrData) {
+                var newArr = [],
+                    self = this;
+                arrData.forEach(function (item) {
+                    if (!self._arrayContains(newArr, "id", item.id)) {
+                        newArr.push(item);
+                    }
+                });
+                return newArr;
+            },
+
+            _ifSelected: function (filters) {
+                return filters.find(function (filter) {
+                    if (Array.isArray(filter.selected) && filter.selected.length) {
+                        return filter;
+                    } else if (filter.selected) {
+                        return filter;
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            _getFilteredItem: function (filterOptions, filteredItemsAccumulator) {
+                var self = this,
+                    filtersToIterate = filterOptions || this.filters || [],
+                    filteredItems = filteredItemsAccumulator || self.items.slice();
+
+                filtersToIterate.forEach(function (filter) {
+
+                    if (filter.type === "Text") {
+
+                        if (typeof filter.selected !== "undefined" && filter.selected.trim().length > 0) {
+                            filteredItems = filteredItems.filter(function (item) {
+                                function evalFilter() {
+                                    return eval(filter.filterBy);
+                                }
+                                return evalFilter.call(filter);
+                            });
+                        }
+
+
+
+                    } else if ((filter.type === "Option" && filter.allowMultiSelect) ||
+                        (filter.type === "Rating" && filter.allowMultiSelect)) {
+
+                        if (typeof filter.selected !== "undefined" && filter.selected.length) {
+                            var eachFiltered = [];
+                            filter.selected.forEach(function (selectedFilter) {
+                                eachFiltered = eachFiltered.concat(filteredItems.filter(function (item) {
+                                    // function evalFilter() {
+                                    //     return eval(filter.data[selectedFilter].filterBy);
+                                    // }
+                                    // return evalFilter.call(filter);
+                                    var filterBy = filter.data[selectedFilter].filterBy;
+                                    if(typeof filterBy =="function"){
+                                        return filterBy.call(filter, item);
+                                    }
+                                    else
+                                        return eval(filterBy);
+                                }));
+                            });
+                            filteredItems = eachFiltered;
+                        }
+
+
+
+                    } else if ((filter.type === "Option" && !filter.allowMultiSelect) ||
+                        (filter.type === "Rating" && !filter.allowMultiSelect)) {
+
+                        if (typeof filter.selected === "number" && filter.selected > -1) {
+                            filteredItems = filteredItems.filter(function (item) {
+                                var filterBy = filter.data[filter.selected].filterBy;
+                                if(typeof filterBy =="function"){
+                                    return filterBy.call(filter, item);
+                                }
+                                else
+                                  return eval(filterBy);
+                                // function evalFilter() {
+                                //     return eval(filter.data[filter.selected].filterBy);
+                                // }
+                                // return evalFilter.call(filter);
+                            });
+                        }
+
+
+                    } else if (filter.type === "Range") {
+
+                        if (typeof filter.selected !== "undefined" && filter.selected.length) {
+                            filteredItems = filteredItems.filter(function (item) {
+                                function evalFilter() {
+                                    return eval(filter.filterBy);
+                                }
+                                return evalFilter.call(filter);
+                            });
+                        }
+                    } else if (filter.type === "Select") {
+
+                        if (typeof filter.selected === "number" && filter.selected > -1) {
+                            filteredItems = filteredItems.filter(function (item) {
+                                function evalFilter() {
+                                    return eval(filter.data[filter.selected].filterBy);
+                                }
+                                return evalFilter.call(filter);
+                            });
+                        }
+                    } else if (filter.type === "Group") {
+
+                        filteredItems = self._getFilteredItem(filter.options, filteredItems.data || filteredItems || []);
+                    }
+                });
+
+                if (filtersToIterate.length) {
+                    return {
+                        data: this._arayUnique(filteredItems.data || filteredItems || []),
+                        filtersApplied: this._ifSelected(filtersToIterate) ? true : false
+                    }
+                } else {
+                    return {
+                        filtersApplied: false
+                    }
+                }
+            },
+
+            _reflectSortedView: function (attr, type) {
+
+                if (!this.settings) return;
+                this.currentPage = this.settings.showPage;
+                this.showNoResultBar = false;
+
+                var filteredItemsData = this._getFilteredItem(),
+                    filteredItems = filteredItemsData.data;
+
+                if (!filteredItems || !filteredItems.length) {
+                    filteredItems = this.items;
+
+                    if (filteredItemsData.filtersApplied) {
+                        this.showNoResultBar = true;
+                    }
+                }
+
+                if (attr) {
+                    this._sortedItems = this._sortData(filteredItems, attr, type);
+                } else {
+                    this._sortedItems = filteredItems;
+                }
+
+                this._itemsToShow = [];
+
+                this._itemsToShow = this._sortedItems.slice(0, this.settings.pageSize * this.settings.showPage);
+                this._setLoadMoreFlag();
+
+                this.sortDetails = {
+                    attr: attr,
+                    type: type
+                };
+            },
+
+            _sortListView: function (e, sortData) {
+                var clickedDataProperty;
+                if (sortData.isExtra) {
+                    clickedDataProperty = sortData.options[sortData.selectedIndex].property;
+                } else {
+                    clickedDataProperty = sortData.property;
+                }
+
+                this._reflectSortedView(clickedDataProperty, sortData.sortBy);
+            },
+
+            _debounce: function (func, wait, immediate) {
+                var timeout;
+                return function () {
+                    var context = this, args = arguments;
+                    var later = function () {
+                        timeout = null;
+                        if (!immediate) func.apply(context, args);
+                    };
+                    var callNow = immediate && !timeout;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                    if (callNow) func.apply(context, args);
+                };
+            },
+
+            ready: function () {
+                var self = this;
+
+                self.debounce('filter', function () {
+                    self._reflectSortedView();
+                }, 300);
+            },
+
+            attached: function () {
+                var self = this,
+                    toggleCheck = function () {
+                        if (window.scrollY > 200) {
+                            self.toggleClass("show", true, self.$.scrollToTop);
+                        } else {
+                            self.toggleClass("show", false, self.$.scrollToTop);
+                        }
+                    },
+                    debouncedScroll = this._debounce(toggleCheck, 250);
+
+                window.addEventListener('scroll', debouncedScroll);
+            },
+
+            _hotelInfoHeroImgTap: function (e) {
+                this.fire("t-hotel-item-hero-img-tap", e.model.item);
+            },
+
+            _hotelInfoTitleTap: function (e) {
+                this.fire("t-hotel-item-title-tap", e.model.item);
+            },
+
+            _hotelInfoShowDetailsTap: function (e) {
+                e.stopPropagation();
+                this.fire("t-hotel-item-show-details-tap", e.model.item);
+                return false;
+            },
+
+
+            _selectedTypeOfFilter: function (filter) {
+                if (filter.type === "Text" || filter.type === "Select" || (filter.type === "Option" && !filter.allowMultiSelect)) {
+
+                    // In case of type Text
+                    // In case of type Select
+                    // In case of type Option and when its of type radio
+                    return "string";
+                } else if ((filter.type === "Option" && filter.allowMultiSelect) || filter.type === "Rating" || filter.type === "Range") {
+
+                    // In case of type Rating
+                    // In case of type Range
+                    // In case of type Option and when its of type checkbox
+                    return "array";
+                } else if (filter.type === "Group") {
+                    return "group";
+                }
+            },
+
+            _findSelectedFilters: function (filters) {
+                var selected = [],
+                    self = this;
+                if (filters)
+                    filters.forEach(function (filter) {
+
+                        if (self._selectedTypeOfFilter(filter) === "string") {
+                            if ((filter.type === "Option" && typeof filter.allowMultiSelect === "boolean") || filter.type === "Select") {
+                                if ((typeof filter.selected === "number" && filter.selected > -1) || (typeof filter.selected === "string" && filter.selected.length)) {
+                                    selected.push(filter.title);
+                                }
+                            } else {
+                                if (typeof filter.selected !== "undefined" && filter.selected.trim().length > 0) {
+                                    selected.push(filter.title);
+                                }
+                            }
+                        }
+
+                        if (self._selectedTypeOfFilter(filter) === "array") {
+                            if (typeof filter.selected !== "undefined" && Array.isArray(filter.selected) && filter.selected.length > 0) {
+                                selected.push(filter.title);
+                            }
+                        }
+
+                        if (self._selectedTypeOfFilter(filter) === "group") {
+                            var groupSelected = self._findSelectedFilters(filter.options);
+                            if (groupSelected.length) {
+                                selected.push(filter.title);
+                            }
+                        }
+                    });
+
+                return selected;
+            },
+
+            _filtersChanged: function (filters) {
+                var self = this;
+                Array.isArray(filters) ? this.filters = filters : undefined;
+                this.filterTags = this._findSelectedFilters(this.filters);
+
+                // Filter data && sort based on selection
+                this.debounce('filter', function () {
+                    self._reflectSortedView();
+                }, 300);
+            },
+
+            _unselectFilter: function (filters) {
+                var self = this;
+
+                filters.forEach(function (filter) {
+
+                    if (self.filterTags.indexOf(filter.title) < 0) {
+                        if (self._selectedTypeOfFilter(filter) === "string") {
+                            if (filter.type === "Option" && typeof filter.allowMultiSelect === "boolean") {
+                                filter.selected = -1;
+                            } else {
+                                filter.selected = "";
+                            }
+
+                        } else if (self._selectedTypeOfFilter(filter) === "array") {
+                            filter.selected = [];
+                        } else if (self._selectedTypeOfFilter(filter) === "group") {
+                            self._unselectFilter(filter.options);
+                        }
+                    }
+                });
+            },
+
+            _tagsUpdated: function () {
+                setTimeout(function(){
+                    this._unselectFilter(this.filters);
+                    this.fire("t-list-filter-updated", this.filter);
+                }.bind(this), 50);
+                
+            }
+        });
+    </script>
+</dom-module>
