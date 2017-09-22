@@ -52,7 +52,7 @@
     <iron-media-query query="(max-width: 1024px) and (min-width: 768px)" query-matches="{{_isTablet}}"></iron-media-query>
 
     <div class="layout footer">
-      <paper-tabs hidden$="[[_hideIfNullOrEmpty(sections)]]" noink on-iron-select="_tabChanged" scrollable selected-class="selected-tab" class=" flex tabs" selected="{{_selected}}">
+      <paper-tabs hidden$="[[_hideIfNullOrEmpty(sections)]]" noink="" on-iron-select="_tabChanged" scrollable="" selected-class="selected-tab" class=" flex tabs" selected="{{_selected}}">
         <template is="dom-repeat" items="[[sections.options]]">
           <paper-tab>[[item.title]]</paper-tab>
         </template>
@@ -62,12 +62,12 @@
         <template is="dom-repeat" items="[[sections.options]]">
           <div>
             <ul class="items">
-              <template is="dom-if" if="[[!sections.openInNewTab]]" >
+              <template is="dom-if" if="[[!sections.openInNewTab]]">
                 <template is="dom-repeat" items="[[item.options]]" as="option">
                   <li><a href$="[[option.url]]" class="section-link">[[option.title]]</a></li>
                 </template>
               </template>
-              <template is="dom-if" if="[[sections.openInNewTab]]" >
+              <template is="dom-if" if="[[sections.openInNewTab]]">
                 <template is="dom-repeat" items="[[item.options]]" as="option">
                   <li><a target="_blank" class="section-link" href$="[[option.url]]">[[option.title]]</a></li>
                 </template>
@@ -77,20 +77,20 @@
         </template>
       </iron-pages>
 
-      <div hidden$="[[_hideIfPrimaryAndSecondaryLinksNotPresent(links)]]"  class$="[[_centerAlignIfResponsive(_notDesktop)]] layout links-section section">
-        <div hidden$="[[_hideIfNullOrEmpty(links.primaryLinks)]]" class$="[[ _centerAlignIfResponsive(_notDesktop) ]] flex layout primary-links" >
+      <div hidden$="[[_hideIfPrimaryAndSecondaryLinksNotPresent(links)]]" class$="[[_centerAlignIfResponsive(_notDesktop)]] layout links-section section">
+        <div hidden$="[[_hideIfNullOrEmpty(links.primaryLinks)]]" class$="[[ _centerAlignIfResponsive(_notDesktop) ]] flex layout primary-links">
           <div class="contact-label">[[links.primaryLinks.title]]</div>
-          <div class$="{{_centerAlignIfResponsive(_notDesktop)}} layout details" >
-            <template is="dom-repeat" items="[[links.primaryLinks.options]]" >
-              <div >[[item.title]]
-                <template is="dom-repeat" items="[[item.options]]" as="option" >
+          <div class$="{{_centerAlignIfResponsive(_notDesktop)}} layout details">
+            <template is="dom-repeat" items="[[links.primaryLinks.options]]">
+              <div>[[item.title]]
+                <template is="dom-repeat" items="[[item.options]]" as="option">
                   <a href$="[[option.url]]" class="primary-link">[[option.title]]</a>
                 </template>
               </div>
             </template>
           </div>
         </div>
-        <div hidden$="[[_hideSectionIfOverflowOrSectionNotPresent(links, _notDesktop)]]" class$="[[_handleFollowAlignment(_isMobile) ]] wrap layout secondary-links" >
+        <div hidden$="[[_hideSectionIfOverflowOrSectionNotPresent(links, _notDesktop)]]" class$="[[_handleFollowAlignment(_isMobile) ]] wrap layout secondary-links">
           <div class="contact-label">[[links.secondaryLinks.title]]</div>
           <div id="social" class="social-links">
             <template is="dom-repeat" items="[[links.secondaryLinks.options]]">
@@ -100,7 +100,7 @@
         </div>
       </div>
 
-      <div hidden$="[[_hideSectionIfOverflowOrSectionNotPresent(links, _notDesktop, _toToggle)]]" class$="[[ _centerAlignIfResponsive(_notDesktop) ]] links-section layout secondary-links" >
+      <div hidden$="[[_hideSectionIfOverflowOrSectionNotPresent(links, _notDesktop, _toToggle)]]" class$="[[ _centerAlignIfResponsive(_notDesktop) ]] links-section layout secondary-links">
         <div class="contact-label">[[links.secondaryLinks.title]]</div>
         <div class="social-links">
           <template is="dom-repeat" items="[[links.secondaryLinks.options]]">
@@ -112,7 +112,7 @@
         <content></content>
       </div>
       <div hidden$="[[_hideSectionIfDesktopOrNoStartLinks(links)]]" class="layout horizontal bottom-section section">
-        <div class$="{{_centerAlignIfResponsive(_notDesktop)}} flex layout bottom-start-links" >
+        <div class$="{{_centerAlignIfResponsive(_notDesktop)}} flex layout bottom-start-links">
           <ul class="layout horizontal link-list ">
             <template is="dom-repeat" items="[[links.bottomStartLinks]]">
               <li><a href$="[[item.url]]" class="bottom-link">[[item.title]]</a></li>
@@ -138,30 +138,30 @@
 Polymer({
   is: 't-footer',
 
-  listeners:{
+  listeners: {
     't-footer-section-select': '_changeSelectedSection'
   },
 
   properties: {
-/**
-		 * Fired when tab is changed
-		 *
-		 * @event t-footer-tab-changed
-		 * @param {Number} index Currently selected item
-		 */
+    /**
+    		 * Fired when tab is changed
+    		 *
+    		 * @event t-footer-tab-changed
+    		 * @param {Number} index Currently selected item
+    		 */
 
     /** returns true if the device is mobile*/
-    _isMobile:{
+    _isMobile: {
       type: Boolean
     },
 
-    _toToggle:{
+    _toToggle: {
       type: Boolean,
       value: true
     },
 
     /** returns true if the device is tablet*/
-    _isTablet:{
+    _isTablet: {
       type: Boolean
     },
 
@@ -170,7 +170,7 @@ Polymer({
      *
      * @type {{title: String, options: Array}}
      */
-    sections:{
+    sections: {
       type: Object,
       value: null,
       notify: true
@@ -181,7 +181,7 @@ Polymer({
      *
      * @type {{primaryLinks: Object,secondaryLinks: Object,bottomStartLinks: Object, bottomEndLinks: Object}}
      */
-    links:{
+    links: {
       type: Object,
       notify: true,
       value: null
@@ -189,7 +189,7 @@ Polymer({
     },
 
     /** returns index of selected tab*/
-    _selected:{
+    _selected: {
       type: Number,
       value: 0
     },
@@ -203,94 +203,87 @@ Polymer({
     },
 
     /** returns true If no content is passed*/
-    _hideIfNoChildren:{
+    _hideIfNoChildren: {
       type: Boolean,
       value: true
     }
   },
 
-  ready: function(){
+  ready: function ready() {
     this._hideIfNoChildren = Polymer.dom(this).children.length === 0;
-    if(this.sections && this.sections.selectedIndex)
-      this._selected = this.sections.selectedIndex;
+    if (this.sections && this.sections.selectedIndex) this._selected = this.sections.selectedIndex;
   },
 
-  _isSmallScreen: function(isTablet, isMobile){
+  _isSmallScreen: function _isSmallScreen(isTablet, isMobile) {
     return isTablet || isMobile;
   },
 
-  _centerAlignIfResponsive: function(_notDesktop){
-    const primaryLinks = this._hideIfNullOrEmpty(this.links.primaryLinks);
-    const secondaryLinks = this._hideIfNullOrEmpty(this.links.secondaryLinks);
-    if(this._isMobile)
-      return "vertical ";
-    if(primaryLinks !== secondaryLinks)
-      return "horizontal center-justified";
-    if(!this._hideIfNullOrEmpty(this.links.secondaryLinks) && this._hideIfContentOverflowHappens(this.links)){
+  _centerAlignIfResponsive: function _centerAlignIfResponsive(_notDesktop) {
+    var primaryLinks = this._hideIfNullOrEmpty(this.links.primaryLinks);
+    var secondaryLinks = this._hideIfNullOrEmpty(this.links.secondaryLinks);
+    if (this._isMobile) return "vertical ";
+    if (primaryLinks !== secondaryLinks) return "horizontal center-justified";
+    if (!this._hideIfNullOrEmpty(this.links.secondaryLinks) && this._hideIfContentOverflowHappens(this.links)) {
       return "horizontal center-justified";
     }
     return "horizontal";
   },
 
-  _handleFollowAlignment: function(_isMobile){
-    return _isMobile? "center-justified vertical": "end-justified horizontal";
+  _handleFollowAlignment: function _handleFollowAlignment(_isMobile) {
+    return _isMobile ? "center-justified vertical" : "end-justified horizontal";
   },
 
-  _hideIfNoSections: function(sections){
-    return (!sections || sections.length === 0);
+  _hideIfNoSections: function _hideIfNoSections(sections) {
+    return !sections || sections.length === 0;
   },
 
-  _hideIfContentOverflowHappens: function(links,_isMobile){
-    if(links.secondaryLinks){
+  _hideIfContentOverflowHappens: function _hideIfContentOverflowHappens(links, _isMobile) {
+    if (links.secondaryLinks) {
       var options = links.secondaryLinks.options;
-      return ((options && options.length> 5) || this._isTablet || this._isMobile);
+      return options && options.length > 5 || this._isTablet || this._isMobile;
     }
     return false;
   },
 
-  _hideSectionIfOverflowOrSectionNotPresent: function(links, notDesktop, toToggle){
+  _hideSectionIfOverflowOrSectionNotPresent: function _hideSectionIfOverflowOrSectionNotPresent(links, notDesktop, toToggle) {
     var secondaryLinks = links.secondaryLinks;
-    if(secondaryLinks){
+    if (secondaryLinks) {
       var options = secondaryLinks.options;
-      let result = this._hideIfNoSections(options) || this._hideIfContentOverflowHappens(this.links, notDesktop);
-      return toToggle? !result : result;
+      var result = this._hideIfNoSections(options) || this._hideIfContentOverflowHappens(this.links, notDesktop);
+      return toToggle ? !result : result;
     }
     return true;
   },
 
-  _hideIfPrimaryAndSecondaryLinksNotPresent: function(links){
-    if(!links || (this._hideIfNullOrEmpty(links.primaryLinks) && this._hideIfNullOrEmpty(links.secondaryLinks)))
-    return true;
-    else
-    return false;
+  _hideIfPrimaryAndSecondaryLinksNotPresent: function _hideIfPrimaryAndSecondaryLinksNotPresent(links) {
+    if (!links || this._hideIfNullOrEmpty(links.primaryLinks) && this._hideIfNullOrEmpty(links.secondaryLinks)) return true;else return false;
   },
 
-  _hideIfNullOrEmpty: function(sections){
+  _hideIfNullOrEmpty: function _hideIfNullOrEmpty(sections) {
     return !(sections && sections.options && sections.options.length > 0);
   },
 
-  _tabChanged:function(e, index){
-    this.fire('t-footer-section-changed',index);
+  _tabChanged: function _tabChanged(e, index) {
+    this.fire('t-footer-section-changed', index);
   },
 
   /** Returns current state of the footer **/
-  getState: function(){
-    this.sections.selectedIndex =  this._selected;
+  getState: function getState() {
+    this.sections.selectedIndex = this._selected;
     return {
       sections: this.sections,
       links: this.links
     };
   },
 
-  _hideSectionIfDesktopOrNoStartLinks: function(links, notDesktop){
+  _hideSectionIfDesktopOrNoStartLinks: function _hideSectionIfDesktopOrNoStartLinks(links, notDesktop) {
     var bottomStartLinks = links.bottomStartLinks;
-    return (!(bottomStartLinks && bottomStartLinks.length > 0) || notDesktop) 
+    return !(bottomStartLinks && bottomStartLinks.length > 0) || notDesktop;
   },
 
-  _changeSelectedSection: function(e, detail){
+  _changeSelectedSection: function _changeSelectedSection(e, detail) {
     this.sections.selectedIndex = detail.index;
   }
 
-});
-</script>
+});</script>
 </dom-module>

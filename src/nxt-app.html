@@ -46,12 +46,12 @@
 
 
     <app-header-layout>
-      <app-header disabled>
+      <app-header disabled="">
         <t-header data="[[_headerData]]" user="[[_user]]"></t-header>
       </app-header>
 
       <template is="dom-if" if="[[pageLoader]]">
-        <paper-progress indeterminate class="blue"></paper-progress>
+        <paper-progress indeterminate="" class="blue"></paper-progress>
       </template>
 
       <div class="page">
@@ -59,13 +59,13 @@
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
 
           <home-page name="home" page-loader="{{pageLoader}}" api-base-url="{{apiBaseUrl}}"></home-page>
-          <hotel-result-page name="hotel-result" support-number="[[hotelSupportNumber]]" api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute=[[subroute]] page-model=[[routeModel]]></hotel-result-page>
-          <hotel-details-page name="hotel-details" page-loader="{{pageLoader}}" subroute=[[subroute]] page-model=[[routeModel]]></hotel-details-page>
+          <hotel-result-page name="hotel-result" support-number="[[hotelSupportNumber]]" api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-result-page>
+          <hotel-details-page name="hotel-details" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-details-page>
 
           <view404-page name="view404">
-            </my-view404>
+            
 
-        </iron-pages>
+        </view404-page></iron-pages>
 
       </div>
 
@@ -78,295 +78,260 @@
 
   </template>
 
-  <script>
-    class NxtApp extends Polymer.Element {
-
-      static get is() { return 'nxt-app'; }
-
-      static get properties() {
-        return {
-          page: {
-            type: String,
-            reflectToAttribute: true,
-            observer: '_pageChanged',
-          },
-          pageLoader: {
-            type: Boolean,
-            notify: true
-          },
-          rootPattern: String,
-          routeData: Object,
-          subroute: String,
-          hotelSupportNumber:{
-            type:String,
-            value:'987654321'
-          },
-          apiBaseUrl:{
-            type:String,
-            value:'https://0k9d3x84bl.execute-api.us-east-1.amazonaws.com/dev'
-          },
-          _headerData: {
-            type: Object,
-            value: function () {
-              return this._getHeaderData();
-            }
-          },
-          _footerLinks: {
-            type: Object,
-            value: function () {
-              return this._getFooterLinks()
-            }
-          },
-          _footerSections: {
-            type: Object,
-            value: function () {
-              return window.footerDealSection;
-            }
-          },
-
-          _user: {
-            type: Object,
-            value: {
-              "isLoggedIn": false,
-              "preLogin": {
-                "title": "Sign Up / Sign In",
-                "icon": "account-circle",
-                "code": "signup",
-                "url": "/register"
-              },
-              "postLogin": {
-                "title": "John Doe",
-                "icon": "account-circle",
-                "code": "signedin",
-                "type": "select",
-                "selectedItem": 0
-              }
-            }
-          }
-
-
-        };
-      }
-
-      static get observers() {
-        return [
-          '_routePageChanged(routeData.page)',
-        ];
-      }
-
-      constructor() {
-        super();
-
-        // Get root pattern for app-route, for more info about `rootPath` see:
-        // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
-        // this.rootPattern = (new URL(this.rootPath)).pathname;
-        this.rootPattern = '/';
-      }
-
-      ready() {
-        super.ready();
-
-        this.addEventListener('page-redirect', this._redirect.bind(this));
-      }
-
-      _routePageChanged(page) {
-
-        if (page === undefined) {
-          return;
-        }
-
-        // If no page was found in the route data, page will be an empty string.
-        // Deault to 'view1' in that case.
-        this.page = page || 'home';
-
-        // Close a non-persistent drawer when the page & route are changed.
-        // if (!this.$.drawer.persistent) {
-        //   this.$.drawer.close();
-        // }
-      }
-
-      _pageChanged(page) {
-        // Load page import on demand. Show 404 page if fails
-        var resolvedPageUrl = this.resolveUrl("pages/" + page + '-page.html');
-        Polymer.importHref(
-          resolvedPageUrl,
-          null,
-          this._showPage404.bind(this),
-          true);
-      }
-
-      _showPage404() {
-        this.page = 'view404';
-      }
-
-      _getHeaderData() {
-
-        var data = {
-          logo: {
-            imageUrl: "https://s3.amazonaws.com/travelnxt-graphics/Backoffice/20043/Images/38cac74e-a177-432e-8c97-507b35f67c69",
-            url: '/'
-          },
-          primaryMenu: {
-            selectedIndex: 0,
-            items: [
-              {
-                label: 'Hotel',
-                icon: 'maps:hotel'
-              },
-              {
-                label: 'Car',
-                icon: 'maps:car'
-              }]
-          },
-          topLeftToolbar: [
-            {
-              "title": "1800-958-1000",
-              "icon": "communication:phone",
-              "url": "tel:18009581000"
-            },
-            {
-              "title": "enquiry@travelnxt.com",
-              "icon": "mail",
-              "url": "mailto:enquiry@travelnxt.com"
-            }
-          ],
-          topEndMenu: [
-            {
-              "code": "ctr-sel",
-              "label": "Country",
-              "isIconMenu": true,
-              "selectedItem": "0",
-              "eventName": "country_changed",
-              "options": [
-                { "icon": "/images/af.svg", "title": "United State(English)", "value": "en-us" },
-                { "icon": "/images/in.svg", "title": "India(English)", "value": "en-in" }
-              ]
-            },
-            {
-              "code": "currency-sel",
-              "isIconMenu": false,
-              "label": "Currency",
-              "selectedItem": "0",
-              "eventName": "currency_changed",
-              "options": [
-                { title: "Australian Dollar", value: "AUD" },
-                { title: "Brazilian Real ", value: "BRL" },
-                { title: "Danish Krone", value: "DKK" },
-                { title: "Czech Koruna", value: "CZK" },
-                { title: "Canadian Dollar", value: "CAD" },
-                { title: "US Dollar", value: "USD" }
-              ]
-            }
-          ],
-
-          mainToolbar: [
-
-          ],
-          recentSearch: {
-
-          }
-        };
-        return data;
-      }
-
-      _getFooterLinks() {
-        return {
-          "primaryLinks": {
-            "title": "Contact Us",
-            "options": [
-              {
-                "title": "Ph.:",
-                "options": [
-                  {
-                    "title": "+215 (801) 4567",
-                    "url": "tel:+2158014567"
-                  },
-                  {
-                    "title": "+215 (802) 6789",
-                    "url": "tel:+2158026789"
-                  }
-                ]
-              },
-              {
-                "title": "Fax:",
-                "options": [
-                  {
-                    "title": "215-123-7890",
-                    "url": "tel:+2151237890"
-                  }
-                ]
-              },
-              {
-                "title": "Email:",
-                "options": [
-                  {
-                    "title": "enquiry@travelnxt.com",
-                    "url": "mailto:enquiry@travelnxt.com"
-                  }
-                ]
-              }
-            ]
-          },
-          "secondaryLinks": {
-            "title": "Follow Us",
-            "options": [
-              {
-                "icon": 'https://image.flaticon.com/icons/svg/174/174855.svg',
-                "url": ""
-              },
-              {
-                "icon": 'https://image.flaticon.com/icons/svg/174/174848.svg',
-                "url": ""
-              }
-            ]
-          },
-          "bottomStartLinks": [
-            {
-              "title": "About Us",
-              "url": ""
-            },
-            {
-              "title": "About Us",
-              "url": ""
-            },
-            {
-              "title": "Privacy Policy",
-              "url": ""
-            },
-            {
-              "title": "Terms Of Use",
-              "url": ""
-            },
-            {
-              "title": "Legal Disclamer",
-              "url": ""
-            },
-            {
-              "title": "Contact Us",
-              "url": "",
-              "openInNewTab": false
-            }
-          ],
-          "bottomEndLinks": [
-            {
-              "title": "@ 2017 Mystique All rights reserved"
-            }
-          ]
-        }
-      }
-
-      _redirect(e) {
-
-        if (e.detail && e.detail.url) {
-          window.history.pushState({}, null, e.detail.url);
-          window.dispatchEvent(new CustomEvent('location-changed'));
-          // this.set("route.path", e.detail.url);
-          // this.routeModel =e.detail.routeModel;
-        }
-      }
-
+  <script>var NxtApp = function (_Polymer$Element) {
+  babelHelpers.inherits(NxtApp, _Polymer$Element);
+  babelHelpers.createClass(NxtApp, null, [{
+    key: 'is',
+    get: function get() {
+      return 'nxt-app';
     }
+  }, {
+    key: 'properties',
+    get: function get() {
+      return {
+        page: {
+          type: String,
+          reflectToAttribute: true,
+          observer: '_pageChanged'
+        },
+        pageLoader: {
+          type: Boolean,
+          notify: true
+        },
+        rootPattern: String,
+        routeData: Object,
+        subroute: String,
+        hotelSupportNumber: {
+          type: String,
+          value: '987654321'
+        },
+        apiBaseUrl: {
+          type: String,
+          value: 'https://0k9d3x84bl.execute-api.us-east-1.amazonaws.com/dev'
+        },
+        _headerData: {
+          type: Object,
+          value: function value() {
+            return this._getHeaderData();
+          }
+        },
+        _footerLinks: {
+          type: Object,
+          value: function value() {
+            return this._getFooterLinks();
+          }
+        },
+        _footerSections: {
+          type: Object,
+          value: function value() {
+            return window.footerDealSection;
+          }
+        },
 
-    window.customElements.define(NxtApp.is, NxtApp);
-  </script>
+        _user: {
+          type: Object,
+          value: {
+            "isLoggedIn": false,
+            "preLogin": {
+              "title": "Sign Up / Sign In",
+              "icon": "account-circle",
+              "code": "signup",
+              "url": "/register"
+            },
+            "postLogin": {
+              "title": "John Doe",
+              "icon": "account-circle",
+              "code": "signedin",
+              "type": "select",
+              "selectedItem": 0
+            }
+          }
+        }
+
+      };
+    }
+  }, {
+    key: 'observers',
+    get: function get() {
+      return ['_routePageChanged(routeData.page)'];
+    }
+  }]);
+
+  function NxtApp() {
+    babelHelpers.classCallCheck(this, NxtApp);
+
+    // Get root pattern for app-route, for more info about `rootPath` see:
+    // https://www.polymer-project.org/2.0/docs/upgrade#urls-in-templates
+    // this.rootPattern = (new URL(this.rootPath)).pathname;
+    var _this = babelHelpers.possibleConstructorReturn(this, (NxtApp.__proto__ || Object.getPrototypeOf(NxtApp)).call(this));
+
+    _this.rootPattern = '/';
+    return _this;
+  }
+
+  babelHelpers.createClass(NxtApp, [{
+    key: 'ready',
+    value: function ready() {
+      babelHelpers.get(NxtApp.prototype.__proto__ || Object.getPrototypeOf(NxtApp.prototype), 'ready', this).call(this);
+
+      this.addEventListener('page-redirect', this._redirect.bind(this));
+    }
+  }, {
+    key: '_routePageChanged',
+    value: function _routePageChanged(page) {
+
+      if (page === undefined) {
+        return;
+      }
+
+      // If no page was found in the route data, page will be an empty string.
+      // Deault to 'view1' in that case.
+      this.page = page || 'home';
+
+      // Close a non-persistent drawer when the page & route are changed.
+      // if (!this.$.drawer.persistent) {
+      //   this.$.drawer.close();
+      // }
+    }
+  }, {
+    key: '_pageChanged',
+    value: function _pageChanged(page) {
+      // Load page import on demand. Show 404 page if fails
+      var resolvedPageUrl = this.resolveUrl("pages/" + page + '-page.html');
+      Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
+    }
+  }, {
+    key: '_showPage404',
+    value: function _showPage404() {
+      this.page = 'view404';
+    }
+  }, {
+    key: '_getHeaderData',
+    value: function _getHeaderData() {
+
+      var data = {
+        logo: {
+          imageUrl: "https://s3.amazonaws.com/travelnxt-graphics/Backoffice/20043/Images/38cac74e-a177-432e-8c97-507b35f67c69",
+          url: '/'
+        },
+        primaryMenu: {
+          selectedIndex: 0,
+          items: [{
+            label: 'Hotel',
+            icon: 'maps:hotel'
+          }, {
+            label: 'Car',
+            icon: 'maps:car'
+          }]
+        },
+        topLeftToolbar: [{
+          "title": "1800-958-1000",
+          "icon": "communication:phone",
+          "url": "tel:18009581000"
+        }, {
+          "title": "enquiry@travelnxt.com",
+          "icon": "mail",
+          "url": "mailto:enquiry@travelnxt.com"
+        }],
+        topEndMenu: [{
+          "code": "ctr-sel",
+          "label": "Country",
+          "isIconMenu": true,
+          "selectedItem": "0",
+          "eventName": "country_changed",
+          "options": [{ "icon": "/images/af.svg", "title": "United State(English)", "value": "en-us" }, { "icon": "/images/in.svg", "title": "India(English)", "value": "en-in" }]
+        }, {
+          "code": "currency-sel",
+          "isIconMenu": false,
+          "label": "Currency",
+          "selectedItem": "0",
+          "eventName": "currency_changed",
+          "options": [{ title: "Australian Dollar", value: "AUD" }, { title: "Brazilian Real ", value: "BRL" }, { title: "Danish Krone", value: "DKK" }, { title: "Czech Koruna", value: "CZK" }, { title: "Canadian Dollar", value: "CAD" }, { title: "US Dollar", value: "USD" }]
+        }],
+
+        mainToolbar: [],
+        recentSearch: {}
+      };
+      return data;
+    }
+  }, {
+    key: '_getFooterLinks',
+    value: function _getFooterLinks() {
+      return {
+        "primaryLinks": {
+          "title": "Contact Us",
+          "options": [{
+            "title": "Ph.:",
+            "options": [{
+              "title": "+215 (801) 4567",
+              "url": "tel:+2158014567"
+            }, {
+              "title": "+215 (802) 6789",
+              "url": "tel:+2158026789"
+            }]
+          }, {
+            "title": "Fax:",
+            "options": [{
+              "title": "215-123-7890",
+              "url": "tel:+2151237890"
+            }]
+          }, {
+            "title": "Email:",
+            "options": [{
+              "title": "enquiry@travelnxt.com",
+              "url": "mailto:enquiry@travelnxt.com"
+            }]
+          }]
+        },
+        "secondaryLinks": {
+          "title": "Follow Us",
+          "options": [{
+            "icon": 'https://image.flaticon.com/icons/svg/174/174855.svg',
+            "url": ""
+          }, {
+            "icon": 'https://image.flaticon.com/icons/svg/174/174848.svg',
+            "url": ""
+          }]
+        },
+        "bottomStartLinks": [{
+          "title": "About Us",
+          "url": ""
+        }, {
+          "title": "About Us",
+          "url": ""
+        }, {
+          "title": "Privacy Policy",
+          "url": ""
+        }, {
+          "title": "Terms Of Use",
+          "url": ""
+        }, {
+          "title": "Legal Disclamer",
+          "url": ""
+        }, {
+          "title": "Contact Us",
+          "url": "",
+          "openInNewTab": false
+        }],
+        "bottomEndLinks": [{
+          "title": "@ 2017 Mystique All rights reserved"
+        }]
+      };
+    }
+  }, {
+    key: '_redirect',
+    value: function _redirect(e) {
+
+      if (e.detail && e.detail.url) {
+        window.history.pushState({}, null, e.detail.url);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        // this.set("route.path", e.detail.url);
+        // this.routeModel =e.detail.routeModel;
+      }
+    }
+  }]);
+  return NxtApp;
+}(Polymer.Element);
+
+window.customElements.define(NxtApp.is, NxtApp);</script>
 </dom-module>

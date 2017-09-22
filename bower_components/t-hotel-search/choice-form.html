@@ -213,10 +213,9 @@ The form handles below mentioned scenarios on its own.
         <div class="container1">
             <form is="iron-form" id="form" method="post" action="/form/handler">
                 <div id="Adult">
-                    <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount"
-                        required auto-validate error-message="Enter" value="{{room.adult}}">
+                    <paper-dropdown-menu label="{{adultLabel}}" id$="adult{{_displayId()}}" on-iron-select="_onCount" class="inputAdultCount" required="" auto-validate="" error-message="Enter" value="{{room.adult}}">
                         <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="0">
-                            <template is='dom-repeat' items='[[_getAdultCountList(searchOption.minAdultCount, searchOption.maxAdultCount)]]'>
+                            <template is="dom-repeat" items="[[_getAdultCountList(searchOption.minAdultCount, searchOption.maxAdultCount)]]">
                                 <paper-item value="[[item]]">[[item]]</paper-item>
                             </template>
                         </paper-listbox>
@@ -226,10 +225,9 @@ The form handles below mentioned scenarios on its own.
                 </div>
 
                 <div class="childs">
-                    <paper-dropdown-menu label="{{childLabel}}" id="child" on-selected-item-changed='_onCount' class="inputChildCount" required
-                        auto-validate error-message="Enter Child Count" value="{{room.child}}">
+                    <paper-dropdown-menu label="{{childLabel}}" id="child" on-selected-item-changed="_onCount" class="inputChildCount" required="" auto-validate="" error-message="Enter Child Count" value="{{room.child}}">
                         <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content" selected="0">
-                            <template is='dom-repeat' items='[[_getChildCountList(searchOption.minChildCount, searchOption.maxChildCount)]]'>
+                            <template is="dom-repeat" items="[[_getChildCountList(searchOption.minChildCount, searchOption.maxChildCount)]]">
                                 <paper-item value="[[item]]">[[item]]</paper-item>
                             </template>
                         </paper-listbox>
@@ -238,12 +236,11 @@ The form handles below mentioned scenarios on its own.
                     <input is="iron-input" type="hidden" bind-value="[[room.child]]">
                 </div>
 
-                <template is='dom-repeat' items={{room.childAge}} id="childAge">
+                <template is="dom-repeat" items="{{room.childAge}}" id="childAge">
                     <div class="childs1">
-                        <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" required auto-validate error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}"
-                            id="child{{_childID(index)}}" value="{{item.age}}" invalid="[[item.invalid]]">
+                        <paper-dropdown-menu on-keydown="_tabPress" class="ageOfChild" required="" auto-validate="" error-message="Enter age" label="{{resources.child}} {{_childIndex(index)}}" id="child{{_childID(index)}}" value="{{item.age}}" invalid="[[item.invalid]]">
                             <paper-listbox slot="dropdown-content" id="listBox" class="dropdown-content">
-                                <template is='dom-repeat' items='[[_getChildAgeList(searchOption.minChildAge, searchOption.maxChildAge)]]'>
+                                <template is="dom-repeat" items="[[_getChildAgeList(searchOption.minChildAge, searchOption.maxChildAge)]]">
                                     <paper-item value="{{item}}">{{item}}</paper-item>
                                 </template>
                             </paper-listbox>
@@ -256,161 +253,151 @@ The form handles below mentioned scenarios on its own.
 
     </template>
     <script>
-        Polymer({
+Polymer({
 
-            is: 'choice-form',
-            properties: {
+    is: 'choice-form',
+    properties: {
 
-                /**
-                * This is an array of children.
-                 * @private
-                **/
-                children: {
-                    type: Array,
-                    notify: true
-                },
+        /**
+        * This is an array of children.
+         * @private
+        **/
+        children: {
+            type: Array,
+            notify: true
+        },
 
-                index: Number,
+        index: Number,
 
-                room: {
-                    type: Object
-                },
+        room: {
+            type: Object
+        },
 
-                isMobile: Boolean,
+        isMobile: Boolean,
 
-                resources: {
-                    type: Object,
-                    value: {}
-                },
+        resources: {
+            type: Object,
+            value: {}
+        },
 
-                searchOption: {
-                    type: Object,
-                    value: {}
-                },
+        searchOption: {
+            type: Object,
+            value: {}
+        },
 
-                /**
-                 * This property is set for search resources to set adult label.
-                 **/
-                adultLabel: {
-                    type: String,
-                    value: function () {
-                        var labelAdult = this.searchOption.adult;
-                        return labelAdult;
-                    }
-                },
-                /**
-                 * This property is set for search resources to set child label.
-                 **/
-                childLabel: {
-                    type: String,
-                    value: function () {
-                        var labelChild = this.resources.childLabel;
-                        return labelChild;
-                    }
-                },
-
-
-            },
-
-            /**
-           *function to create dynamic Id for child age dropdown.
-           **/
-
-            _childID: function (index) {
-                index = index + 1;
-                return this.index + '_' + index;
-            },
-
-            /**
-           *function to create lable for child age dropdown.
-           **/
-
-            _childIndex: function (index) {
-                index = index + 1;
-                return index;
-            },
-
-            /**
-           *function to generate dynamic id for adult dropdown.
-           **/
-
-            _displayId: function (a) {
-                return a;
-            },
-
-            /**
-           *defines the array for children 
-           **/
-
-            ready: function () {
-                this.children = [];
-                this.adultLabel = this.resources.adult;
-                this.childLabel = this.resources.child;
-
-            },
-
-            _getAdultCountList: function (minimumAdult, maxAdultCount) {
-
-                var childArray = new Array();
-                if (minimumAdult >= 0 && maxAdultCount)
-                    for (var i = minimumAdult; i <= maxAdultCount; i++) {
-                        childArray.push(i);
-                    }
-                return childArray;
-            },
-            _getChildCountList: function (minChildCount, maxChildCount) {
-                var childArray = new Array();
-                if (minChildCount >= 0 && maxChildCount)
-                    for (var i = minChildCount; i <= maxChildCount; i++) {
-                        childArray.push(i);
-                    }
-                return childArray;
-            },
-
-            _getChildAgeList: function (minChildAge, maxChildAge) {
-                var childArray = new Array();
-                if (minChildAge >= 0 && maxChildAge)
-                    for (var i = minChildAge; i <= maxChildAge; i++) {
-                        childArray.push(i);
-                    }
-                return childArray;
-            },
-
-
-            /**
-            *This function is used for child dropdown ,
-             *on click this function adds the child age dropdown to form.
-            **/
-
-            _onCount: function () {
-                this.async(function () {
-
-
-                    var ageArr = [];
-                    var setcount = this.searchOption.minChildCount;
-                    var cCount = parseInt(this.room.child) + setcount;
-                    for (var i = 0; i < cCount; i++) {
-                        ageArr.push({ age: "0" });
-                    }
-
-                    this.set("room.childAge", ageArr);
-
-
-                    this.$.childAge.render();
-
-                });
-            },
-
-            /**
-            * This function is used for keypress on children age drop down.
-             **/
-            _tabPress: function (e) {
-                if (e.keyCode == 38 || e.keyCode == 40) {
-                    e.currentTarget.invalid = false;
-                    var lblsize = e.currentTarget.id.replace("child", "size1");
-                    this.$$("#" + lblsize).style.visibility = "";
-                }
+        /**
+         * This property is set for search resources to set adult label.
+         **/
+        adultLabel: {
+            type: String,
+            value: function value() {
+                var labelAdult = this.searchOption.adult;
+                return labelAdult;
             }
+        },
+        /**
+         * This property is set for search resources to set child label.
+         **/
+        childLabel: {
+            type: String,
+            value: function value() {
+                var labelChild = this.resources.childLabel;
+                return labelChild;
+            }
+        }
+
+    },
+
+    /**
+    *function to create dynamic Id for child age dropdown.
+    **/
+
+    _childID: function _childID(index) {
+        index = index + 1;
+        return this.index + '_' + index;
+    },
+
+    /**
+    *function to create lable for child age dropdown.
+    **/
+
+    _childIndex: function _childIndex(index) {
+        index = index + 1;
+        return index;
+    },
+
+    /**
+    *function to generate dynamic id for adult dropdown.
+    **/
+
+    _displayId: function _displayId(a) {
+        return a;
+    },
+
+    /**
+    *defines the array for children 
+    **/
+
+    ready: function ready() {
+        this.children = [];
+        this.adultLabel = this.resources.adult;
+        this.childLabel = this.resources.child;
+    },
+
+    _getAdultCountList: function _getAdultCountList(minimumAdult, maxAdultCount) {
+
+        var childArray = new Array();
+        if (minimumAdult >= 0 && maxAdultCount) for (var i = minimumAdult; i <= maxAdultCount; i++) {
+            childArray.push(i);
+        }
+        return childArray;
+    },
+    _getChildCountList: function _getChildCountList(minChildCount, maxChildCount) {
+        var childArray = new Array();
+        if (minChildCount >= 0 && maxChildCount) for (var i = minChildCount; i <= maxChildCount; i++) {
+            childArray.push(i);
+        }
+        return childArray;
+    },
+
+    _getChildAgeList: function _getChildAgeList(minChildAge, maxChildAge) {
+        var childArray = new Array();
+        if (minChildAge >= 0 && maxChildAge) for (var i = minChildAge; i <= maxChildAge; i++) {
+            childArray.push(i);
+        }
+        return childArray;
+    },
+
+    /**
+    *This function is used for child dropdown ,
+     *on click this function adds the child age dropdown to form.
+    **/
+
+    _onCount: function _onCount() {
+        this.async(function () {
+
+            var ageArr = [];
+            var setcount = this.searchOption.minChildCount;
+            var cCount = parseInt(this.room.child) + setcount;
+            for (var i = 0; i < cCount; i++) {
+                ageArr.push({ age: "0" });
+            }
+
+            this.set("room.childAge", ageArr);
+
+            this.$.childAge.render();
         });
-    </script>
+    },
+
+    /**
+    * This function is used for keypress on children age drop down.
+     **/
+    _tabPress: function _tabPress(e) {
+        if (e.keyCode == 38 || e.keyCode == 40) {
+            e.currentTarget.invalid = false;
+            var lblsize = e.currentTarget.id.replace("child", "size1");
+            this.$$("#" + lblsize).style.visibility = "";
+        }
+    }
+});</script>
 </dom-module>

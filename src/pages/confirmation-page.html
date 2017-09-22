@@ -1,4 +1,3 @@
-
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../nxt-shared-styles.html">
 
@@ -12,11 +11,22 @@
 
   </template>
 
-  <script>
-    class ConfirmationPage extends Polymer.Element {
-      static get is() { return 'confirmation-page'; }
-    }
+  <script>var ConfirmationPage = function (_Polymer$Element) {
+  babelHelpers.inherits(ConfirmationPage, _Polymer$Element);
 
-    window.customElements.define(ConfirmationPage.is, ConfirmationPage);
-  </script>
+  function ConfirmationPage() {
+    babelHelpers.classCallCheck(this, ConfirmationPage);
+    return babelHelpers.possibleConstructorReturn(this, (ConfirmationPage.__proto__ || Object.getPrototypeOf(ConfirmationPage)).apply(this, arguments));
+  }
+
+  babelHelpers.createClass(ConfirmationPage, null, [{
+    key: 'is',
+    get: function get() {
+      return 'confirmation-page';
+    }
+  }]);
+  return ConfirmationPage;
+}(Polymer.Element);
+
+window.customElements.define(ConfirmationPage.is, ConfirmationPage);</script>
 </dom-module>

@@ -22,59 +22,58 @@ Example:
 <dom-module id="t-mystique-auth">
 
 <template>
-  <iron-ajax id="tokenCall" method="POST" url="[[url]]" verbose content-type="application/json" on-response="_callback"></iron-ajax>
+  <iron-ajax id="tokenCall" method="POST" url="[[url]]" verbose="" content-type="application/json" on-response="_callback"></iron-ajax>
 </template>
 
 </dom-module>
 
 <script>
-  Polymer({
-    is: 't-mystique-auth',
+Polymer({
+  is: 't-mystique-auth',
 
-    properties: {
-        /**
-         * The name of the context
-         * @type {String}
-         */
-        name: {
-          type: String,
-          value: ""
-        },
-
-        /**
-         * The cid of the context
-         * @type {Number}
-         */
-        cid: Number,
-
-        /**
-         * The authenticate by context api endpoint
-         * @type {String}
-         */
-        url: String,
-
-        /**
-         * The context api response for getting token
-         * @type {Object}
-         */
-        tokenResponse: {
-          type: Object,
-          notify: true
-        }
+  properties: {
+    /**
+     * The name of the context
+     * @type {String}
+     */
+    name: {
+      type: String,
+      value: ""
     },
 
-    attached: function(){
-      var request=  {
-        "Name": this.name,
-        "CID": this.cid
-      };
+    /**
+     * The cid of the context
+     * @type {Number}
+     */
+    cid: Number,
 
-      this.$.tokenCall.body = JSON.stringify(request);
-      this.$.tokenCall.generateRequest();
-    },
+    /**
+     * The authenticate by context api endpoint
+     * @type {String}
+     */
+    url: String,
 
-    _callback: function(event){
-      this.tokenResponse =   event.detail.response;
+    /**
+     * The context api response for getting token
+     * @type {Object}
+     */
+    tokenResponse: {
+      type: Object,
+      notify: true
     }
-  });
-</script>
+  },
+
+  attached: function attached() {
+    var request = {
+      "Name": this.name,
+      "CID": this.cid
+    };
+
+    this.$.tokenCall.body = JSON.stringify(request);
+    this.$.tokenCall.generateRequest();
+  },
+
+  _callback: function _callback(event) {
+    this.tokenResponse = event.detail.response;
+  }
+});</script>

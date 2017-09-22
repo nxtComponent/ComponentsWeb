@@ -6,8 +6,7 @@ The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
 The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-<link rel="import" href="../polymer/polymer.html">
+--><link rel="import" href="../polymer/polymer.html">
 <link rel="import" href="../iron-resizable-behavior/iron-resizable-behavior.html">
 <link rel="import" href="../iron-selector/iron-selectable.html">
 <link rel="import" href="neon-animation-runner-behavior.html">
@@ -56,17 +55,13 @@ animations to be run when switching to or switching out of the page.
 </dom-module>
 
 <script>
-(function() {
+(function () {
 
   Polymer({
 
     is: 'neon-animated-pages',
 
-    behaviors: [
-      Polymer.IronResizableBehavior,
-      Polymer.IronSelectableBehavior,
-      Polymer.NeonAnimationRunnerBehavior
-    ],
+    behaviors: [Polymer.IronResizableBehavior, Polymer.IronSelectableBehavior, Polymer.NeonAnimationRunnerBehavior],
 
     properties: {
 
@@ -88,7 +83,7 @@ animations to be run when switching to or switching out of the page.
       'neon-animation-finish': '_onNeonAnimationFinish'
     },
 
-    _onIronSelect: function(event) {
+    _onIronSelect: function _onIronSelect(event) {
       var selectedPage = event.detail.item;
 
       // Only consider child elements.
@@ -166,14 +161,12 @@ animations to be run when switching to or switching out of the page.
               toPage: selectedPage
             });
           });
-
         } else {
           this.playAnimation(undefined, {
             fromPage: oldPage,
             toPage: selectedPage
           });
         }
-
       } else {
         this._completeSelectedChanged(oldPage, selectedPage);
       }
@@ -183,7 +176,7 @@ animations to be run when switching to or switching out of the page.
      * @param {Object=} oldPage
      * @param {Object=} selectedPage
      */
-    _completeSelectedChanged: function(oldPage, selectedPage) {
+    _completeSelectedChanged: function _completeSelectedChanged(oldPage, selectedPage) {
       if (selectedPage) {
         selectedPage.classList.remove('neon-animating');
       }
@@ -199,7 +192,7 @@ animations to be run when switching to or switching out of the page.
       this.async(this._notifyPageResize);
     },
 
-    _onNeonAnimationFinish: function(event) {
+    _onNeonAnimationFinish: function _onNeonAnimationFinish(event) {
       if (this._squelchNextFinishEvent) {
         this._squelchNextFinishEvent = false;
         return;
@@ -207,14 +200,12 @@ animations to be run when switching to or switching out of the page.
       this._completeSelectedChanged(event.detail.fromPage, event.detail.toPage);
     },
 
-    _notifyPageResize: function() {
+    _notifyPageResize: function _notifyPageResize() {
       var selectedPage = this.selectedItem || this._valueToItem(this.selected);
-      this.resizerShouldNotify = function(element) {
+      this.resizerShouldNotify = function (element) {
         return element == selectedPage;
       };
       this.notifyResize();
     }
-  })
-
-})();
-</script>
+  });
+})();</script>

@@ -169,8 +169,8 @@ Loader element for t-hotel search result page
     <div class="clearfix">
       <div class="filters">
         <h1>Filter hotels by</h1>
-        <template is="dom-repeat" items={{data}}>
-          <div class=filter-item>
+        <template is="dom-repeat" items="{{data}}">
+          <div class="filter-item">
             
             <header class="filter-header clearfix">
               
@@ -326,20 +326,19 @@ Loader element for t-hotel search result page
   </template>
 
   <script>
-    Polymer({
+Polymer({
 
-      is: 't-hotel-result-loader',
+  is: 't-hotel-result-loader',
 
-      properties: {
-        settings: Object,
-        _origData: {
-          type: Array,
-          value: []
-        },
-        data: Array,
-        resources: Object
-      },
+  properties: {
+    settings: Object,
+    _origData: {
+      type: Array,
+      value: []
+    },
+    data: Array,
+    resources: Object
+  }
 
-    });
-  </script>
+});</script>
 </dom-module>

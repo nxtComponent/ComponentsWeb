@@ -194,169 +194,166 @@ styling:
     </div>
   </template>
   <script>
-    Polymer({
-      is: 't-paper-date-picker',
-      properties: {
-        /**
-         * The selected date (YYYY-MM-DD)
-         */
-        date: {
-          type: Date,
-          notify: true
-        },
+Polymer({
+  is: 't-paper-date-picker',
+  properties: {
+    /**
+     * The selected date (YYYY-MM-DD)
+     */
+    date: {
+      type: Date,
+      notify: true
+    },
 
-        isMobile:Boolean,
-        /**
-         * Maximum screen width at which the picker uses a vertical layout
-         */
-        responsiveWidth: {
-          type: String,
-          value: '240px'
-        },
-        /**
-         * The current locale
-         */
-        locale: {
-          type: String,
-          value: 'en'
-        },
+    isMobile: Boolean,
+    /**
+     * Maximum screen width at which the picker uses a vertical layout
+     */
+    responsiveWidth: {
+      type: String,
+      value: '240px'
+    },
+    /**
+     * The current locale
+     */
+    locale: {
+      type: String,
+      value: 'en'
+    },
 
-        format : {
-          type:String,
-          value:"MM/DD/YYYY"
-        },
-        /**
-         * The format of the date displayed in the heading.
-         * See docuemntation for Moment.js for more info.
-         */
-        headingFormat: {
-          type: String,
-          value: 'MM-DD-YYYY'
-        },
-        /**
-         * The minimum allowed date
-         */
-        minDate: {
-          type: Date,
-          value: null
-        },
-        /**
-         * The maximum allowed date
-         */
-        maxDate: {
-          type: Date,
-          value: null
-        },
-        /**
-         * Force narrow layout
-         */
-        forceNarrow: {
-          type: Boolean,
-          value: false
-        },
-        narrow: {
-          type: Boolean,
-          reflectToAttribute: true,
-          notify: true,
-          computed: '_computeNarrow(forceNarrow, _queryMatches)'
-        },
-        isTouch: {
-          type: Boolean,
-          value: false,
-          readOnly: true,
-          reflectToAttribute: true
-        },
-        _queryMatches: {
-          type: Boolean,
-          value: false
-        },
-        headingBreak: {
-          type: String,
-          value: '[,]'
-        },
-        _selectedPage: String,
-        _maxYear: {
-          type: Number,
-          computed: '_getFullYear(maxDate)'
-        },
-        _minYear: {
-          type: Number,
-          computed: '_getFullYear(minDate)'
-        }
-      },
-      behaviors: [
-        Polymer.IronResizableBehavior
-      ],
-      listeners: {
-        'iron-resize': '_resizeHandler'
-      },
-      ready: function () {
-        this.today = this.$.calendar.today;
-        this.isTouch = 'ontouchstart' in window;
-        this._selectPage('chooseDate');
-      },
-      dateFormat: function () {
-        arguments[1] = this.format;
-        return this.$.calendar.dateFormat.apply(this.$.calendar, arguments);
-      },
-      _tapHeadingDate: function () {
-        if (this.$.pages.selected !== 'chooseDate') {
-          this._selectPage('chooseDate');
-        } else {
-          // tapping the date header while already viewing months brings you back
-          // to the selected month
-          this.$.calendar.currentMonth = this.date.getMonth() + 1;
-          this.$.calendar.currentYear = this.date.getFullYear();
-        }
-      },
-      _tapHeadingYear: function () {
-        if (this.$.pages.selected !== 'chooseYear') {
-          this._selectPage('chooseYear');
-          this.$.yearList.centerSelected();
-        }
-      },
-      _selectPage: function (page) {
-        this.$.pages.selected = page;
-      },
-      _getMediaQuery: function (forceNarrow, responsiveWidth) {
-        return '(max-width: ' + (forceNarrow ? '' : responsiveWidth) + ')';
-      },
-      _getHeadingClass: function (pfx, selectedPage) {
-        return pfx + ' pg-' + selectedPage;
-      },
-      _getFullYear: function (date) {
-        return date ? date.getFullYear() : null;
-      },
-      _splitHeadingDate: function (date, format, locale) {
-        var re = new RegExp(this.headingBreak, 'g');
-        var text = this.dateFormat(date, format, locale);
-        var seps = text.match(re);
-        var value;
-        if (!seps) {
-          value = [text];
-        } else {
-          value = text.split(re).map(function (s, i) {
-            return s + (seps[i] || '');
-          });
-        }
-        return value;
-      },
-      _computeNarrow: function (queryMatches, forceNarrow) {
-        return queryMatches || forceNarrow;
-      },
-      _pageSelected: function () {
-        this._resizeHandler();
-      },
-      _resizeHandler: function () {
-        if (this._resizing) {
-          return;
-        }
-        this._resizing = true;
-        this.$.calendar.notifyResize();
-        this._resizing = false;
+    format: {
+      type: String,
+      value: "MM/DD/YYYY"
+    },
+    /**
+     * The format of the date displayed in the heading.
+     * See docuemntation for Moment.js for more info.
+     */
+    headingFormat: {
+      type: String,
+      value: 'MM-DD-YYYY'
+    },
+    /**
+     * The minimum allowed date
+     */
+    minDate: {
+      type: Date,
+      value: null
+    },
+    /**
+     * The maximum allowed date
+     */
+    maxDate: {
+      type: Date,
+      value: null
+    },
+    /**
+     * Force narrow layout
+     */
+    forceNarrow: {
+      type: Boolean,
+      value: false
+    },
+    narrow: {
+      type: Boolean,
+      reflectToAttribute: true,
+      notify: true,
+      computed: '_computeNarrow(forceNarrow, _queryMatches)'
+    },
+    isTouch: {
+      type: Boolean,
+      value: false,
+      readOnly: true,
+      reflectToAttribute: true
+    },
+    _queryMatches: {
+      type: Boolean,
+      value: false
+    },
+    headingBreak: {
+      type: String,
+      value: '[,]'
+    },
+    _selectedPage: String,
+    _maxYear: {
+      type: Number,
+      computed: '_getFullYear(maxDate)'
+    },
+    _minYear: {
+      type: Number,
+      computed: '_getFullYear(minDate)'
+    }
+  },
+  behaviors: [Polymer.IronResizableBehavior],
+  listeners: {
+    'iron-resize': '_resizeHandler'
+  },
+  ready: function ready() {
+    this.today = this.$.calendar.today;
+    this.isTouch = 'ontouchstart' in window;
+    this._selectPage('chooseDate');
+  },
+  dateFormat: function dateFormat() {
+    arguments[1] = this.format;
+    return this.$.calendar.dateFormat.apply(this.$.calendar, arguments);
+  },
+  _tapHeadingDate: function _tapHeadingDate() {
+    if (this.$.pages.selected !== 'chooseDate') {
+      this._selectPage('chooseDate');
+    } else {
+      // tapping the date header while already viewing months brings you back
+      // to the selected month
+      this.$.calendar.currentMonth = this.date.getMonth() + 1;
+      this.$.calendar.currentYear = this.date.getFullYear();
+    }
+  },
+  _tapHeadingYear: function _tapHeadingYear() {
+    if (this.$.pages.selected !== 'chooseYear') {
+      this._selectPage('chooseYear');
+      this.$.yearList.centerSelected();
+    }
+  },
+  _selectPage: function _selectPage(page) {
+    this.$.pages.selected = page;
+  },
+  _getMediaQuery: function _getMediaQuery(forceNarrow, responsiveWidth) {
+    return '(max-width: ' + (forceNarrow ? '' : responsiveWidth) + ')';
+  },
+  _getHeadingClass: function _getHeadingClass(pfx, selectedPage) {
+    return pfx + ' pg-' + selectedPage;
+  },
+  _getFullYear: function _getFullYear(date) {
+    return date ? date.getFullYear() : null;
+  },
+  _splitHeadingDate: function _splitHeadingDate(date, format, locale) {
+    var re = new RegExp(this.headingBreak, 'g');
+    var text = this.dateFormat(date, format, locale);
+    var seps = text.match(re);
+    var value;
+    if (!seps) {
+      value = [text];
+    } else {
+      value = text.split(re).map(function (s, i) {
+        return s + (seps[i] || '');
+      });
+    }
+    return value;
+  },
+  _computeNarrow: function _computeNarrow(queryMatches, forceNarrow) {
+    return queryMatches || forceNarrow;
+  },
+  _pageSelected: function _pageSelected() {
+    this._resizeHandler();
+  },
+  _resizeHandler: function _resizeHandler() {
+    if (this._resizing) {
+      return;
+    }
+    this._resizing = true;
+    this.$.calendar.notifyResize();
+    this._resizing = false;
 
-        this.updateStyles();
-      }
-    });
-  </script>
+    this.updateStyles();
+  }
+});</script>
 </dom-module>

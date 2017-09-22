@@ -65,55 +65,54 @@
     </template>
 
     <script>
-        Polymer({
-            is: 't-list-title-tags',
-            properties: {
-                showNoResultBar: Boolean,
-                total: Number,
-                compiledTitle: String,
-                filteredtitle: String,
-                title: String,
-                filteredItemCount: Number,
-                enableAdd: {
-                    type: Boolean,
-                    value: false
-                },
-                tags: {
-                    type: Array,
-                    observer: '_tagsChanged',
-                    notify: true,
-                    value: []
-                }
-            },
-            _removedTag: function(e, data){
-                this.fire("t-tags-input-updated", data.index);
-            },
-            template: function(markup, tmplvars, prefix) {
-                if(!markup) return "";
-                for (var key in tmplvars) {
-                    if (tmplvars[key] instanceof Object) {
-                        markup = this.template(markup, tmplvars[key], prefix ? (prefix + "." + key) : key);
-                    } else {
-                        markup = markup.replace(new RegExp("\{\{" + (prefix ? (prefix + "." + key) : key) + "\}\}", "gi"), tmplvars[key])
-                    };
-                }
-                return markup;
-            },
-            _tagsChanged: function(){
-                if (this.tags.length) {
-                    this.compiledTitle = this.template(this.filteredtitle, {
-                        current: this.filteredItemCount,
-                        total: this.total
-                    });
-                } else {
-                    this.compiledTitle = this.template(this.title, {
-                        total: this.total
-                    });
-                }
-            },
-            attached: function() {
-                this._tagsChanged();
-            }
-        });
-    </script>
+Polymer({
+    is: 't-list-title-tags',
+    properties: {
+        showNoResultBar: Boolean,
+        total: Number,
+        compiledTitle: String,
+        filteredtitle: String,
+        title: String,
+        filteredItemCount: Number,
+        enableAdd: {
+            type: Boolean,
+            value: false
+        },
+        tags: {
+            type: Array,
+            observer: '_tagsChanged',
+            notify: true,
+            value: []
+        }
+    },
+    _removedTag: function _removedTag(e, data) {
+        this.fire("t-tags-input-updated", data.index);
+    },
+    template: function template(markup, tmplvars, prefix) {
+        if (!markup) return "";
+        for (var key in tmplvars) {
+            if (tmplvars[key] instanceof Object) {
+                markup = this.template(markup, tmplvars[key], prefix ? prefix + "." + key : key);
+            } else {
+                markup = markup.replace(new RegExp("\{\{" + (prefix ? prefix + "." + key : key) + "\}\}", "gi"), tmplvars[key]);
+            };
+        }
+        return markup;
+    },
+    _tagsChanged: function _tagsChanged() {
+        if (this.tags.length) {
+            this.compiledTitle = this.template(this.filteredtitle, {
+                current: this.filteredItemCount,
+                total: this.total
+            });
+        } else {
+            this.compiledTitle = this.template(this.title, {
+                total: this.total
+            });
+        }
+    },
+    attached: function attached() {
+        this._tagsChanged();
+    }
+});</script>
 </dom-module>

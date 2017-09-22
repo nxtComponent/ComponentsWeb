@@ -190,8 +190,7 @@ Custom property | Description | Default
             <template is="dom-if" if="[[data.attractions]]">
                 <div class="room-for-transportation">
                     <template is="dom-repeat" items="[[data.attractions]]">
-                        <span id$="for_{{item.name}}"><i
-                                class$="[[_getAttractionIcon(item.name)]] icon-{{item.icon}}"></i></span>
+                        <span id$="for_{{item.name}}"><i class$="[[_getAttractionIcon(item.name)]] icon-{{item.icon}}"></i></span>
                     </template>
                 </div>
                 <template is="dom-repeat" items="[[data.attractions]]">
@@ -204,7 +203,7 @@ Custom property | Description | Default
                 <iron-image class="hero-image" sizing="cover" src="[[data.heroImageUrl]]" id="heroCover"></iron-image>
                 <div class="image-container">
                     <div class="image-container-inside" id="imagecontainer">
-                        <img src="[[data.heroImageUrl]]" id="heroimage" />
+                        <img src="[[data.heroImageUrl]]" id="heroimage">
                     </div>
                 </div>
                 <template is="dom-if" if="[[_discountText]]">
@@ -232,11 +231,10 @@ Custom property | Description | Default
                     <paper-tooltip for="hotelName" position="top">[[data.name]]</paper-tooltip>
                     <t-rating-stars value="{{data.rating}}" height="20" font-size="18"></t-rating-stars>
                     <div class="location">
-                        <span id="locationArea" class="location-area" id="loction_area">[[_getLocationName(data)]]</span>
-                        <template if="dom-if"> if="[[data.distance]]">
+                        <span id="locationArea" class="location-area">[[_getLocationName(data)]]</span>
+                        <template if="dom-if"> if="[[data.distance]]"&gt;
                             <span class="pipeline hidden-md">|</span>
-                            <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]] <i
-                                    class="icon-map-pin"></i></span>
+                            <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]] <i class="icon-map-pin"></i></span>
                         </template>
                         <paper-tooltip for="loction_area" position="top">[[data.address]]</paper-tooltip>
                     </div>
@@ -305,7 +303,7 @@ Custom property | Description | Default
                     <template is="dom-if" if="[[data.room.benefits]]">
                         <div class="other-facility right">
                             <template is="dom-repeat" items="[[data.room.benefits]]">
-                                <br/><span>[[item]]</span>
+                                <br><span>[[item]]</span>
                             </template>
                         </div>
                     </template>
@@ -324,212 +322,205 @@ Custom property | Description | Default
 
     <!--Register t-hotel-item-->
     <script>
-        Polymer({
+Polymer({
 
-            is: 't-hotel-item',
+    is: 't-hotel-item',
 
-            properties: {
-                initialized: {
-                    type: Boolean,
-                    value: false
-                },
-                _discountText: {
-                    type: String,
-                    value: ""
-                },
-                currencyIcon: String,
-                calculatedActualPrice: Number,
-                fromattedAmount: Number,
-                offPercent: Number,
-                data: {
-                    notify: true,
-                    type: Object,
-                    value: {},
-                    observer: '_propagateChange'
-                },
-                resources: {
-                    type: Object,
-                    value: {}
-                },
-                supportNumber: String,
-                _room: {
-                    type: Object,
-                    value: null,
-                    computed: "_getFirstRoom(data.rooms)"
-                },
-                _payLater: {
-                    type: Boolean,
-                    value: false,
-                    computed: "_isPayLater(_room)"
-                },
-                _breakfast: {
-                    type: String,
-                    value: null,
-                    computed: "_breakfastAvailable(data.amenities)"
-                }
-            },
+    properties: {
+        initialized: {
+            type: Boolean,
+            value: false
+        },
+        _discountText: {
+            type: String,
+            value: ""
+        },
+        currencyIcon: String,
+        calculatedActualPrice: Number,
+        fromattedAmount: Number,
+        offPercent: Number,
+        data: {
+            notify: true,
+            type: Object,
+            value: {},
+            observer: '_propagateChange'
+        },
+        resources: {
+            type: Object,
+            value: {}
+        },
+        supportNumber: String,
+        _room: {
+            type: Object,
+            value: null,
+            computed: "_getFirstRoom(data.rooms)"
+        },
+        _payLater: {
+            type: Boolean,
+            value: false,
+            computed: "_isPayLater(_room)"
+        },
+        _breakfast: {
+            type: String,
+            value: null,
+            computed: "_breakfastAvailable(data.amenities)"
+        }
+    },
 
-            _propagateChange: function () {
-                this.fresh();
-            },
+    _propagateChange: function _propagateChange() {
+        this.fresh();
+    },
 
-            listeners: {
-                'heroimage.error': 'imageLoadError'
-            },
-            _isPayLater: function (room) {               
-                  return room && room.roomRate && !room.roomRate.isPrepaid;
-            },
-            _breakfastAvailable: function (amenities) {
-                if (!amenities) return null;             
+    listeners: {
+        'heroimage.error': 'imageLoadError'
+    },
+    _isPayLater: function _isPayLater(room) {
+        return room && room.roomRate && !room.roomRate.isPrepaid;
+    },
+    _breakfastAvailable: function _breakfastAvailable(amenities) {
+        if (!amenities) return null;
 
-                var breakfast = amenities.find(function (amenity) {
-                    return amenity.category && amenity.category.toLowerCase() === 'breakfast';
-                });               
-                return breakfast ? breakfast.name : null;               
-
-            },
-            _toFixed: function (amount) {
-                if (!amount)
-                    return "";
-                return amount.toFixed(2);
-            },
-
-            _getLocationName: function (hotel) {
-                return hotel.location || hotel.address;
-            },
-
-            _getAttractionIcon: function (name) {
-                var icon = this.resources.attractions.find(function (sym) {
-                    return sym.name === name;
-                }).icon;
-
-                return "icon-" + icon;
-            },
-
-            _getPrimaryAmenities: function (amenityList) {
-                var lst = [], _this = this;
-
-                if (amenityList) {
-                    amenityList.forEach(function (itm) {
-                        if (itm.category) {
-                            var amenity = _this._getPrimaryAmenity(itm.category);
-                            if (amenity)
-                                lst.push(amenity);
-                        }
-                    });
-                }
-
-                return lst;
-            },
-
-            _getPrimaryAmenity: function (amenity) {
-                return this.resources.primaryAmenities.find(function (sym) {
-                    return sym.name === amenity;
-                });
-            },
-
-            _getAmenitiesIcon: function (name) {
-                var icon = this.resources.primaryAmenities.find(function (sym) {
-                    return sym.name === name;
-                });
-
-                if (icon)
-                    return "icon-" + icon.icon;
-                return "";
-            },
-
-            imageLoadError: function (e) {
-                if (this.resources.defaultImage && !this.imageLoadAttempted) {
-                    this.$.heroimage.src = this.resources.defaultImage;
-                    this.$.heroCover.src = this.resources.defaultImage;
-                    this.imageLoadAttempted = true;
-                } else {
-                    this.$.heroimage.remove();
-                    this.toggleClass("onerror", true, this.$.imagecontainer);
-                }
-            },
-
-            fresh: function () {
-                if (!this.initialized) return;
-
-                var self = this;
-
-                if (!this.data.heroImageUrl) {
-                    this.$.heroimage.src = this.resources.defaultImage;
-                    this.$.heroCover.src = this.resources.defaultImage;
-                }
-
-                try {
-                    this.currencyIcon = this.resources.currencySymbols.find(function (sym) {
-                        return sym.code === self.data.fare.currency;
-                    }).symbol;
-                } catch (e) {
-                    this.currencyIcon = self.data.fare ? self.data.fare.currency : "";
-                }
-
-                if (this.data && this.data.fare && this.data.fare.totalFare) {
-                    if (this.data.fare.discount != null && this.data.fare.discount.length > 0) {
-                        this._discountText = this.data.fare.discount[0].text;
-                        this.calculatedActualPrice = Math.round((+this.data.fare.amount) + (+this.data.fare.fare.discount[0].amount)).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                        this.offPercent = Math.round(((+this.data.fare.discount[0].amount) / ((+this.data.fare.totalFare) + (+this.data.fare.discount[0].amount))) * 100).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                    } else {
-                        this.calculatedActualPrice = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                        this.offPercent = Math.round(0).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                    }
-
-                    this.fromattedAmount = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                }
-
-
-
-                this.notifyPath('data.rating');
-            },
-
-            _getFirstRoom: function (roomList) {
-                if (roomList && roomList.length > 0) {
-                    return roomList[0];
-                }
-                return null;
-            },
-
-            attached: function () {
-                this.initialized = true;
-                this.fresh();
-            },
-
-            /**
-             * Fired when the hero image is clicked/tapped.
-             * Also passes id of the result item.
-             *
-             * @event t-hotel-item-hero-img-tap
-             */
-            _heroImageTap: function (e) {
-                e.preventDefault();
-                this.fire("t-hotel-item-hero-img-tap", this.data.id);
-            },
-
-            /**
-             * Fired when the Hotel name/title header is clicked/tapped.
-             * Also passes id of the result item.
-             *
-             * @event t-hotel-item-title-tap
-             */
-            _titleTap: function (e) {
-                e.preventDefault();
-                this.fire("t-hotel-item-title-tap", this.data.id);
-            },
-
-
-            /**
-             * Fired when the show detail label is clicked/tapped.
-             * Also passes id of the result item.
-             *
-             * @event t-hotel-item-show-details-tap
-             */
-            _showDetails: function (e) {
-                e.preventDefault();
-                this.fire("t-hotel-item-show-details-tap", this.data.id);
-            }
+        var breakfast = amenities.find(function (amenity) {
+            return amenity.category && amenity.category.toLowerCase() === 'breakfast';
         });
-    </script>
+        return breakfast ? breakfast.name : null;
+    },
+    _toFixed: function _toFixed(amount) {
+        if (!amount) return "";
+        return amount.toFixed(2);
+    },
+
+    _getLocationName: function _getLocationName(hotel) {
+        return hotel.location || hotel.address;
+    },
+
+    _getAttractionIcon: function _getAttractionIcon(name) {
+        var icon = this.resources.attractions.find(function (sym) {
+            return sym.name === name;
+        }).icon;
+
+        return "icon-" + icon;
+    },
+
+    _getPrimaryAmenities: function _getPrimaryAmenities(amenityList) {
+        var lst = [],
+            _this = this;
+
+        if (amenityList) {
+            amenityList.forEach(function (itm) {
+                if (itm.category) {
+                    var amenity = _this._getPrimaryAmenity(itm.category);
+                    if (amenity) lst.push(amenity);
+                }
+            });
+        }
+
+        return lst;
+    },
+
+    _getPrimaryAmenity: function _getPrimaryAmenity(amenity) {
+        return this.resources.primaryAmenities.find(function (sym) {
+            return sym.name === amenity;
+        });
+    },
+
+    _getAmenitiesIcon: function _getAmenitiesIcon(name) {
+        var icon = this.resources.primaryAmenities.find(function (sym) {
+            return sym.name === name;
+        });
+
+        if (icon) return "icon-" + icon.icon;
+        return "";
+    },
+
+    imageLoadError: function imageLoadError(e) {
+        if (this.resources.defaultImage && !this.imageLoadAttempted) {
+            this.$.heroimage.src = this.resources.defaultImage;
+            this.$.heroCover.src = this.resources.defaultImage;
+            this.imageLoadAttempted = true;
+        } else {
+            this.$.heroimage.remove();
+            this.toggleClass("onerror", true, this.$.imagecontainer);
+        }
+    },
+
+    fresh: function fresh() {
+        if (!this.initialized) return;
+
+        var self = this;
+
+        if (!this.data.heroImageUrl) {
+            this.$.heroimage.src = this.resources.defaultImage;
+            this.$.heroCover.src = this.resources.defaultImage;
+        }
+
+        try {
+            this.currencyIcon = this.resources.currencySymbols.find(function (sym) {
+                return sym.code === self.data.fare.currency;
+            }).symbol;
+        } catch (e) {
+            this.currencyIcon = self.data.fare ? self.data.fare.currency : "";
+        }
+
+        if (this.data && this.data.fare && this.data.fare.totalFare) {
+            if (this.data.fare.discount != null && this.data.fare.discount.length > 0) {
+                this._discountText = this.data.fare.discount[0].text;
+                this.calculatedActualPrice = Math.round(+this.data.fare.amount + +this.data.fare.fare.discount[0].amount).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                this.offPercent = Math.round(+this.data.fare.discount[0].amount / (+this.data.fare.totalFare + +this.data.fare.discount[0].amount) * 100).toLocaleString('en-US', { minimumFractionDigits: 0 });
+            } else {
+                this.calculatedActualPrice = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                this.offPercent = Math.round(0).toLocaleString('en-US', { minimumFractionDigits: 0 });
+            }
+
+            this.fromattedAmount = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
+        }
+
+        this.notifyPath('data.rating');
+    },
+
+    _getFirstRoom: function _getFirstRoom(roomList) {
+        if (roomList && roomList.length > 0) {
+            return roomList[0];
+        }
+        return null;
+    },
+
+    attached: function attached() {
+        this.initialized = true;
+        this.fresh();
+    },
+
+    /**
+     * Fired when the hero image is clicked/tapped.
+     * Also passes id of the result item.
+     *
+     * @event t-hotel-item-hero-img-tap
+     */
+    _heroImageTap: function _heroImageTap(e) {
+        e.preventDefault();
+        this.fire("t-hotel-item-hero-img-tap", this.data.id);
+    },
+
+    /**
+     * Fired when the Hotel name/title header is clicked/tapped.
+     * Also passes id of the result item.
+     *
+     * @event t-hotel-item-title-tap
+     */
+    _titleTap: function _titleTap(e) {
+        e.preventDefault();
+        this.fire("t-hotel-item-title-tap", this.data.id);
+    },
+
+    /**
+     * Fired when the show detail label is clicked/tapped.
+     * Also passes id of the result item.
+     *
+     * @event t-hotel-item-show-details-tap
+     */
+    _showDetails: function _showDetails(e) {
+        e.preventDefault();
+        this.fire("t-hotel-item-show-details-tap", this.data.id);
+    }
+});</script>
 </dom-module>

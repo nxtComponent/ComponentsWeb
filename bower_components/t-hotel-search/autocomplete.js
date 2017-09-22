@@ -1,193 +1,193 @@
-var AutoComplete = (function () {
+var AutoComplete = function () {
     "use strict";
-    var AutoComplete = function (params, component) {
+
+    var AutoComplete = function AutoComplete(params, component) {
         //Construct
         if (this) {
             var i,
                 self = this,
                 defaultParams = {
-                    limit: 10,
-                    method: "GET",
-                    noResult: component.emptyMessage,
-                    paramName: "query",
-                    select: function (input, item) {
-                        attr(input, { "data-autocomplete-old-value": input.value = attr(item, "data-autocomplete-value", item.innerHTML) });
-                        // component.selectedValue = attr(item, "data-autocomplete-value", item.innerHTML);
-                        // component.selectedItem = component.response[attr(item)];
+                limit: 10,
+                method: "GET",
+                noResult: component.emptyMessage,
+                paramName: "query",
+                select: function select(input, item) {
+                    attr(input, { "data-autocomplete-old-value": input.value = attr(item, "data-autocomplete-value", item.innerHTML) });
+                    // component.selectedValue = attr(item, "data-autocomplete-value", item.innerHTML);
+                    // component.selectedItem = component.response[attr(item)];
+                    component.$.dropBox.style.display = "none";
+                    if (item.nodeName != "LI") {
+                        item = item.parentNode;
+                    }
+                    var itemIndex = item.getAttribute("data-index");
+                    var dataAutocompleteDetail = component.response[itemIndex];
+                    component.selectedItem = dataAutocompleteDetail;
+                    component.selectedValue = component.selectedItem[component.tokenParam];
+                    component.dispatchEvent(new CustomEvent("autosuggest-select", {
+                        detail: component.selectedItem
+                    }));
+                    // component.fire('autosuggest-select', component.selectedItem);
+                    // var setClear = component.children[1];
+                    // component.fire('tab-next');
+                    component.dispatchEvent(new CustomEvent("tab-next"));
+                    if (params.isMobile) {
+                        // component.domHost.querySelector("#start1").style.display = "block";
+                        // component.domHost.querySelector("#end1").style.display = "block";
+                        // component.domHost.querySelector("#travellField").style.display = "block";
+                        // component.domHost.querySelector("#Button").style.display = "block";
+                        // setClear.style.display = "block";
+                        var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
+                        tool.hidden = true;
+                        var ul = component.shadowRoot.querySelector("ul.ulClassMobile");
                         component.$.dropBox.style.display = "none";
-                        if (item.nodeName != "LI") {
-                            item = item.parentNode;
-                        }
-                        var itemIndex = item.getAttribute("data-index");
-                        var dataAutocompleteDetail = component.response[itemIndex];
-                        component.selectedItem = dataAutocompleteDetail;
-                        component.selectedValue = component.selectedItem[component.tokenParam];
-                        component.dispatchEvent(new CustomEvent("autosuggest-select",{
-                            detail: component.selectedItem
-                        }));
-                        // component.fire('autosuggest-select', component.selectedItem);
-                        // var setClear = component.children[1];
-                        // component.fire('tab-next');
-                        component.dispatchEvent(new CustomEvent("tab-next"));
-                        if (params.isMobile) {
-                            // component.domHost.querySelector("#start1").style.display = "block";
-                            // component.domHost.querySelector("#end1").style.display = "block";
-                            // component.domHost.querySelector("#travellField").style.display = "block";
-                            // component.domHost.querySelector("#Button").style.display = "block";
-                            // setClear.style.display = "block";
-                            var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
-                            tool.hidden = true;
-                            var ul = component.shadowRoot.querySelector("ul.ulClassMobile");
-                            component.$.dropBox.style.display = "none";
-                            component.$.clearContainer.style.display = "block";
-                            ul.removeAttribute("class");
-                            component.label = component.domHost.hotelLocation;
-                        }
-                        closeBox(component.shadowRoot.querySelector(".autocomplete"), false);
-                    },
-                    open: function (input, result) {
-                        var self = this;
-                        Array.prototype.forEach.call(result.getElementsByTagName("li"), function (li) {
-                            li.onmousedown = function (event) {
-                                self.select(input, event.target);
-                            };
-                        });
-                    },
-
-                    post: function (result, res, custParams, cityName) {
-                        try {
-                            if (!Array.prototype.includes) {
-                                Object.defineProperty(Array.prototype, "includes", {
-                                    enumerable: false,
-                                    value: function (obj) {
-                                        var newArr = this.filter(function (el) {
-                                            return el == obj;
-                                        });
-                                        return newArr.length > 0;
-                                    }
-                                });
-                            }
-                            component.$.spinner.hidden = true;
-                            var response = JSON.parse(res);
-                            if (response.status.isSuccessful) {
-                                var node = component.$.dropBox;
-                                while (node.hasChildNodes()) {
-                                    node.removeChild(node.lastChild);
-                                }
-                                component.response = new Array();
-                                response = response.items;
-                                var groupedByType = {};
-                                var typeArr2 = [];
-                                for (var item in response) {
-                                    var cityn = response[item].type.toUpperCase();
-                                    if (cityn === 'POINTOFINTEREST') {
-                                        cityn = "POINT OF INTEREST";
-                                    }
-                                    if (!typeArr2.includes(cityn)) {
-                                        typeArr2.push(cityn);
-                                    }
-                                    if (!groupedByType[cityn]) {
-                                        groupedByType[cityn] = [];
-                                    }
-                                    groupedByType[cityn].push(response[item]);
-                                }
-                                var typeUL = domCreate("ul")
-                                var ul = domCreate("ul")
-                                var dataIndex = 0;
-                                for (var t = 0; t < typeArr2.length; t++) {
-                                    for (var i = 0; i < groupedByType[typeArr2[t]].length; i++) {
-                                        component.response.push(groupedByType[typeArr2[t]][i]);
-                                    }
-                                }
-                                for (var t = 0; t < typeArr2.length; t++) {
-                                    //component.response = groupedByType[typeArr2[t]];
-
-                                    var createLi = function () { return domCreate("li"); },
-                                        autoReverse = function (param, limit) {
-                                            return (limit < 0) ? param.reverse() : param;
-                                        },
-                                        addLi = function (ul, li, response, index) {
-                                            var tempResponse = response;
-                                            if (index === 0 && t === 0) {
-                                                tempResponse = "<span class='boldText'>" + tempResponse + "</span>";
-                                            }
-                                            else {
-                                                tempResponse = tempResponse.replace(cityName, "<span class='boldText'>" + cityName + "</span>");
-                                            }
-                                            li.innerHTML = tempResponse;
-                                            attr(li, { "data-autocomplete-value": response });
-                                            attr(li, { "data-index": index });
-                                            attrClass(li, "liColor");
-                                            ul.appendChild(li);
-                                            return createLi();
-                                        },
-                                        addType = function (ul, response) {
-                                            var tdiv = domCreate("div");
-                                            var p = domCreate("span");
-                                            // tdiv.id = "line";
-                                            tdiv.classList.add("line")
-                                            tdiv.style.height = "10px";
-                                            p.style.color = "Silver";
-                                            p.style.borderbottomstyle = "solid";
-                                            p.innerHTML = response;
-                                            tdiv.appendChild(p);
-                                            ul.appendChild(tdiv);
-                                        },
-                                        empty,
-                                        i = 0,
-                                        length = groupedByType[typeArr2[t]].length,
-                                        li = createLi(),
-                                        limit = custParams.limit,
-                                        propertie,
-                                        properties,
-                                        value;
-                                    if (length) {
-                                        addType(ul, typeArr2[t])
-                                        response = autoReverse(groupedByType[typeArr2[t]], limit);
-                                        var item = null;
-                                        for (; i < length && (i < Math.abs(limit) || !limit); i++) {
-                                                item = response[i][component.tokenParam||"formattedAddress"];
-                                            li = addLi(ul, li, item, dataIndex++);
-                                        }
-                                    }
-                                    else {
-                                        //If the response is an object or an array and that the response is empty, so this script is here, 
-                                        //for the message no response.
-                                        empty = true;
-                                        attrClass(li, "locked");
-                                        li = addLi(ul, li, custParams.noResult);
-                                    }
-                                }//for
-                                if (result.hasChildNodes()) {
-                                    result.removeChild(result.lastChild);
-                                }
-                                if (params.isMobile) {
-                                    var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
-                                    tool.style.display = "block";
-                                    tool.hidden = false;
-                                    var inPut = tool.childNodes[2];
-                                    result.appendChild(ul);
-                                    attrClass(ul, "ulClassMobile");
-                                }
-                                else {
-                                    result.appendChild(ul);
-                                }
-                                attrClass(result, "autocomplete open");
-                                return empty;
-                            }//if response
-                            else {
-                                return empty;
-                            }
-                        } catch (e) {
-                            result.innerHTML = response;
-                        }
-                    },
-                    pre: function (input) {
-                        return input.value;
-                    },
-                    selector: ["input[data-autocomplete]"]
-                    // selector:["input[ data-autocomplete-dealy]"]
+                        component.$.clearContainer.style.display = "block";
+                        ul.removeAttribute("class");
+                        component.label = component.domHost.hotelLocation;
+                    }
+                    closeBox(component.shadowRoot.querySelector(".autocomplete"), false);
                 },
+                open: function open(input, result) {
+                    var self = this;
+                    Array.prototype.forEach.call(result.getElementsByTagName("li"), function (li) {
+                        li.onmousedown = function (event) {
+                            self.select(input, event.target);
+                        };
+                    });
+                },
+
+                post: function post(result, res, custParams, cityName) {
+                    try {
+                        if (!Array.prototype.includes) {
+                            Object.defineProperty(Array.prototype, "includes", {
+                                enumerable: false,
+                                value: function value(obj) {
+                                    var newArr = this.filter(function (el) {
+                                        return el == obj;
+                                    });
+                                    return newArr.length > 0;
+                                }
+                            });
+                        }
+                        component.$.spinner.hidden = true;
+                        var response = JSON.parse(res);
+                        if (response.status.isSuccessful) {
+                            var node = component.$.dropBox;
+                            while (node.hasChildNodes()) {
+                                node.removeChild(node.lastChild);
+                            }
+                            component.response = new Array();
+                            response = response.items;
+                            var groupedByType = {};
+                            var typeArr2 = [];
+                            for (var item in response) {
+                                var cityn = response[item].type.toUpperCase();
+                                if (cityn === 'POINTOFINTEREST') {
+                                    cityn = "POINT OF INTEREST";
+                                }
+                                if (!typeArr2.includes(cityn)) {
+                                    typeArr2.push(cityn);
+                                }
+                                if (!groupedByType[cityn]) {
+                                    groupedByType[cityn] = [];
+                                }
+                                groupedByType[cityn].push(response[item]);
+                            }
+                            var typeUL = domCreate("ul");
+                            var ul = domCreate("ul");
+                            var dataIndex = 0;
+                            for (var t = 0; t < typeArr2.length; t++) {
+                                for (var i = 0; i < groupedByType[typeArr2[t]].length; i++) {
+                                    component.response.push(groupedByType[typeArr2[t]][i]);
+                                }
+                            }
+                            for (var t = 0; t < typeArr2.length; t++) {
+                                //component.response = groupedByType[typeArr2[t]];
+
+                                var createLi = function createLi() {
+                                    return domCreate("li");
+                                },
+                                    autoReverse = function autoReverse(param, limit) {
+                                    return limit < 0 ? param.reverse() : param;
+                                },
+                                    addLi = function addLi(ul, li, response, index) {
+                                    var tempResponse = response;
+                                    if (index === 0 && t === 0) {
+                                        tempResponse = "<span class='boldText'>" + tempResponse + "</span>";
+                                    } else {
+                                        tempResponse = tempResponse.replace(cityName, "<span class='boldText'>" + cityName + "</span>");
+                                    }
+                                    li.innerHTML = tempResponse;
+                                    attr(li, { "data-autocomplete-value": response });
+                                    attr(li, { "data-index": index });
+                                    attrClass(li, "liColor");
+                                    ul.appendChild(li);
+                                    return createLi();
+                                },
+                                    addType = function addType(ul, response) {
+                                    var tdiv = domCreate("div");
+                                    var p = domCreate("span");
+                                    // tdiv.id = "line";
+                                    tdiv.classList.add("line");
+                                    tdiv.style.height = "10px";
+                                    p.style.color = "Silver";
+                                    p.style.borderbottomstyle = "solid";
+                                    p.innerHTML = response;
+                                    tdiv.appendChild(p);
+                                    ul.appendChild(tdiv);
+                                },
+                                    empty,
+                                    i = 0,
+                                    length = groupedByType[typeArr2[t]].length,
+                                    li = createLi(),
+                                    limit = custParams.limit,
+                                    propertie,
+                                    properties,
+                                    value;
+                                if (length) {
+                                    addType(ul, typeArr2[t]);
+                                    response = autoReverse(groupedByType[typeArr2[t]], limit);
+                                    var item = null;
+                                    for (; i < length && (i < Math.abs(limit) || !limit); i++) {
+                                        item = response[i][component.tokenParam || "formattedAddress"];
+                                        li = addLi(ul, li, item, dataIndex++);
+                                    }
+                                } else {
+                                    //If the response is an object or an array and that the response is empty, so this script is here, 
+                                    //for the message no response.
+                                    empty = true;
+                                    attrClass(li, "locked");
+                                    li = addLi(ul, li, custParams.noResult);
+                                }
+                            } //for
+                            if (result.hasChildNodes()) {
+                                result.removeChild(result.lastChild);
+                            }
+                            if (params.isMobile) {
+                                var tool = component.domHost.shadowRoot.querySelector("#toolbarAutoComplete");
+                                tool.style.display = "block";
+                                tool.hidden = false;
+                                var inPut = tool.childNodes[2];
+                                result.appendChild(ul);
+                                attrClass(ul, "ulClassMobile");
+                            } else {
+                                result.appendChild(ul);
+                            }
+                            attrClass(result, "autocomplete open");
+                            return empty;
+                        } //if response
+                        else {
+                                return empty;
+                            }
+                    } catch (e) {
+                        result.innerHTML = response;
+                    }
+                },
+                pre: function pre(input) {
+                    return input.value;
+                },
+                selector: ["input[data-autocomplete]"]
+                // selector:["input[ data-autocomplete-dealy]"]
+            },
                 selectors;
 
             self._custArgs = [];
@@ -202,27 +202,27 @@ var AutoComplete = (function () {
                         var oldValueLabel = "data-autocomplete-old-value",
                             result = component.$.dropBox,
                             request,
-                            positionLambda = function () {
-                                attr(result, {
-                                    "class": "autocomplete"
-                                });
-                            },
-                            destroyLambda = function () {
-                                input.onfocus = input.onblur = input.onkeyup = null;
-                                input.removeEventListener("position", positionLambda);
-                                input.removeEventListener("destroy", destroyLambda);
-                                result.parentNode.removeChild(result);
-                                self.CustParams(input, true);
-                            },
-                            focusLamdba = function () {
-                                var dataAutocompleteOldValue = attr(input, oldValueLabel);
-                                if (!component.caching && result.hasChildNodes()) {
-                                    result.removeChild(result.lastChild);
-                                }
-                                if (!dataAutocompleteOldValue || input.value != dataAutocompleteOldValue) {
-                                    attrClass(result, "autocomplete open");
-                                }
-                            };
+                            positionLambda = function positionLambda() {
+                            attr(result, {
+                                "class": "autocomplete"
+                            });
+                        },
+                            destroyLambda = function destroyLambda() {
+                            input.onfocus = input.onblur = input.onkeyup = null;
+                            input.removeEventListener("position", positionLambda);
+                            input.removeEventListener("destroy", destroyLambda);
+                            result.parentNode.removeChild(result);
+                            self.CustParams(input, true);
+                        },
+                            focusLamdba = function focusLamdba() {
+                            var dataAutocompleteOldValue = attr(input, oldValueLabel);
+                            if (!component.caching && result.hasChildNodes()) {
+                                result.removeChild(result.lastChild);
+                            }
+                            if (!dataAutocompleteOldValue || input.value != dataAutocompleteOldValue) {
+                                attrClass(result, "autocomplete open");
+                            }
+                        };
 
                         attr(input, { "autocomplete": "off" });
                         positionLambda(input, result);
@@ -231,8 +231,7 @@ var AutoComplete = (function () {
                         component.$.append.appendChild(result);
                         input.onfocus = focusLamdba;
                         input.onblur = closeBox(null, result);
-                        Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide')
-
+                        Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide');
                     }
 
                     input.onkeyup = function (e) {
@@ -249,13 +248,12 @@ var AutoComplete = (function () {
                         //------------------------------------------
                         if (this.value == "") {
                             Polymer.dom(component.$.autoInput).node.setAttribute("style", "width:99%");
-                            Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide')
-                        }
-                        else {
+                            Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'hide');
+                        } else {
 
                             component.$.autoSuggest.style.color = "lightgray";
                             Polymer.dom(component.$.autoInput).node.setAttribute("style", "width:99%");
-                            Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'unhide')
+                            Polymer.dom(component.$.clearContainer).node.setAttribute('class', 'unhide');
                         }
                         //--------------------------------------------
 
@@ -272,9 +270,7 @@ var AutoComplete = (function () {
                                 attrClass(result, "autocomplete");
                                 closeBox(null, result);
                             }
-
-                        }
-                        else {
+                        } else {
 
                             if (keyCode == 38 || keyCode == 40) {
                                 liActive = result.querySelector("li.active");
@@ -309,7 +305,7 @@ var AutoComplete = (function () {
                                     var nextElement = liActive.parentElement.childNodes.item(position);
 
                                     if (nextElement == null || nextElement.tagName == 'DIV') {
-                                        nextElement = liActive.parentElement.childNodes.item(position + ((keyCode - 39)));
+                                        nextElement = liActive.parentElement.childNodes.item(position + (keyCode - 39));
                                     }
                                     attrClass(nextElement, "active");
                                 } else if (first) {
@@ -319,8 +315,7 @@ var AutoComplete = (function () {
                                 if (inputValue && custParams.url) {
                                     if (inputValue.length >= 0) {
                                         component.label = component.resource.locationPlaceholder;
-                                    }
-                                    else {
+                                    } else {
                                         component.label = "";
                                     }
                                     if (inputValue.length >= component.minimumCharacters && component.selectedValue != inputValue) {
@@ -329,8 +324,7 @@ var AutoComplete = (function () {
                                             request = ajax(request, custParams, inputValue.trim(), input, result, component.subType, component.queryParams);
                                         }, component.delay);
                                         component.$.dropBox.style.display = "block";
-                                    }
-                                    else {
+                                    } else {
                                         if (result.hasChildNodes()) {
                                             result.removeChild(result.lastChild);
                                         }
@@ -407,22 +401,19 @@ var AutoComplete = (function () {
                                                         attrClass(ul, "ulClassMobile");
                                                     }
                                                 }, component.delay);
-
-                                            }
-                                        }
-                                        else {
+                                            };
+                                        } else {
                                             this.domHost.label = "";
                                             component.domHost.shadowRoot.querySelector("#toolbarAutoComplete").style.display = "none";
                                             if (result.hasChildNodes()) {
                                                 result.removeChild(result.lastChild);
                                             }
-
                                         }
                                     }
                                 }
                             }
                         };
-                    }
+                    };
                 });
             });
         } else {
@@ -431,18 +422,18 @@ var AutoComplete = (function () {
     };
     //call to api
     AutoComplete.prototype = {
-        CustParams: function (input, toDelete) {
+        CustParams: function CustParams(input, toDelete) {
             var dataAutocompleteIdLabel = "data-autocomplete-id",
                 self = this,
                 prefix = "data-autocomplete",
                 params = {
-                    limit: prefix + "-limit",
-                    method: prefix + "-method",
-                    noResult: prefix + "-no-result",
-                    paramName: prefix + "-param-name",
-                    delay: prefix + "-delay",
-                    url: prefix
-                },
+                limit: prefix + "-limit",
+                method: prefix + "-method",
+                noResult: prefix + "-no-result",
+                paramName: prefix + "-param-name",
+                delay: prefix + "-delay",
+                url: prefix
+            },
                 paramsAttribute = Object.getOwnPropertyNames(params),
                 i;
 
@@ -483,8 +474,7 @@ var AutoComplete = (function () {
         var method = custParams.method,
             url = custParams.url;
         url = url + value;
-        if (subType != '')
-            url = url + "/" + subType;
+        if (subType != '') url = url + "/" + subType;
         if (queryParams != "") {
             url += "?" + queryParams;
         }
@@ -503,16 +493,18 @@ var AutoComplete = (function () {
         return request;
     }
     function toTitleCase(str) {
-        return str.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
+        return str.replace(/\w\S*/g, function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        });
     }
-
 
     function closeBox(result, closeNow) {
         if (closeNow) {
             attrClass(result, "autocomplete");
-        }
-        else {
-            setTimeout(function () { closeBox(result, true); }, 150);
+        } else {
+            setTimeout(function () {
+                closeBox(result, true);
+            }, 150);
         }
     }
 
@@ -529,7 +521,7 @@ var AutoComplete = (function () {
         return concat;
     }
     return AutoComplete;
-}());
+}();
 
 function attr(item, attrs, defaultValue) {
     if (item) {

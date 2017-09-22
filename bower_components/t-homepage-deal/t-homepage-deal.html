@@ -50,8 +50,8 @@
     <div class="flex header"><h1 class="main-heading">[[heading]]</h1></div>
     <div id="dealContainer" class="flex container">
       <div class="tab-container">
-        <paper-tabs id="tabs" selected-class="selected-tab" on-iron-select="_tabChanged" fit-container class="tabs" scrollable selected="{{selected}}" >
-          <template is="dom-repeat" items="[[data]]" >
+        <paper-tabs id="tabs" selected-class="selected-tab" on-iron-select="_tabChanged" fit-container="" class="tabs" scrollable="" selected="{{selected}}">
+          <template is="dom-repeat" items="[[data]]">
             <paper-tab>[[item.category]]</paper-tab>
           </template>
         </paper-tabs>
@@ -99,13 +99,11 @@
 Polymer({
 	is: 't-homepage-deal',
 
-	behaviors: [
-		Polymer.IronResizableBehavior
-	],
+	behaviors: [Polymer.IronResizableBehavior],
 
 	listeners: {
 		'iron-resize': '_screenChanged'
-			// 't-deal-section-select': '_sectionChanged'
+		// 't-deal-section-select': '_sectionChanged'
 	},
 
 	properties: {
@@ -114,121 +112,109 @@ Polymer({
 			value: 240
 		},
 		/** returns true if the device is mobile*/
-		_isMobile:{
+		_isMobile: {
 			type: Boolean,
-			notify:true,
+			notify: true
 		},
 		/** returns true if the device is tablet*/
-		_isTablet:{
+		_isTablet: {
 			type: Boolean,
-			notify:true,
+			notify: true
 		},
 		/**
-		 * Describes Main heading of the photo grid
-		 *
-		 * @type {String}
-		 */
-		heading:{
+   * Describes Main heading of the photo grid
+   *
+   * @type {String}
+   */
+		heading: {
 			type: String
 		},
 
 		/**
-		 * Describes Photo Grid array configuration
-		 *
-		 * @type {{heading: String, subHeading: String, imageSize: ['cover', 'contain'], type: Number, description: String, button: String, priceText: String, priceValue: String, image: Url}}
-		 */
-		data:{
+   * Describes Photo Grid array configuration
+   *
+   * @type {{heading: String, subHeading: String, imageSize: ['cover', 'contain'], type: Number, description: String, button: String, priceText: String, priceValue: String, image: Url}}
+   */
+		data: {
 			type: Array,
 			notify: true
 		},
-		selected:{
+		selected: {
 			type: Number,
 			value: 0,
-			notify:true
+			notify: true
 		}
 	},
 
-	_getBoxSize: function(){
-		if(this._isMobile)
-			return window.innerWidth - 40;
-		if(this._isTablet)
-			return window.innerWidth/2 - 22;
+	_getBoxSize: function _getBoxSize() {
+		if (this._isMobile) return window.innerWidth - 40;
+		if (this._isTablet) return window.innerWidth / 2 - 22;
 		return 256;
 	},
 
-	_getBoxType: function(type){
-		if(this._isMobile)
-			return "flip-container box size11";
+	_getBoxType: function _getBoxType(type) {
+		if (this._isMobile) return "flip-container box size11";
 		return "flip-container box size" + type;
 	},
 
-	attached: function(){
+	attached: function attached() {
 		Polymer.RenderStatus.beforeNextRender(this, function () {
-		var component = this;
-		
-		setTimeout(function(){
-			this.applyNested();
-			
-		}.bind(this),0);
+			var component = this;
+
+			setTimeout(function () {
+				this.applyNested();
+			}.bind(this), 0);
 		});
 	},
 
-	applyNested: function(){
-		$( this.shadowRoot.querySelectorAll(".gridContainer")).nested({
-				resizeToFit: true,
-				resizeToFitOptions: {
-					resizeAny: true
-				},
-				minWidth: this._getBoxSize(),
-				gutter:4
-			});
+	applyNested: function applyNested() {
+		$(this.shadowRoot.querySelectorAll(".gridContainer")).nested({
+			resizeToFit: true,
+			resizeToFitOptions: {
+				resizeAny: true
+			},
+			minWidth: this._getBoxSize(),
+			gutter: 4
+		});
 	},
 
-	_tabChanged: function(item){
-		var flippedTile= this.querySelector('.flipped');
-		if(flippedTile)
-			flippedTile.classList.remove('flipped');
-			this.applyNested();
-		
+	_tabChanged: function _tabChanged(item) {
+		var flippedTile = this.querySelector('.flipped');
+		if (flippedTile) flippedTile.classList.remove('flipped');
+		this.applyNested();
 	},
 
-	_flip: function(e){
-		var flippedTile= this.querySelector('.flipped');
-		if(flippedTile && !e.currentTarget.querySelector('.flipped'))
-			flippedTile.classList.remove('flipped');
+	_flip: function _flip(e) {
+		var flippedTile = this.querySelector('.flipped');
+		if (flippedTile && !e.currentTarget.querySelector('.flipped')) flippedTile.classList.remove('flipped');
 		e.currentTarget.querySelector('.panel').classList.toggle('flipped');
 	},
 
-	_getSizing: function(sizing){
+	_getSizing: function _getSizing(sizing) {
 		return sizing || 'contain';
 	},
 
-	_getCaptionValue: function(priceText, priceValue){
+	_getCaptionValue: function _getCaptionValue(priceText, priceValue) {
 		return priceText + ' ' + priceValue;
 	},
 
-	_getEllipsedDescription: function(description, type){
-		if(this._isMobile || type === 11){
-      return (description.length > 140)? description.substr(0,140) + '...': description;
-		}
-		else if(type === 22){
-			return (description.length > 500)?description.substr(0,500) + '...': description;
-		}
-		else
-			return (description.length > 300)?description.substr(0,300) + '...': description;
+	_getEllipsedDescription: function _getEllipsedDescription(description, type) {
+		if (this._isMobile || type === 11) {
+			return description.length > 140 ? description.substr(0, 140) + '...' : description;
+		} else if (type === 22) {
+			return description.length > 500 ? description.substr(0, 500) + '...' : description;
+		} else return description.length > 300 ? description.substr(0, 300) + '...' : description;
 	},
 
-	_screenChanged: function(){
-		var flippedTile= this.querySelector('.flipped');
-		if(flippedTile)
-			flippedTile.classList.remove('flipped');
+	_screenChanged: function _screenChanged() {
+		var flippedTile = this.querySelector('.flipped');
+		if (flippedTile) flippedTile.classList.remove('flipped');
 		this.applyNested();
-	},
+	}
 
 	// _sectionChanged: function(e, detail){
 	//   this.set('data.selectedIndex', detail.index);
 	// }
 	//
-});
-	</script>
+});</script>
 </dom-module>

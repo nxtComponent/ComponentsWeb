@@ -11,26 +11,38 @@
 
   </template>
 
-  <script>
-    class HotelDetailsPage extends Polymer.Element {
-      static get is() { return 'hotel-details-page'; }
+  <script>var HotelDetailsPage = function (_Polymer$Element) {
+  babelHelpers.inherits(HotelDetailsPage, _Polymer$Element);
 
-      static get properties() {
-        return {
-          pageLoader: {
-            type: Boolean,
-            notify: true
-          }
-        }
-      }
+  function HotelDetailsPage() {
+    babelHelpers.classCallCheck(this, HotelDetailsPage);
+    return babelHelpers.possibleConstructorReturn(this, (HotelDetailsPage.__proto__ || Object.getPrototypeOf(HotelDetailsPage)).apply(this, arguments));
+  }
 
-      connectedCallback(){
-        super.connectedCallback();
-        this.set("pageLoader", false);
-      }
-
+  babelHelpers.createClass(HotelDetailsPage, [{
+    key: "connectedCallback",
+    value: function connectedCallback() {
+      babelHelpers.get(HotelDetailsPage.prototype.__proto__ || Object.getPrototypeOf(HotelDetailsPage.prototype), "connectedCallback", this).call(this);
+      this.set("pageLoader", false);
     }
+  }], [{
+    key: "is",
+    get: function get() {
+      return 'hotel-details-page';
+    }
+  }, {
+    key: "properties",
+    get: function get() {
+      return {
+        pageLoader: {
+          type: Boolean,
+          notify: true
+        }
+      };
+    }
+  }]);
+  return HotelDetailsPage;
+}(Polymer.Element);
 
-    window.customElements.define(HotelDetailsPage.is, HotelDetailsPage);
-  </script>
+window.customElements.define(HotelDetailsPage.is, HotelDetailsPage);</script>
 </dom-module>

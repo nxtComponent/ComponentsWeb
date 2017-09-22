@@ -1,4 +1,3 @@
-
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 
 <dom-module id="view404-page">
@@ -14,18 +13,31 @@
     Oops you hit a 404. <a href="[[rootPath]]">Head back to home.</a>
   </template>
 
-  <script>
-    class View404Page extends Polymer.Element {
-      static get is() { return 'view404-page'; }
-      static get properties() {
-        return {
-          // This shouldn't be neccessary, but the Analyzer isn't picking up
-          // Polymer.Element#rootPath
-          rootPath: String,
-        };
-      }
-    }
+  <script>var View404Page = function (_Polymer$Element) {
+  babelHelpers.inherits(View404Page, _Polymer$Element);
 
-    window.customElements.define(View404Page.is, View404Page);
-  </script>
+  function View404Page() {
+    babelHelpers.classCallCheck(this, View404Page);
+    return babelHelpers.possibleConstructorReturn(this, (View404Page.__proto__ || Object.getPrototypeOf(View404Page)).apply(this, arguments));
+  }
+
+  babelHelpers.createClass(View404Page, null, [{
+    key: 'is',
+    get: function get() {
+      return 'view404-page';
+    }
+  }, {
+    key: 'properties',
+    get: function get() {
+      return {
+        // This shouldn't be neccessary, but the Analyzer isn't picking up
+        // Polymer.Element#rootPath
+        rootPath: String
+      };
+    }
+  }]);
+  return View404Page;
+}(Polymer.Element);
+
+window.customElements.define(View404Page.is, View404Page);</script>
 </dom-module>

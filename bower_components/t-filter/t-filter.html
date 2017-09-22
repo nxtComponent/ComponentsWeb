@@ -434,8 +434,8 @@ Custom property | Description | Default
         <a href="#." id="resetBtnTop" class="reset-apply-top-btn float-right" on-tap="_resetAllFilter">{{resources.resetButtonText}}</a>
       </div>
       <slot name="filterplaceholder"></slot>
-      <template is="dom-repeat" items={{data}}>
-        <div class=filter-item>
+      <template is="dom-repeat" items="{{data}}">
+        <div class="filter-item">
           
           <header class="filter-header clearfix">
             
@@ -447,11 +447,7 @@ Custom property | Description | Default
             
           </header>
 
-          <t-filter-block-content
-            resources="[[resources]]" 
-            on-t-filter-block-changed="_onChange" 
-            item="{{item}}"
-            is-open={{item.isOpen}}>
+          <t-filter-block-content resources="[[resources]]" on-t-filter-block-changed="_onChange" item="{{item}}" is-open="{{item.isOpen}}">
           </t-filter-block-content>
           
         </div>
@@ -460,217 +456,208 @@ Custom property | Description | Default
   </template>
 
   <script>
-    Polymer({
-      is: 't-filter',
+Polymer({
+  is: 't-filter',
 
-      properties: {
-        settings: Object,
-        _origData: {
-          type: Array,
-          value: []
-        },
-        data: Array,
-        resources: Object
-      },
+  properties: {
+    settings: Object,
+    _origData: {
+      type: Array,
+      value: []
+    },
+    data: Array,
+    resources: Object
+  },
 
-      listeners: {
-        't-filter-item-reset': '_resetView',
-        't-filter-reset': '_resetAllFilter',
-        't-filter-update-state': '_setState'
-      },
+  listeners: {
+    't-filter-item-reset': '_resetView',
+    't-filter-reset': '_resetAllFilter',
+    't-filter-update-state': '_setState'
+  },
 
-      _clone: function(dataToClone){
-        return JSON.parse(JSON.stringify(dataToClone));
-      },
+  _clone: function _clone(dataToClone) {
+    return JSON.parse(JSON.stringify(dataToClone));
+  },
 
-      _setState: function(evt, data){
-        this.data = data;
-      },
+  _setState: function _setState(evt, data) {
+    this.data = data;
+  },
 
-      getState: function(){
-        return this.data;
-      },
+  getState: function getState() {
+    return this.data;
+  },
 
-      _getFormattedDataForFilter: function(filters, accArr){
-        var arr = accArr || [],
-            self = this;
+  _getFormattedDataForFilter: function _getFormattedDataForFilter(filters, accArr) {
+    var arr = accArr || [],
+        self = this;
 
-        filters.forEach(function(filter){
+    filters.forEach(function (filter) {
 
-          if(filter.type === "Group"){
-            self._getFormattedDataForFilter(filter.options, arr);
-          } else {
-            arr.push({
-              code: filter.code,
-              selected: filter.selected
-            });            
-          }
+      if (filter.type === "Group") {
+        self._getFormattedDataForFilter(filter.options, arr);
+      } else {
+        arr.push({
+          code: filter.code,
+          selected: filter.selected
         });
-
-        return arr;
-      },
-
-      _applyFilter: function(evt, data){
-        this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
-      },
-
-      _resetAllFilter: function(evt, data){
-        try{
-          evt.preventDefault();
-        } catch(e){
-
-        }
-        
-        this.data = this._clone(this._origData);
-        this.fire("t-filter-changed", this.data);
-      },
-      
-      // Show Hide Filter Block
-      _toggleView: function(evt){
-        var isOpenState = !evt.model.get("item").isOpen;
-        evt.model.set("item.isOpen", isOpenState);
-        this.updateStyles();
-      },
-      
-      // Reset Filter
-      _resetView: function(evt, resetData){
-        try{
-          evt.preventDefault();
-        } catch(e){
-
-        }
-
-        evt.preventDefault();
-        var index,
-            clonedFilterData;
-
-        // When reset custom event is triggered
-        if(resetData && typeof resetData.index === "number"){
-
-          index = resetData.index;
-          this._origData[index].isOpen = this.data[index].isOpen;
-          clonedFilterData = this._clone(this.data);
-          clonedFilterData[index] = this._origData[index];
-          this.set("data", []);
-          this.set("data", clonedFilterData);
-
-        } else {
-
-          // For reset from DOM, to make diff more efficient
-          index = evt.model.get("index");
-          this._origData[index].isOpen = this.data[index].isOpen;
-          evt.model.set("item", {});
-          evt.model.set("item", JSON.parse(JSON.stringify(this._origData[index])));
-        }
-
-        this.fire("t-filter-changed", this.data);
-      },
-
-      // Return Class for filter expand/collapse icon
-      _chevronClass: function(isOpen){
-        if(isOpen){
-          return 'icon-drop-up';
-        }
-        return 'icon-drop-down';
-      },
-
-      _assignId: function(data, code, index){
-        var self = this;
-
-        if(Array.isArray(data)){
-          data.forEach(function(dataItem, index){
-            if(dataItem.data || dataItem.options){
-              dataItem.__id = dataItem.code;
-              return self._assignId(dataItem.data || dataItem.options, dataItem.code, index);
-            } else {
-              dataItem.__id = dataItem.code || code + "_" + index;
-            }
-          })
-        } else {
-          data.__id = data.code || code + "_" + index;
-        }
-      },
-
-      _onChange: function(e, data){
-
-        if(data.item.type === "Text"){
-          // No action required, model updates automatically
-        }
-
-        if(data.item.type === "Option"){
-          // If checkbox
-          if(data.item.allowMultiSelect){
-            if(data.item.selected.indexOf(data.index) < 0 && data.value === true){
-              data.item.selected.push(data.index);
-            } else if(data.item.selected.indexOf(data.index) > -1 && data.value === false){
-              var foundAt = data.item.selected.indexOf(data.index);
-              data.item.selected.splice(foundAt, 1);
-            }
-          } else {
-            
-            // If radio
-            if(data.value){
-              data.item.selected = data.index;
-            } else {
-              data.item.selected = -1;
-            }
-          }
-        }
-
-        if(data.item.type === "Rating"){
-         if(data.item.selected.indexOf(data.index) < 0 && data.value === true){
-            data.item.selected.push(data.index);
-          } else if(data.item.selected.indexOf(data.index) > -1 && data.value === false){
-            var foundAt = data.item.selected.indexOf(data.index);
-            data.item.selected.splice(foundAt, 1);
-          }
-        }
-
-        if(data.item.type === "Range"){
-          if(data.item.isSingleMarker){
-            data.item.selected = [data.minValue];
-          } else {
-            data.item.selected = [data.minValue, data.maxValue];
-          }
-        }
-
-        if(data.item.type === "Select"){
-          data.item.selected = data.item.data.indexOf(data.option);
-        }
-
-        var evtData = {
-          code: data.item.code,
-          selected: data.item.selected
-        };
-        
-        this.fire("t-filter-item-tap", evtData);
-        this.fire("t-filter-"+data.item.code+"-item-apply", evtData);
-        this.fire("t-filter-changed", this.data);
-      },
-
-      ready: function(){
-
-        if(!this.data) return;
-
-        // create __id
-        this._assignId(this.data);
-
-        // Keep original data for reset
-        this._origData = JSON.parse(JSON.stringify(this.data));
-        this.fire("t-filter-changed", this.data);
-      },
-
-      _applyFilters: function(e) {
-        
-        try{
-          evt.preventDefault();
-          document.getElementById('tFilter').style.display = 'none';
-        } catch(e){
-
-        }
-
-        this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
       }
     });
-  </script>
+
+    return arr;
+  },
+
+  _applyFilter: function _applyFilter(evt, data) {
+    this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
+  },
+
+  _resetAllFilter: function _resetAllFilter(evt, data) {
+    try {
+      evt.preventDefault();
+    } catch (e) {}
+
+    this.data = this._clone(this._origData);
+    this.fire("t-filter-changed", this.data);
+  },
+
+  // Show Hide Filter Block
+  _toggleView: function _toggleView(evt) {
+    var isOpenState = !evt.model.get("item").isOpen;
+    evt.model.set("item.isOpen", isOpenState);
+    this.updateStyles();
+  },
+
+  // Reset Filter
+  _resetView: function _resetView(evt, resetData) {
+    try {
+      evt.preventDefault();
+    } catch (e) {}
+
+    evt.preventDefault();
+    var index, clonedFilterData;
+
+    // When reset custom event is triggered
+    if (resetData && typeof resetData.index === "number") {
+
+      index = resetData.index;
+      this._origData[index].isOpen = this.data[index].isOpen;
+      clonedFilterData = this._clone(this.data);
+      clonedFilterData[index] = this._origData[index];
+      this.set("data", []);
+      this.set("data", clonedFilterData);
+    } else {
+
+      // For reset from DOM, to make diff more efficient
+      index = evt.model.get("index");
+      this._origData[index].isOpen = this.data[index].isOpen;
+      evt.model.set("item", {});
+      evt.model.set("item", JSON.parse(JSON.stringify(this._origData[index])));
+    }
+
+    this.fire("t-filter-changed", this.data);
+  },
+
+  // Return Class for filter expand/collapse icon
+  _chevronClass: function _chevronClass(isOpen) {
+    if (isOpen) {
+      return 'icon-drop-up';
+    }
+    return 'icon-drop-down';
+  },
+
+  _assignId: function _assignId(data, code, index) {
+    var self = this;
+
+    if (Array.isArray(data)) {
+      data.forEach(function (dataItem, index) {
+        if (dataItem.data || dataItem.options) {
+          dataItem.__id = dataItem.code;
+          return self._assignId(dataItem.data || dataItem.options, dataItem.code, index);
+        } else {
+          dataItem.__id = dataItem.code || code + "_" + index;
+        }
+      });
+    } else {
+      data.__id = data.code || code + "_" + index;
+    }
+  },
+
+  _onChange: function _onChange(e, data) {
+
+    if (data.item.type === "Text") {
+      // No action required, model updates automatically
+    }
+
+    if (data.item.type === "Option") {
+      // If checkbox
+      if (data.item.allowMultiSelect) {
+        if (data.item.selected.indexOf(data.index) < 0 && data.value === true) {
+          data.item.selected.push(data.index);
+        } else if (data.item.selected.indexOf(data.index) > -1 && data.value === false) {
+          var foundAt = data.item.selected.indexOf(data.index);
+          data.item.selected.splice(foundAt, 1);
+        }
+      } else {
+
+        // If radio
+        if (data.value) {
+          data.item.selected = data.index;
+        } else {
+          data.item.selected = -1;
+        }
+      }
+    }
+
+    if (data.item.type === "Rating") {
+      if (data.item.selected.indexOf(data.index) < 0 && data.value === true) {
+        data.item.selected.push(data.index);
+      } else if (data.item.selected.indexOf(data.index) > -1 && data.value === false) {
+        var foundAt = data.item.selected.indexOf(data.index);
+        data.item.selected.splice(foundAt, 1);
+      }
+    }
+
+    if (data.item.type === "Range") {
+      if (data.item.isSingleMarker) {
+        data.item.selected = [data.minValue];
+      } else {
+        data.item.selected = [data.minValue, data.maxValue];
+      }
+    }
+
+    if (data.item.type === "Select") {
+      data.item.selected = data.item.data.indexOf(data.option);
+    }
+
+    var evtData = {
+      code: data.item.code,
+      selected: data.item.selected
+    };
+
+    this.fire("t-filter-item-tap", evtData);
+    this.fire("t-filter-" + data.item.code + "-item-apply", evtData);
+    this.fire("t-filter-changed", this.data);
+  },
+
+  ready: function ready() {
+
+    if (!this.data) return;
+
+    // create __id
+    this._assignId(this.data);
+
+    // Keep original data for reset
+    this._origData = JSON.parse(JSON.stringify(this.data));
+    this.fire("t-filter-changed", this.data);
+  },
+
+  _applyFilters: function _applyFilters(e) {
+
+    try {
+      evt.preventDefault();
+      document.getElementById('tFilter').style.display = 'none';
+    } catch (e) {}
+
+    this.fire("t-filter-apply", this._getFormattedDataForFilter(this.data));
+  }
+});</script>
 </dom-module>

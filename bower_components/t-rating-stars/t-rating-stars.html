@@ -73,66 +73,65 @@ Custom property | Description | Default
     </template>
 
     <script>
-        Polymer({
-            is: 't-rating-stars',
-            properties: {
-                initialized: {
-                    type: Boolean,
-                    value: false
-                },
-                value: {
-                    type: Number,
-                    reflectToAttribute: true,
-                    observer: '_propagateChange',
-                    notify: true
-                },
-                fontSize: {
-                    type: Number,
-                    value: 20,
-                    reflectToAttribute: true
-                },
-                percentage: {
-                    type: Number,
-                    value: 100
-                },
-                height: {
-                    type: Number,
-                    value: 20,
-                    reflectToAttribute: true
-                },
-                color: {
-                    type: String,
-                    value: '#FCCD38',
-                    reflectToAttribute: true
-                }
-            },
-            
-            _propagateChange: function(){
-              this.fresh();
-            },
-            
-            fresh: function () {
-                
-                if(!this.initialized) return;
-                
-                this.percentage = (this.value / 5) * 100;
+Polymer({
+    is: 't-rating-stars',
+    properties: {
+        initialized: {
+            type: Boolean,
+            value: false
+        },
+        value: {
+            type: Number,
+            reflectToAttribute: true,
+            observer: '_propagateChange',
+            notify: true
+        },
+        fontSize: {
+            type: Number,
+            value: 20,
+            reflectToAttribute: true
+        },
+        percentage: {
+            type: Number,
+            value: 100
+        },
+        height: {
+            type: Number,
+            value: 20,
+            reflectToAttribute: true
+        },
+        color: {
+            type: String,
+            value: '#FCCD38',
+            reflectToAttribute: true
+        }
+    },
 
-                // this.customStyle['--t-rating-stars-font-size'] = this.fontSize + "px";
-                // this.customStyle['--t-rating-stars-container-height'] = this.height + "px";
-                // this.customStyle['--t-rating-stars-container-width'] = (5 * this.fontSize) + "px";
-                // this.customStyle['--t-rating-stars-filled-color'] = this.color;
-                this.updateStyles({
-                    '--t-rating-stars-font-size' : this.fontSize + "px",
-                    '--t-rating-stars-container-height' :  this.height + "px",
-                    '--t-rating-stars-container-width' : (5 * this.fontSize) + "px",
-                    '--t-rating-stars-filled-color' : this.color
-                });
-            },
-            
-            attached: function () {
-                this.initialized = true;
-                this.fresh();
-            }
+    _propagateChange: function _propagateChange() {
+        this.fresh();
+    },
+
+    fresh: function fresh() {
+
+        if (!this.initialized) return;
+
+        this.percentage = this.value / 5 * 100;
+
+        // this.customStyle['--t-rating-stars-font-size'] = this.fontSize + "px";
+        // this.customStyle['--t-rating-stars-container-height'] = this.height + "px";
+        // this.customStyle['--t-rating-stars-container-width'] = (5 * this.fontSize) + "px";
+        // this.customStyle['--t-rating-stars-filled-color'] = this.color;
+        this.updateStyles({
+            '--t-rating-stars-font-size': this.fontSize + "px",
+            '--t-rating-stars-container-height': this.height + "px",
+            '--t-rating-stars-container-width': 5 * this.fontSize + "px",
+            '--t-rating-stars-filled-color': this.color
         });
-    </script>
+    },
+
+    attached: function attached() {
+        this.initialized = true;
+        this.fresh();
+    }
+});</script>
 </dom-module>

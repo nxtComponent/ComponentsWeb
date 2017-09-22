@@ -70,8 +70,7 @@ The form handles below mentioned scenarios on its own.
     <iron-media-query query="(max-width: 600px)" query-matches="{{mediumTablet}}"></iron-media-query>
     <iron-media-query query="(max-width: 767px)" query-matches="{{mobilePhone}}"></iron-media-query>
 
-    <div class="item" smallMobileView$="{{smallMobileView}}" desktopView$="{{desktopView}}" tabletView$="{{tabletView}}" mobileView$="{{mobileView}}"
-      largeDesktopView$="{{_largeDesktopViewOther(largeDesktopView)}}" largeDesktopViewIE$="{{_largeDesktopViewIE(largeDesktopView)}}">
+    <div class="item" smallmobileview$="{{smallMobileView}}" desktopview$="{{desktopView}}" tabletview$="{{tabletView}}" mobileview$="{{mobileView}}" largedesktopview$="{{_largeDesktopViewOther(largeDesktopView)}}" largedesktopviewie$="{{_largeDesktopViewIE(largeDesktopView)}}">
 
 
       <!--Toolbar to show on mobile screen for Drop down link 'Need more rooms or have children' .
@@ -82,7 +81,7 @@ The form handles below mentioned scenarios on its own.
         <paper-button class="btnback" on-tap="_closeCardView">
           <iron-icon icon="icons:arrow-back"></iron-icon>
         </paper-button>
-        <paper-button toggles class="btndone" on-tap='_doneCardView'>Done</paper-button>
+        <paper-button toggles="" class="btndone" on-tap="_doneCardView">Done</paper-button>
       </app-toolbar>
 
       <!--Toolbar to show on mobile screen for datepicker.
@@ -93,8 +92,8 @@ The form handles below mentioned scenarios on its own.
         <paper-button class="btnback" on-tap="_closeDatePicker">
           <iron-icon icon="icons:arrow-back"></iron-icon>
         </paper-button>
-        <span class="dateSpan" main-title disabled>Select Dates</span>
-        <paper-button toggles class="btndone" on-tap='_doneDatePicker'>Done</paper-button>
+        <span class="dateSpan" main-title="" disabled="">Select Dates</span>
+        <paper-button toggles="" class="btndone" on-tap="_doneDatePicker">Done</paper-button>
         <!--<div id="selectDate">
           <iron-icon icon="icons:arrow-back" id="backButtonDatepicker" on-tap="_closeDatePicker"></iron-icon>
           <span class="dateSpan" disabled>Select Dates</span>
@@ -107,7 +106,7 @@ The form handles below mentioned scenarios on its own.
             This is hidden while user is working desktop mode or tablet mode.
             It will come in picture after user providing three input characters at autosuggest at mobile screen.       -->
 
-      <app-toolbar id="toolbarAutoComplete" hidden class="row-lg-height row-md-height row-sm-height row-xs-height">
+      <app-toolbar id="toolbarAutoComplete" hidden="" class="row-lg-height row-md-height row-sm-height row-xs-height">
         <iron-icon id="backButtonAutoSuggest" icon="icons:arrow-back" on-tap="_showACMainToolbar"></iron-icon>
         <div>
           <iron-icon id="clearButton" icon="close" on-click="_clearInput"></iron-icon>
@@ -120,38 +119,31 @@ The form handles below mentioned scenarios on its own.
           <app-toolbar id="mainToolbar" class="row row-lg-height row-md-height row-sm-height row-xs-height">
             <form is="iron-form" id="form" method="post" action="/form/handler">
 
-              <div id="autosuggestInput" required auto-validate class="col-md-4 col-sm-11">
-                <t-autosuggest id="location" name="location" required auto-validate selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}"
-                  resource=[[_resources]] is-mobile="[[mobilePhone]]" data-url$="[[autoSuggestUrl]]">
+              <div id="autosuggestInput" required="" auto-validate="" class="col-md-4 col-sm-11">
+                <t-autosuggest id="location" name="location" required="" auto-validate="" selected-item="{{location}}" query-params="token={{tokenResponse.authenticationToken}}" resource="[[_resources]]" is-mobile="[[mobilePhone]]" data-url$="[[autoSuggestUrl]]">
                 </t-autosuggest>
 
               </div>
 
 
               <div id="startContainer" class="col-md-1 col-sm-3 col-xs-5">
-                <t-input-date-picker required auto-validate error-message="[[_resources.checkInError]]" class="suggestions" date-format="MM/DD/YYYY"
-                  id="start" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]"
-                  on-tap="_openDatePicker" is-mobile="[[mobilePhone]]" placeholder="[[_resources.datePlaceholder]]">
+                <t-input-date-picker required="" auto-validate="" error-message="[[_resources.checkInError]]" class="suggestions" date-format="MM/DD/YYYY" id="start" label="[[_resources.checkin]]" min-date="[[_searchOption.minDateToday]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker" is-mobile="[[mobilePhone]]" placeholder="[[_resources.datePlaceholder]]">
                 </t-input-date-picker>
 
               </div>
 
               <div id="endContainer" class="col-md-1 col-sm-3 col-xs-5">
-                <t-input-date-picker required auto-validate error-message="[[resource.checkOutError]]" class="suggestions" id="end" label="[[_resources.checkout]]"
-                  date-format="MM/DD/YYYY" is-mobile="[[mobilePhone]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker"
-                  placeholder="[[_resources.datePlaceholder]]">
+                <t-input-date-picker required="" auto-validate="" error-message="[[resource.checkOutError]]" class="suggestions" id="end" label="[[_resources.checkout]]" date-format="MM/DD/YYYY" is-mobile="[[mobilePhone]]" max-date="[[_searchOption.maxDate]]" on-tap="_openDatePicker" placeholder="[[_resources.datePlaceholder]]">
                 </t-input-date-picker>
 
               </div>
 
               <div class="col-md-3 col-sm-4 col-xs-11" id="travellField">
 
-                <paper-dropdown-menu on-tap="_dismisCard" required auto-validate error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]"
-                  readonly on-keydown="_tabPress">
+                <paper-dropdown-menu on-tap="_dismisCard" required="" auto-validate="" error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]" readonly="" on-keydown="_tabPress">
                   <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
-                    <template is='dom-repeat' items='{{choices}}'>
-                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}"
-                        value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
+                    <template is="dom-repeat" items="{{choices}}">
+                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}" value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
                     </template>
                     <paper-item id="customTravelerMenu" class="hidden">[[_getTravelerMenuLabel()]] </paper-item>
                     <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
@@ -171,12 +163,10 @@ The form handles below mentioned scenarios on its own.
       </div>
     </div>
 
-    <div class="item" id="card" smallMobileView$="{{smallMobileView}}" MobileView$="{{mobileView}}" TabletView$="{{tabletView}}"
-      DesktopView$="{{desktopView}}" largeDesktopView$="{{largeDesktopView}}">
+    <div class="item" id="card" smallmobileview$="{{smallMobileView}}" mobileview$="{{mobileView}}" tabletview$="{{tabletView}}" desktopview$="{{desktopView}}" largedesktopview$="{{largeDesktopView}}">
       <paper-card hidden$="{{_hiddenTravelerCard}}" id="paperCard" class="paperCard">
         <div>
-          <choice-card id="choiceCard" rooms=[[_selectedTraveller]] search-option=[[_searchOption]] is-mobile="[[isMobile]]" resources=[[_resources]]
-            on-traveler-selected="_onChoiceCardTravelerSelected"></choice-card>
+          <choice-card id="choiceCard" rooms="[[_selectedTraveller]]" search-option="[[_searchOption]]" is-mobile="[[isMobile]]" resources="[[_resources]]" on-traveler-selected="_onChoiceCardTravelerSelected"></choice-card>
         </div>
       </paper-card>
     </div>
@@ -184,694 +174,722 @@ The form handles below mentioned scenarios on its own.
   </template>
 
   <script>
-    /**
-     * `t-hotel-search`
-     * Travel Hotel Search
-     *
-     * @customElement
-     * @polymer
-     * @demo demo/index.html
-     */
-    class THotelSearch extends Polymer.Element {
-      static get is() { return 't-hotel-search'; }
+/**
+ * `t-hotel-search`
+ * Travel Hotel Search
+ *
+ * @customElement
+ * @polymer
+ * @demo demo/index.html
+ */
+var THotelSearch = function (_Polymer$Element) {
+  babelHelpers.inherits(THotelSearch, _Polymer$Element);
 
-      static get properties() {
-        return {
+  function THotelSearch() {
+    babelHelpers.classCallCheck(this, THotelSearch);
+    return babelHelpers.possibleConstructorReturn(this, (THotelSearch.__proto__ || Object.getPrototypeOf(THotelSearch)).apply(this, arguments));
+  }
 
-          /**
-          * This property should have the value of a compatible autosuggest api url.
-          * Autosuggest api should return valid options based on a GET call to this url after appending `'/{text entered in location field}?{queryParams}'`
-          * Suggestions are requested after 3 characters(configurable) have been entered. 
-          */
-          autoSuggestUrl: String,
+  babelHelpers.createClass(THotelSearch, [{
+    key: "screenSizeChange",
+    value: function screenSizeChange() {
+      if (this.smallMobileView || this.mobileView) this.set("isMobile", true);else this.set("isMobile", false);
+    }
 
-          isMobile: Boolean,
+    /* 
+    * function to control datepicker for checkin and checkout dates.
+    */
 
-          /**
-          * This property stores the value of authentication token required for autosuggest API. 
-          */
-          tokenResponse: String,
+  }, {
+    key: "ready",
+    value: function ready() {
+      babelHelpers.get(THotelSearch.prototype.__proto__ || Object.getPrototypeOf(THotelSearch.prototype), "ready", this).call(this);
 
-          _hiddenToolbar: {
-            type: Boolean,
-            value: true
-          },
+      this._defaultOptionValue();
+      this._defaultResourcesValue();
+      var ckeckMin = this._searchOption.checkInAllowFromNow;
+      this._setMinDate(ckeckMin);
+      var travelDD = this._searchOption.defaultSelectOption;
+      this._choices(travelDD);
 
-          _hiddenDatePickerToolbar: {
-            type: Boolean,
-            value: true
-          },
-
-          _hiddenTravelerCard: {
-            type: Boolean,
-            value: true
-          },
-
-          /**
-        * This property is used to set search option.
-        **/
-          option: {
-            type: Object,
-            value: {
-              "traveller": {
-
-                "defaultSelectOption": []
-
-              },
-              "date": {
-              }
-            }
-          },
-          /**
-          * This property is used to set search localized resources.
-          **/
-          resources: {
-            type: Object,
-            value: {
-              "labels": {
-              },
-              "watermark": {
-              },
-
-              "errorMessage": {
-              }
-            }
-          },
-
-          _searchOption: {
-            type: Object,
-            value: function () {
-              var maxDate = new Date();
-              maxDate.setMonth(maxDate.getMonth() + 12);
-
-              return {
-                "checkInAllowFromNow": 0,
-                "minDateToday": new Date(),
-                "maxDate": maxDate,
-                "maxRoomCount": 2,
-                "minAdultCount": 1,
-                "maxAdultCount": 8,
-                "minChildCount": 0,
-                "maxChildCount": 5,
-                "totalRoomPaxCount": 9,
-                "minChildAge": 0,
-                "defaultStayDuration": 2,
-                "maxStayDuration": 30,
-                "dateFormat": "MM/DD/YYYY",
-                "maxChildAge": 12,
-                "defaultAdultCount": 1,
-                "defaultChildCount": 0,
-                "defaultSelectOption": [
-                  {
-                    "room": 1,
-                    "adult": 1
-                  }, {
-                    "room": 1,
-                    "adult": 2
-                  }, {
-                    "room": 1,
-                    "adult": 3
-                  }, {
-                    "room": 2,
-                    "adult": 5
-                  }]
-
-              }
-            }
-          },
-
-          _resources: {
-            type: Object,
-            value: function () {
-              return {
-                locationPlaceholder: "Search by Airport, Destination etc.",
-                locationLabel: "City, Airport, Address or Point of Interest",
-                destinationError: "Please enter your destination",
-                checkInError: "Please enter checkin date",
-                checkOutError: "Please enter checkout date",
-                datePlaceholder: "MM/DD/YYYY",
-                checkin: "Check in",
-                checkout: "Check out",
-                travelers: "Travellers",
-                age: "Age",
-                rooms: "Rooms",
-                room: "Room",
-                adult: "Adult",
-                adults: "Adults",
-                child: "Child",
-                children: "Children",
-                childLabel: "Children",
-              }
-            }
-          },
-
-          _selectedTraveller: {
-            type: Array,
-            value: function () {
-              return [
-                { adult: 1, child: 0, childAge: [] }
-              ];
-            }
+      var start = this.$.start;
+      var end = this.$.end;
+      var CurrentDate;
+      start.addEventListener('value-changed', function () {
+        // Open the end datepicker with a delay to
+        // make it less confusing.
+        window.setTimeout(function () {
+          var startDate = new Date();
+          startDate.setDate(startDate.getDate() - 1);
+          start.minDate = startDate;
+          var CurrentDate = start.value;
+          if (CurrentDate != undefined) {
+            CurrentDate.setHours(0, 0, 0, 0);
+            CurrentDate.setDate(CurrentDate.getDate());
           }
 
-        };
-      }
-
-      static get observers() {
-        return [
-          'screenSizeChange(smallMobileView, mobileView)'
-        ]
-      }
-
-      screenSizeChange() {
-        if (this.smallMobileView || this.mobileView)
-          this.set("isMobile", true);
-        else
-          this.set("isMobile", false);
-      }
-
-      /* 
-      * function to control datepicker for checkin and checkout dates.
-      */
-      ready() {
-        super.ready();
-
-        this._defaultOptionValue();
-        this._defaultResourcesValue();
-        var ckeckMin = this._searchOption.checkInAllowFromNow;
-        this._setMinDate(ckeckMin);
-        var travelDD = this._searchOption.defaultSelectOption;
-        this._choices(travelDD);
-
-        var start = this.$.start;
-        var end = this.$.end;
-        var CurrentDate;
-        start.addEventListener('value-changed', function () {
-          // Open the end datepicker with a delay to
-          // make it less confusing.
-          window.setTimeout(function () {
-            var startDate = new Date();
-            startDate.setDate(startDate.getDate() - 1);
-            start.minDate = startDate;
-            var CurrentDate = start.value;
-            if (CurrentDate != undefined) {
-              CurrentDate.setHours(0, 0, 0, 0);
-              CurrentDate.setDate(CurrentDate.getDate());
-            }
-
-            if (start.value > end.value) {
-              end.value = CurrentDate;
-            }
-          });
+          if (start.value > end.value) {
+            end.value = CurrentDate;
+          }
         });
+      });
 
-        var travelLableColor = this.$.travelerInput;
-        travelLableColor.$.menuButton.querySelector("paper-input").$.input.style.color = "lightgray";
-        var deskView = window.matchMedia("(min-width:1024px) and (max-width:1260px)").matches;
-        if (deskView) {
-          var travellerDD = this.$.travelerInput.children[1].children[1];
-          travellerDD.style.width = "120%";
-          travellerDD.style.marginTop = "5px";
+      var travelLableColor = this.$.travelerInput;
+      travelLableColor.$.menuButton.querySelector("paper-input").$.input.style.color = "lightgray";
+      var deskView = window.matchMedia("(min-width:1024px) and (max-width:1260px)").matches;
+      if (deskView) {
+        var travellerDD = this.$.travelerInput.children[1].children[1];
+        travellerDD.style.width = "120%";
+        travellerDD.style.marginTop = "5px";
+      }
+      if (this.tabletView) {
+        var inputContent = this.$.travelerInput.children[1].children[1];
+        inputContent.style.width = "120%";
+      }
+    }
+  }, {
+    key: "_defaultOptionValue",
+    value: function _defaultOptionValue() {
+      if (this.option.traveller) {
+
+        if (this.option.traveller.defaultSelectOption) {
+          this._searchOption.defaultSelectOption = this.option.traveller.defaultSelectOption;
         }
-        if (this.tabletView) {
-          var inputContent = this.$.travelerInput.children[1].children[1];
-          inputContent.style.width = "120%";
+        if (this.option.traveller.defaultChildCount) {
+          this._searchOption.defaultChildCount = this.option.traveller.defaultChildCount;
+        }
+        if (this.option.traveller.defaultAdultCount) {
+          this._searchOption.defaultAdultCount = this.option.traveller.defaultAdultCount;
+        }
+        if (this.option.traveller.totalRoomPaxCount) {
+          this._searchOption.totalRoomPaxCount = this.option.traveller.totalRoomPaxCount;
+        }
+        if (this.option.traveller.minAdultCount) {
+          this._searchOption.minAdultCount = this.option.traveller.minAdultCount;
+        }
+        if (this.option.traveller.maxAdultCount) {
+          this._searchOption.maxAdultCount = this.option.traveller.maxAdultCount;
+        }
+        if (this.option.traveller.minChildCount) {
+          this._searchOption.minChildCount = this.option.traveller.minChildCount;
+        }
+        if (this.option.traveller.maxChildCount) {
+          this._searchOption.maxChildCount = this.option.traveller.maxChildCount;
+        }
+        if (this.option.traveller.minChildAge) {
+          this._searchOption.minChildAge = this.option.traveller.minChildAge;
+        }
+        if (this.option.traveller.maxChildAge) {
+          this._searchOption.maxChildAge = this.option.traveller.maxChildAge;
+        }
+      }
+      if (this.option.date) {
+        if (this.option.date.checkInAllowFromNow) {
+          this._searchOption.checkInAllowFromNow = this.option.date.checkInAllowFromNow;
+        }
+        if (this.option.date.maxStayDuration) {
+          this._searchOption.maxStayDuration = this.option.date.maxStayDuration;
+        }
+        if (this.option.date.defaultStayDuration) {
+          this._searchOption.defaultStayDuration = this.option.date.defaultStayDuration;
+        }
+        if (this.option.date.format) {
+          this._searchOption.format = this.option.date.format;
+        }
+      }
+      if (this.option.maxRoomCount) {
+        this._searchOption.maxRoomCount = this.option.maxRoomCount;
+      }
+    }
+  }, {
+    key: "_defaultResourcesValue",
+    value: function _defaultResourcesValue() {
+      /**Labels**/
+      if (this.resources.labels) {
+        if (this.resources.labels.adult) {
+          this._resources.adult = this.resources.labels.adult;
+        }
+        if (this.resources.labels.adults) {
+          this._resources.adults = this.resources.labels.adults;
+        }
+        if (this.resources.labels.room) {
+          this._resources.room = this.resources.labels.room;
+        }
+        if (this.resources.labels.rooms) {
+          this._resources.rooms = this.resources.labels.rooms;
+        }
+        if (this.resources.labels.children) {
+          this._resources.childLabel = this.resources.labels.children;
+        }
+        if (this.resources.labels.child) {
+          this._resources.child = this.resources.labels.child;
+        }
+        if (this.resources.labels.age) {
+          this._resources.age = this.resources.labels.age;
+        }
+        if (this.resources.labels.travelers) {
+          this._resources.travelers = this.resources.labels.travelers;
+        }
+        if (this.resources.labels.checkin) {
+          this._resources.checkin = this.resources.labels.checkin;
+        }
+        if (this.resources.labels.checkout) {
+          this._resources.checkout = this.resources.labels.checkout;
+        }
+        if (this.resources.labels.hotelLocation) {
+          this._resources.locationLabel = this.resources.labels.hotelLocation;
+        }
+        if (this.resources.labels.HotelLocation) {
+          this._resources.locationPlaceholder = this.resources.labels.HotelLocation;
         }
       }
 
-      _defaultOptionValue() {
-        if (this.option.traveller) {
-
-          if (this.option.traveller.defaultSelectOption) {
-            this._searchOption.defaultSelectOption = this.option.traveller.defaultSelectOption;
-          }
-          if (this.option.traveller.defaultChildCount) {
-            this._searchOption.defaultChildCount = this.option.traveller.defaultChildCount;
-          }
-          if (this.option.traveller.defaultAdultCount) {
-            this._searchOption.defaultAdultCount = this.option.traveller.defaultAdultCount;
-          }
-          if (this.option.traveller.totalRoomPaxCount) {
-            this._searchOption.totalRoomPaxCount = this.option.traveller.totalRoomPaxCount;
-          }
-          if (this.option.traveller.minAdultCount) {
-            this._searchOption.minAdultCount = this.option.traveller.minAdultCount;
-          }
-          if (this.option.traveller.maxAdultCount) {
-            this._searchOption.maxAdultCount = this.option.traveller.maxAdultCount;
-          }
-          if (this.option.traveller.minChildCount) {
-            this._searchOption.minChildCount = this.option.traveller.minChildCount;
-          }
-          if (this.option.traveller.maxChildCount) {
-            this._searchOption.maxChildCount = this.option.traveller.maxChildCount;
-          }
-          if (this.option.traveller.minChildAge) {
-            this._searchOption.minChildAge = this.option.traveller.minChildAge;
-          }
-          if (this.option.traveller.maxChildAge) {
-            this._searchOption.maxChildAge = this.option.traveller.maxChildAge;
-          }
+      /**WaterMark**/
+      if (this.resources.watermark) {
+        if (this.resources.watermark.checkIn) {
+          this._resources.checkIn = this.resources.watermark.checkIn;
         }
-        if (this.option.date) {
-          if (this.option.date.checkInAllowFromNow) {
-            this._searchOption.checkInAllowFromNow = this.option.date.checkInAllowFromNow;
-          }
-          if (this.option.date.maxStayDuration) {
-            this._searchOption.maxStayDuration = this.option.date.maxStayDuration;
-          }
-          if (this.option.date.defaultStayDuration) {
-            this._searchOption.defaultStayDuration = this.option.date.defaultStayDuration;
-          }
-          if (this.option.date.format) {
-            this._searchOption.format = this.option.date.format;
-          }
-        }
-        if (this.option.maxRoomCount) {
-          this._searchOption.maxRoomCount = this.option.maxRoomCount;
-        }
-
-      }
-
-      _defaultResourcesValue() {
-        /**Labels**/
-        if (this.resources.labels) {
-          if (this.resources.labels.adult) {
-            this._resources.adult = this.resources.labels.adult;
-          }
-          if (this.resources.labels.adults) {
-            this._resources.adults = this.resources.labels.adults;
-          }
-          if (this.resources.labels.room) {
-            this._resources.room = this.resources.labels.room;
-          }
-          if (this.resources.labels.rooms) {
-            this._resources.rooms = this.resources.labels.rooms;
-          }
-          if (this.resources.labels.children) {
-            this._resources.childLabel = this.resources.labels.children;
-          }
-          if (this.resources.labels.child) {
-            this._resources.child = this.resources.labels.child;
-          }
-          if (this.resources.labels.age) {
-            this._resources.age = this.resources.labels.age;
-          }
-          if (this.resources.labels.travelers) {
-            this._resources.travelers = this.resources.labels.travelers;
-          }
-          if (this.resources.labels.checkin) {
-            this._resources.checkin = this.resources.labels.checkin;
-          }
-          if (this.resources.labels.checkout) {
-            this._resources.checkout = this.resources.labels.checkout;
-          }
-          if (this.resources.labels.hotelLocation) {
-            this._resources.locationLabel = this.resources.labels.hotelLocation;
-          }
-          if (this.resources.labels.HotelLocation) {
-            this._resources.locationPlaceholder = this.resources.labels.HotelLocation;
-          }
-        }
-
-        /**WaterMark**/
-        if (this.resources.watermark) {
-          if (this.resources.watermark.checkIn) {
-            this._resources.checkIn = this.resources.watermark.checkIn;
-          }
-          if (this.resources.watermark.checkOut) {
-            this._resources.checkOut = this.resources.watermark.checkOut;
-          }
-        }
-        if (this.resources.errorMessage) {
-          if (this.resources.errorMessage.destinationError) {
-            this._resources.destinationError = this.resources.errorMessage.destinationError;
-          }
-          if (this.resources.errorMessage.checkInError) {
-            this._resources.checkInError = this.resources.errorMessage.checkInError;
-          }
-          if (this.resources.errorMessage.checkOutError) {
-            this.resources.checkOutError = this.resources.errorMessage.checkOutError;
-          }
+        if (this.resources.watermark.checkOut) {
+          this._resources.checkOut = this.resources.watermark.checkOut;
         }
       }
-
-      /**
-      * This function is used to set min date for check in datepicker.
-      * It returns the min date as today.
-      **/
-      _setMinDate(checkInAllowFromNow) {
-        var setMinDatetoToday = new Date();
-        setMinDatetoToday.setDate(setMinDatetoToday.getDate() - 1 + checkInAllowFromNow);
-        this._searchOption.minDateToday = setMinDatetoToday;
-        return setMinDatetoToday;
+      if (this.resources.errorMessage) {
+        if (this.resources.errorMessage.destinationError) {
+          this._resources.destinationError = this.resources.errorMessage.destinationError;
+        }
+        if (this.resources.errorMessage.checkInError) {
+          this._resources.checkInError = this.resources.errorMessage.checkInError;
+        }
+        if (this.resources.errorMessage.checkOutError) {
+          this.resources.checkOutError = this.resources.errorMessage.checkOutError;
+        }
       }
+    }
 
-      _choices() {
-        var childArray = new Array();
-        var maximumChild = this._searchOption.defaultSelectOption.length;
-        if (maximumChild > 0) {
-          for (var i = 0; i < maximumChild; i++) {
-            var dropDownOption = this._searchOption.defaultSelectOption[i].room;
-            if (dropDownOption <= this._searchOption.maxRoomCount) {
-              childArray.push(this._searchOption.defaultSelectOption[i]);
-            }
+    /**
+    * This function is used to set min date for check in datepicker.
+    * It returns the min date as today.
+    **/
+
+  }, {
+    key: "_setMinDate",
+    value: function _setMinDate(checkInAllowFromNow) {
+      var setMinDatetoToday = new Date();
+      setMinDatetoToday.setDate(setMinDatetoToday.getDate() - 1 + checkInAllowFromNow);
+      this._searchOption.minDateToday = setMinDatetoToday;
+      return setMinDatetoToday;
+    }
+  }, {
+    key: "_choices",
+    value: function _choices() {
+      var childArray = new Array();
+      var maximumChild = this._searchOption.defaultSelectOption.length;
+      if (maximumChild > 0) {
+        for (var i = 0; i < maximumChild; i++) {
+          var dropDownOption = this._searchOption.defaultSelectOption[i].room;
+          if (dropDownOption <= this._searchOption.maxRoomCount) {
+            childArray.push(this._searchOption.defaultSelectOption[i]);
           }
-
-          var defTraveler = this._searchOption.defaultSelectOption[0];
-
-          if (defTraveler.adult)
-            this._selectedTraveller[0].adult = defTraveler.adult;
-          if (defTraveler.child)
-            this._selectedTraveller[0].child = defTraveler.child;
-
-        }
-        this.choices = childArray;
-        this.set("choice", 0);
-        return childArray;
-      }
-
-      /**
-       * Function to set view of internet explorer.       
-       * */
-      _largeDesktopViewIE(largeDesktopView) {
-        // Internet Explorer 6-11
-        var isIE = /*@cc_on!@*/false || !!document.documentMode;
-        return isIE && largeDesktopView;
-      }
-
-      /**
-       * Function for desktop view for browsers other than internet explorer.
-       * */
-      _largeDesktopViewOther(largeDesktopView) {
-        // Internet Explorer 6-11
-        var isIE = /*@cc_on!@*/false || !!document.documentMode;
-        return !isIE && largeDesktopView;
-      }
-
-      /**
-       * Function to open full screen calendar dialog at mobile screen.
-       **/
-      _openDatePicker() {
-        var startInput = Polymer.dom(this.$.start).node;
-        var endInput = Polymer.dom(this.$.end).node;
-        if (this.isMobile) {
-          this.$.end.invalid = false;
-
-          this.set("_hiddenDatePickerToolbar", false);
-          this.$.autosuggestInput.style.display = "none";
-          this.$.travellField.style.display = "none";
-          this.$.btnContainer.style.display = "none";
-          this.$.mainToolbar.style.height = "0px";
-          this.$.mainToolbar.style.minHeight = "0px";
-          this.$.startContainer.classList.add("divColorofDatepicker");
-          this.$.endContainer.classList.add("divColorofDatepicker");
-          this.$.mainToolbar.classList.add("divColorofDatepicker");
-          this.$.start.updateStyles({ "--paper-input-container-input-color": "black" });
-          this.$.end.updateStyles({ "--paper-input-container-input-color": "black" });
-          // startInput.children[0].style.textAlign = "center";
-          // endInput.children[0].style.textAlign = "center";
-          // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
-          // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
-        }
-        var tabView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
-        if (tabView) {
-          startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.fontSize = "13px";
-          endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.fontSize = "13px";
         }
 
+        var defTraveler = this._searchOption.defaultSelectOption[0];
+
+        if (defTraveler.adult) this._selectedTraveller[0].adult = defTraveler.adult;
+        if (defTraveler.child) this._selectedTraveller[0].child = defTraveler.child;
+      }
+      this.choices = childArray;
+      this.set("choice", 0);
+      return childArray;
+    }
+
+    /**
+     * Function to set view of internet explorer.       
+     * */
+
+  }, {
+    key: "_largeDesktopViewIE",
+    value: function _largeDesktopViewIE(largeDesktopView) {
+      // Internet Explorer 6-11
+      var isIE = /*@cc_on!@*/false || !!document.documentMode;
+      return isIE && largeDesktopView;
+    }
+
+    /**
+     * Function for desktop view for browsers other than internet explorer.
+     * */
+
+  }, {
+    key: "_largeDesktopViewOther",
+    value: function _largeDesktopViewOther(largeDesktopView) {
+      // Internet Explorer 6-11
+      var isIE = /*@cc_on!@*/false || !!document.documentMode;
+      return !isIE && largeDesktopView;
+    }
+
+    /**
+     * Function to open full screen calendar dialog at mobile screen.
+     **/
+
+  }, {
+    key: "_openDatePicker",
+    value: function _openDatePicker() {
+      var startInput = Polymer.dom(this.$.start).node;
+      var endInput = Polymer.dom(this.$.end).node;
+      if (this.isMobile) {
+        this.$.end.invalid = false;
+
+        this.set("_hiddenDatePickerToolbar", false);
+        this.$.autosuggestInput.style.display = "none";
+        this.$.travellField.style.display = "none";
+        this.$.btnContainer.style.display = "none";
+        this.$.mainToolbar.style.height = "0px";
+        this.$.mainToolbar.style.minHeight = "0px";
+        this.$.startContainer.classList.add("divColorofDatepicker");
+        this.$.endContainer.classList.add("divColorofDatepicker");
+        this.$.mainToolbar.classList.add("divColorofDatepicker");
+        this.$.start.updateStyles({ "--paper-input-container-input-color": "black" });
+        this.$.end.updateStyles({ "--paper-input-container-input-color": "black" });
+        // startInput.children[0].style.textAlign = "center";
+        // endInput.children[0].style.textAlign = "center";
+        // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
+        // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").querySelector("input").style.color = "black";
+      }
+      var tabView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
+      if (tabView) {
+        startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.fontSize = "13px";
+        endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.fontSize = "13px";
+      }
+    }
+
+    /**
+    * Function called upon done button click for calendar on mobile screen.
+    **/
+
+  }, {
+    key: "_doneDatePicker",
+    value: function _doneDatePicker() {
+      var startDialog = this.$.start;
+      var endDialog = this.$.end;
+      // startDialog.$.dialog.style.display = "none";
+      // endDialog.$.dialog.style.display = "none";
+      startDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+      endDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+      this.doneDatePicker = true;
+      this._closeDatePicker();
+    }
+
+    /**
+     * This is supportive function to maintain style of datepicker toolbar in mobile view.
+     **/
+
+  }, {
+    key: "_closeDatePicker",
+    value: function _closeDatePicker() {
+      this._hiddenTravelerCard = true;
+      this.showToolbar = true;
+      this.set("_hiddenDatePickerToolbar", true);
+
+      this.$.autosuggestInput.style.display = "block";
+      this.$.travellField.style.display = "block";
+      this.$.btnContainer.style.display = "block";
+      this.$.startContainer.classList.remove("divColorofDatepicker");
+      this.$.endContainer.classList.remove("divColorofDatepicker");
+      this.$.mainToolbar.classList.remove("divColorofDatepicker");
+
+      this.$.start.updateStyles({ "--paper-input-container-input-color": "white" });
+      this.$.end.updateStyles({ "--paper-input-container-input-color": "white" });
+
+      this.$.start.close();
+      this.$.end.close();
+      // this.$.startContainer.classList.add("colorOfToolbarAtRuntime");
+      // this.$.endContainer.classList.add("colorOfToolbarAtRuntime");
+      // this.$.mainToolbar.classList.add("colorOfToolbarAtRuntime");
+
+      // startInput.children[0].style.textAlign = "";
+      // endInput.children[0].style.textAlign = "";
+      // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
+      // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
+
+      this.$.start.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+      this.$.end.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+      // startInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
+      // endInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
+    }
+
+    /**
+    *to hide the travellers form on blur.
+    **/
+
+  }, {
+    key: "_dismisCard",
+    value: function _dismisCard() {
+      var travellerLabelShow = this.$.travelerInput;
+      var tabsView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
+      if (tabsView) {
+        travellerLabelShow.$.menuButton.querySelector("paper-input").$.input.style.fontSize = "13px";
       }
 
-      /**
-      * Function called upon done button click for calendar on mobile screen.
-      **/
-      _doneDatePicker() {
-        var startDialog = this.$.start;
-        var endDialog = this.$.end;
-        // startDialog.$.dialog.style.display = "none";
-        // endDialog.$.dialog.style.display = "none";
-        startDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-        endDialog.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-        this.doneDatePicker = true;
-        this._closeDatePicker();
+      travellerLabelShow.label = this._resources.travelers;
+      travellerLabelShow.$.menuButton.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+      // var pCard = Polymer.dom(this.$.paperCard).node;
+      // pCard.style.display = 'none';
+      this.set("_hiddenTravelerCard", true);
+      // var paperItem = this.$.needRoom;
+      // paperItem.textContent = "Need more rooms or have children?";
+      this.$.travelerInput.blur();
+    }
 
-      }
+    /**
+     * This function is used for up and down arrow key press on drop down menu.
+     **/
 
-      /**
-       * This is supportive function to maintain style of datepicker toolbar in mobile view.
-       **/
-      _closeDatePicker() {
-        this._hiddenTravelerCard = true;
-        this.showToolbar = true;
-        this.set("_hiddenDatePickerToolbar", true);
-
-        this.$.autosuggestInput.style.display = "block";
-        this.$.travellField.style.display = "block";
-        this.$.btnContainer.style.display = "block";
-        this.$.startContainer.classList.remove("divColorofDatepicker");
-        this.$.endContainer.classList.remove("divColorofDatepicker");
-        this.$.mainToolbar.classList.remove("divColorofDatepicker");
-
-        this.$.start.updateStyles({ "--paper-input-container-input-color": "white" });
-        this.$.end.updateStyles({ "--paper-input-container-input-color": "white" });
-
-        this.$.start.close();
-        this.$.end.close();
-        // this.$.startContainer.classList.add("colorOfToolbarAtRuntime");
-        // this.$.endContainer.classList.add("colorOfToolbarAtRuntime");
-        // this.$.mainToolbar.classList.add("colorOfToolbarAtRuntime");
-
-        // startInput.children[0].style.textAlign = "";
-        // endInput.children[0].style.textAlign = "";
-        // startInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
-        // endInput.shadowRoot.querySelector("#input").shadowRoot.querySelector("#input").style.color = "white";
-
-        this.$.start.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-        this.$.end.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-        // startInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
-        // endInput.$.input.$.container.shadowRoot.querySelector("#labelAndInputContainer").style.marginRight = "";
-      }
-
-
-      /**
-      *to hide the travellers form on blur.
-      **/
-
-      _dismisCard() {
-        var travellerLabelShow = this.$.travelerInput;
-        var tabsView = window.matchMedia("(min-width:768px) and (max-width:1190px)").matches;
-        if (tabsView) {
-          travellerLabelShow.$.menuButton.querySelector("paper-input").$.input.style.fontSize = "13px";
-        }
-
-        travellerLabelShow.label = this._resources.travelers;
-        travellerLabelShow.$.menuButton.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+  }, {
+    key: "_tabPress",
+    value: function _tabPress(e) {
+      if (e.keyCode == 38 || e.key == "ArrowDown") {
         // var pCard = Polymer.dom(this.$.paperCard).node;
         // pCard.style.display = 'none';
         this.set("_hiddenTravelerCard", true);
         // var paperItem = this.$.needRoom;
         // paperItem.textContent = "Need more rooms or have children?";
-        this.$.travelerInput.blur();
       }
-
-      /**
-       * This function is used for up and down arrow key press on drop down menu.
-       **/
-      _tabPress(e) {
-        if (e.keyCode == 38 || e.key == "ArrowDown") {
-          // var pCard = Polymer.dom(this.$.paperCard).node;
-          // pCard.style.display = 'none';
-          this.set("_hiddenTravelerCard", true);
-          // var paperItem = this.$.needRoom;
-          // paperItem.textContent = "Need more rooms or have children?";
-        }
+    }
+  }, {
+    key: "_adultLabel",
+    value: function _adultLabel(adultCount) {
+      if (adultCount <= 1) {
+        return this._resources.adult;
+      } else {
+        return this._resources.adults;
       }
-
-      _adultLabel(adultCount) {
-        if (adultCount <= 1) {
-          return this._resources.adult;
-        }
-        else {
-          return this._resources.adults;
-        }
+    }
+  }, {
+    key: "_roomLabel",
+    value: function _roomLabel(roomCount) {
+      if (roomCount <= 1) {
+        return this._resources.room;
+      } else {
+        return this._resources.rooms;
       }
-
-      _roomLabel(roomCount) {
-        if (roomCount <= 1) {
-          return this._resources.room;
-        }
-        else {
-          return this._resources.rooms;
-        }
-      }
-
-      /**
-      *To open the travellers form on click of 'need more rooms or have children'.      
-      **/
-      _openChildForm(e) {
-        setTimeout(function () {
-          if (this.isMobile) {
-            this.$.startContainer.hidden = true;
-            this.$.endContainer.hidden = true;
-            this.$.autosuggestInput.hidden = true;
-            this.$.travellField.hidden = true;
-            this.$.btnContainer.hidden = true;
-          }
-          // this.$.needRoom.textContent = "1 Adult in 1 Room";
-          // var pCard = Polymer.dom(this.$.paperCard).node;
-          // pCard.style.display = 'block';
-
-          // if (this._hiddenTravelerCard == true) {
-          //   this._hiddenTravelerCard = !this._hiddenTravelerCard
-          // }
-
-          this._hiddenTravelerCard = false;
-          // pCard.style.visibility = '' ? 'hidden' : '';
-
-          // var tBar = Polymer.dom(this.$.toolbarRoom).node;
-          // tBar.style.display = 'block';
-          // this.set("_hiddenToolbar", false);
-
-          // var toolbarSpan = this.$.choiceCard.shadowRoot.querySelector("#choiceRoom");
-          // this.choice = this.choices.length;
-          // toolbarSpan._calResultOfRoom();
-          if (this.isMobile) {
-            this.set("_hiddenToolbar", false);
-          }
-          // tBar.style.visibility = '' ? 'hidden' : '';
-          // if (mq) {
-          //   this.$.toolbarRoom;
-          // }
-          // var Choicecard = this.$.choiceCard;
-          // Choicecard.$.btnAddRoom.style.visibility = "visible";
-          // if (Choicecard.roomCount >= this.maxRoomCount) {
-          //   Choicecard.$.btnAddRoom.style.visibility = "hidden";
-          // }
-          this.set("choice", this.choices.length);
-        }.bind(this), 0);
-      }
-
-      /**
-      * this method will get executed when close button click on mobile view on card view popup.
-      **/
-
-      _closeCardView() {
-        this.set("_hiddenToolbar", true);
-        this.set("_hiddenTravelerCard", true);
-        this.$.startContainer.hidden = false;
-        this.$.endContainer.hidden = false;
-        this.$.autosuggestInput.hidden = false;
-        this.$.travellField.hidden = false;
-        this.$.btnContainer.hidden = false;
-      }
-
-      /**
-      * this method will get executed when done button click on mobile view on card view popup.
-      **/
-      _doneCardView() {
-        this.$.choiceCard.triggerDone();
-      }
-
-      _onChoiceCardTravelerSelected(e) {
-        // console.log("traveler selected", e, e.detail);
-        this.set("_selectedTraveller", e.detail);
-
-        this.$.customTravelerMenu.textContent = this._getTravelerMenuLabel();
-        this.set("choice", 0);
-        this.set("choice", this.choices.length);
-        this._closeCardView()
-      }
-
-      _getTravelerMenuLabel() {
-        var cntAdult = 0, cntChild = 0, strLabel = [];
-        for (var cnt = 0; cnt < this._selectedTraveller.length; cnt++) {
-          cntAdult += parseInt(this._selectedTraveller[cnt].adult);
-          cntChild += parseInt(this._selectedTraveller[cnt].child);
-        }
-        strLabel.push(cntAdult);
-        if (cntAdult > 1)
-          strLabel.push(this._resources.adults);
-        else
-          strLabel.push(this._resources.adult);
-
-        if (cntChild > 0) {
-          strLabel.push(cntChild)
-          if (cntChild > 1)
-            strLabel.push(this._resources.children);
-          else
-            strLabel.push(this._resources.child);
-        }
-        strLabel.push("in " + this._selectedTraveller.length);
-        if (this._selectedTraveller.length > 1)
-          strLabel.push(this._resources.rooms);
-        else
-          strLabel.push(this._resources.room);
-
-        return strLabel.join(" ");
-      }
-
-      /*
-     *To collect the input from form on click of search button.
-     *This function also validates each field of the form.
-     * And used to set search button text as 'searching'.
-     */
-
-      _onSearchClick(e) {
-
-        var isValid = true;
-
-        if (!this.$.location.selectedItem) {
-          isValid = false;
-          this.$.location.isInvalid = true;
-        }
-
-        if (!this.$.start.value) {
-          isValid = false;
-          this.$.start.invalid = true;
-        }
-
-        if (!this.$.end.value) {
-          isValid = false;
-          this.$.end.invalid = true;
-        }
-
-        if (isValid) {
-
-          var searchModel = {
-
-            destination: this.$.location.selectedItem,
-            checkIn: this.$.start.getValue("MM/DD/YYYY"),
-            checkOut: this.$.end.getValue("MM/DD/YYYY"),
-            rooms: []
-          }
-          for (var i = 0; i < this._selectedTraveller.length; i++) {
-            var room = this._selectedTraveller[i];
-
-
-            var obj = {
-              adult: parseInt(room.adult),
-              children: parseInt(room.child),
-              childAges: []
-            };
-
-            if (obj.children > 0) {
-              room.childAge.forEach(ag => {
-                obj.childAges.push(parseInt(ag.age));
-              });
-            }
-            searchModel.rooms.push(obj);
-          }
-          searchModel.type = "Hotel";
-          this.dispatchEvent(new CustomEvent("do-search", {
-            detail: searchModel
-          }));
-
-          // console.log(searchModel);
-        }
-      }
-
     }
 
-    window.customElements.define(THotelSearch.is, THotelSearch);
-  </script>
+    /**
+    *To open the travellers form on click of 'need more rooms or have children'.      
+    **/
+
+  }, {
+    key: "_openChildForm",
+    value: function _openChildForm(e) {
+      setTimeout(function () {
+        if (this.isMobile) {
+          this.$.startContainer.hidden = true;
+          this.$.endContainer.hidden = true;
+          this.$.autosuggestInput.hidden = true;
+          this.$.travellField.hidden = true;
+          this.$.btnContainer.hidden = true;
+        }
+        // this.$.needRoom.textContent = "1 Adult in 1 Room";
+        // var pCard = Polymer.dom(this.$.paperCard).node;
+        // pCard.style.display = 'block';
+
+        // if (this._hiddenTravelerCard == true) {
+        //   this._hiddenTravelerCard = !this._hiddenTravelerCard
+        // }
+
+        this._hiddenTravelerCard = false;
+        // pCard.style.visibility = '' ? 'hidden' : '';
+
+        // var tBar = Polymer.dom(this.$.toolbarRoom).node;
+        // tBar.style.display = 'block';
+        // this.set("_hiddenToolbar", false);
+
+        // var toolbarSpan = this.$.choiceCard.shadowRoot.querySelector("#choiceRoom");
+        // this.choice = this.choices.length;
+        // toolbarSpan._calResultOfRoom();
+        if (this.isMobile) {
+          this.set("_hiddenToolbar", false);
+        }
+        // tBar.style.visibility = '' ? 'hidden' : '';
+        // if (mq) {
+        //   this.$.toolbarRoom;
+        // }
+        // var Choicecard = this.$.choiceCard;
+        // Choicecard.$.btnAddRoom.style.visibility = "visible";
+        // if (Choicecard.roomCount >= this.maxRoomCount) {
+        //   Choicecard.$.btnAddRoom.style.visibility = "hidden";
+        // }
+        this.set("choice", this.choices.length);
+      }.bind(this), 0);
+    }
+
+    /**
+    * this method will get executed when close button click on mobile view on card view popup.
+    **/
+
+  }, {
+    key: "_closeCardView",
+    value: function _closeCardView() {
+      this.set("_hiddenToolbar", true);
+      this.set("_hiddenTravelerCard", true);
+      this.$.startContainer.hidden = false;
+      this.$.endContainer.hidden = false;
+      this.$.autosuggestInput.hidden = false;
+      this.$.travellField.hidden = false;
+      this.$.btnContainer.hidden = false;
+    }
+
+    /**
+    * this method will get executed when done button click on mobile view on card view popup.
+    **/
+
+  }, {
+    key: "_doneCardView",
+    value: function _doneCardView() {
+      this.$.choiceCard.triggerDone();
+    }
+  }, {
+    key: "_onChoiceCardTravelerSelected",
+    value: function _onChoiceCardTravelerSelected(e) {
+      // console.log("traveler selected", e, e.detail);
+      this.set("_selectedTraveller", e.detail);
+
+      this.$.customTravelerMenu.textContent = this._getTravelerMenuLabel();
+      this.set("choice", 0);
+      this.set("choice", this.choices.length);
+      this._closeCardView();
+    }
+  }, {
+    key: "_getTravelerMenuLabel",
+    value: function _getTravelerMenuLabel() {
+      var cntAdult = 0,
+          cntChild = 0,
+          strLabel = [];
+      for (var cnt = 0; cnt < this._selectedTraveller.length; cnt++) {
+        cntAdult += parseInt(this._selectedTraveller[cnt].adult);
+        cntChild += parseInt(this._selectedTraveller[cnt].child);
+      }
+      strLabel.push(cntAdult);
+      if (cntAdult > 1) strLabel.push(this._resources.adults);else strLabel.push(this._resources.adult);
+
+      if (cntChild > 0) {
+        strLabel.push(cntChild);
+        if (cntChild > 1) strLabel.push(this._resources.children);else strLabel.push(this._resources.child);
+      }
+      strLabel.push("in " + this._selectedTraveller.length);
+      if (this._selectedTraveller.length > 1) strLabel.push(this._resources.rooms);else strLabel.push(this._resources.room);
+
+      return strLabel.join(" ");
+    }
+
+    /*
+    *To collect the input from form on click of search button.
+    *This function also validates each field of the form.
+    * And used to set search button text as 'searching'.
+    */
+
+  }, {
+    key: "_onSearchClick",
+    value: function _onSearchClick(e) {
+
+      var isValid = true;
+
+      if (!this.$.location.selectedItem) {
+        isValid = false;
+        this.$.location.isInvalid = true;
+      }
+
+      if (!this.$.start.value) {
+        isValid = false;
+        this.$.start.invalid = true;
+      }
+
+      if (!this.$.end.value) {
+        isValid = false;
+        this.$.end.invalid = true;
+      }
+
+      if (isValid) {
+
+        var searchModel = {
+
+          destination: this.$.location.selectedItem,
+          checkIn: this.$.start.getValue("MM/DD/YYYY"),
+          checkOut: this.$.end.getValue("MM/DD/YYYY"),
+          rooms: []
+        };
+        for (var i = 0; i < this._selectedTraveller.length; i++) {
+          var room = this._selectedTraveller[i];
+
+          var obj = {
+            adult: parseInt(room.adult),
+            children: parseInt(room.child),
+            childAges: []
+          };
+
+          if (obj.children > 0) {
+            room.childAge.forEach(function (ag) {
+              obj.childAges.push(parseInt(ag.age));
+            });
+          }
+          searchModel.rooms.push(obj);
+        }
+        searchModel.type = "Hotel";
+        this.dispatchEvent(new CustomEvent("do-search", {
+          detail: searchModel
+        }));
+
+        // console.log(searchModel);
+      }
+    }
+  }], [{
+    key: "is",
+    get: function get() {
+      return 't-hotel-search';
+    }
+  }, {
+    key: "properties",
+    get: function get() {
+      return {
+
+        /**
+        * This property should have the value of a compatible autosuggest api url.
+        * Autosuggest api should return valid options based on a GET call to this url after appending `'/{text entered in location field}?{queryParams}'`
+        * Suggestions are requested after 3 characters(configurable) have been entered. 
+        */
+        autoSuggestUrl: String,
+
+        isMobile: Boolean,
+
+        /**
+        * This property stores the value of authentication token required for autosuggest API. 
+        */
+        tokenResponse: String,
+
+        _hiddenToolbar: {
+          type: Boolean,
+          value: true
+        },
+
+        _hiddenDatePickerToolbar: {
+          type: Boolean,
+          value: true
+        },
+
+        _hiddenTravelerCard: {
+          type: Boolean,
+          value: true
+        },
+
+        /**
+        * This property is used to set search option.
+        **/
+        option: {
+          type: Object,
+          value: {
+            "traveller": {
+
+              "defaultSelectOption": []
+
+            },
+            "date": {}
+          }
+        },
+        /**
+        * This property is used to set search localized resources.
+        **/
+        resources: {
+          type: Object,
+          value: {
+            "labels": {},
+            "watermark": {},
+
+            "errorMessage": {}
+          }
+        },
+
+        _searchOption: {
+          type: Object,
+          value: function value() {
+            var maxDate = new Date();
+            maxDate.setMonth(maxDate.getMonth() + 12);
+
+            return {
+              "checkInAllowFromNow": 0,
+              "minDateToday": new Date(),
+              "maxDate": maxDate,
+              "maxRoomCount": 2,
+              "minAdultCount": 1,
+              "maxAdultCount": 8,
+              "minChildCount": 0,
+              "maxChildCount": 5,
+              "totalRoomPaxCount": 9,
+              "minChildAge": 0,
+              "defaultStayDuration": 2,
+              "maxStayDuration": 30,
+              "dateFormat": "MM/DD/YYYY",
+              "maxChildAge": 12,
+              "defaultAdultCount": 1,
+              "defaultChildCount": 0,
+              "defaultSelectOption": [{
+                "room": 1,
+                "adult": 1
+              }, {
+                "room": 1,
+                "adult": 2
+              }, {
+                "room": 1,
+                "adult": 3
+              }, {
+                "room": 2,
+                "adult": 5
+              }]
+
+            };
+          }
+        },
+
+        _resources: {
+          type: Object,
+          value: function value() {
+            return {
+              locationPlaceholder: "Search by Airport, Destination etc.",
+              locationLabel: "City, Airport, Address or Point of Interest",
+              destinationError: "Please enter your destination",
+              checkInError: "Please enter checkin date",
+              checkOutError: "Please enter checkout date",
+              datePlaceholder: "MM/DD/YYYY",
+              checkin: "Check in",
+              checkout: "Check out",
+              travelers: "Travellers",
+              age: "Age",
+              rooms: "Rooms",
+              room: "Room",
+              adult: "Adult",
+              adults: "Adults",
+              child: "Child",
+              children: "Children",
+              childLabel: "Children"
+            };
+          }
+        },
+
+        _selectedTraveller: {
+          type: Array,
+          value: function value() {
+            return [{ adult: 1, child: 0, childAge: [] }];
+          }
+        }
+
+      };
+    }
+  }, {
+    key: "observers",
+    get: function get() {
+      return ['screenSizeChange(smallMobileView, mobileView)'];
+    }
+  }]);
+  return THotelSearch;
+}(Polymer.Element);
+
+window.customElements.define(THotelSearch.is, THotelSearch);</script>
 </dom-module>

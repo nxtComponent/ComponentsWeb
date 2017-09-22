@@ -49,21 +49,20 @@
   </template>
 
   <script>
-    Polymer({
+Polymer({
 
-      is: 't-progress-bar',
-      properties: {
-        value: {
-          type: Number,
-          reflectToAttribute: true,
-          notify: true,
-          observer: '_changeValue'
-        },
-        text: String
-      },
-      _changeValue: function(){
-        this.value = this.value;
-      }
-    });
-  </script>
+  is: 't-progress-bar',
+  properties: {
+    value: {
+      type: Number,
+      reflectToAttribute: true,
+      notify: true,
+      observer: '_changeValue'
+    },
+    text: String
+  },
+  _changeValue: function _changeValue() {
+    this.value = this.value;
+  }
+});</script>
 </dom-module>

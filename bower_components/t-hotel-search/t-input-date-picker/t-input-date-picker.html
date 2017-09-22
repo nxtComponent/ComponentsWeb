@@ -166,349 +166,329 @@ Example:
     </style>
 
     <paper-button on-tap="_showDialog" focus-target="[[_dropdownContent]]" tabindex="-1">
-      <paper-input style="width:100%" id="input" disabled="[[disabled]]" value="[[_computeInputText(value)]]" invalid="{{invalid}}"
-        type="[[type]]" name="[[name]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]" auto-validate="[[autoValidate]]"
-        label="[[label]]" on-blur="_onInputBlur" on-keydown="_onInputKeyDown" on-keyup="_onInputKeyUp" tabindex="-1" readonly>
+      <paper-input style="width:100%" id="input" disabled="[[disabled]]" value="[[_computeInputText(value)]]" invalid="{{invalid}}" type="[[type]]" name="[[name]]" placeholder="[[placeholder]]" always-float-label="[[alwaysFloatLabel]]" auto-validate="[[autoValidate]]" label="[[label]]" on-blur="_onInputBlur" on-keydown="_onInputKeyDown" on-keyup="_onInputKeyUp" tabindex="-1" readonly="">
       </paper-input>
     </paper-button>
     <paper-dialog id="dialog" class="t-date-picker-dialog dialogPosition" modal="[[modal]]" on-iron-overlay-closed="_dismissDialog">
-      <t-paper-date-picker id="picker" is-mobile="[[mobilePhone]]" format="[[dateFormat]]" locale="[[locale]]" min-date="[[_computeMinDate(minDate)]]"
-        max-date="[[_computeMaxDate(maxDate)]]">
-        </paper-date-picker>
-    </paper-dialog>
+      <t-paper-date-picker id="picker" is-mobile="[[mobilePhone]]" format="[[dateFormat]]" locale="[[locale]]" min-date="[[_computeMinDate(minDate)]]" max-date="[[_computeMaxDate(maxDate)]]">
+        
+    </t-paper-date-picker></paper-dialog>
   </template>
 
 
 
   <script>
-    Polymer({
+Polymer({
 
-      is: 't-input-date-picker',
+  is: 't-input-date-picker',
 
-      behaviors: [
-        Polymer.IronButtonState
-      ],
+  behaviors: [Polymer.IronButtonState],
 
-      hostAttributes: {
-        tabindex: '0'
-      },
+  hostAttributes: {
+    tabindex: '0'
+  },
 
-      properties: {
-        /**
-          * Turns the datepicker in a modal dialog .
-            *@private
-          */
-        modal: {
-          type: Boolean
-        },
-        /**
-        *Following properties are added to suppress lint warnings.
-        **/
-        /**
+  properties: {
+    /**
+      * Turns the datepicker in a modal dialog .
         *@private
-        **/
-        _dropdownContent: {
-          type: String
-        },
+      */
+    modal: {
+      type: Boolean
+    },
+    /**
+    *Following properties are added to suppress lint warnings.
+    **/
+    /**
+    *@private
+    **/
+    _dropdownContent: {
+      type: String
+    },
 
-        dateFormat: {
-          type: String,
-          value: "MM/DD/YYYY"
-        },
+    dateFormat: {
+      type: String,
+      value: "MM/DD/YYYY"
+    },
 
-        isMobile: Boolean,
-        /**@private**/
-        invalid: {
-          type: Boolean
-        },
+    isMobile: Boolean,
+    /**@private**/
+    invalid: {
+      type: Boolean
+    },
 
+    /**@private**/
+    type: {},
 
-        /**@private**/
-        type: {},
+    name: {},
+    /**@private**/
+    autoValidate: {},
 
+    /**
+      * The label for the dropdown.
+      */
+    label: {
+      type: String
+    },
 
+    /**
+      * placeholder for datepicker as MM/DD/YY.
+      */
+    placeholder: {
+      type: String
+    },
 
+    /**@private**/
+    disabled: {
+      type: Boolean,
+      value: false
+    },
+    /**
+    *To store previous check in date.
+       *@private
+       **/
+    LastStartDate: {
+      type: Date,
+      value: new Date()
+    },
 
-        name: {},
-        /**@private**/
-        autoValidate: {},
+    /**
+      * Set to true to always float the label. Bind this to the
+      * `<paper-input-container>`'s `alwaysFloatLabel` property.
+      *@private**/
+    alwaysFloatLabel: {
+      type: Boolean,
+      value: false
+    },
 
+    /**
+     * For localization formatting.
+     */
+    locale: {
+      type: String,
+      notify: true
+    },
+    /**
+    * The minimum allowed date
+    */
+    minDate: {
+      type: Date,
+      notify: true
+    },
+    /**
+    * The maximum allowed date
+    */
+    maxDate: {
+      type: Date,
+      notify: true
+    },
+    /**@private**/
+    keyEventTarget: {
+      type: Object,
+      value: function value() {
+        return this;
+      }
+    },
+    /**
+    *To hold the value of datepicker.
+    **/
+    value: {
+      type: Date,
+      notify: true
+    },
+    /**
+    *To set the display format of input.
+    *@private
+    **/
+    inputDisplayFormat: {
+      type: String,
+      value: 'L',
+      notify: true
+    }
+  },
 
-        /**
-          * The label for the dropdown.
-          */
-        label: {
-          type: String
-        },
+  get $picker() {
+    return this.$.picker;
+  },
 
-        /**
-          * placeholder for datepicker as MM/DD/YY.
-          */
-        placeholder: {
-          type: String
-        },
+  get _inputElement() {
+    return this.$.input;
+  },
 
-        /**@private**/
-        disabled: {
-          type: Boolean,
-          value: false
-        },
-        /**
-        *To store previous check in date.
-           *@private
-           **/
-        LastStartDate: {
-          type: Date,
-          value: new Date()
-        },
+  _computeMinDate: function _computeMinDate(minDate) {
+    if (minDate) {
+      return minDate;
+    }
+    return null;
+  },
 
+  _computeMaxDate: function _computeMaxDate(maxDate) {
+    if (maxDate) {
+      return maxDate;
+    }
 
-        /**
-          * Set to true to always float the label. Bind this to the
-          * `<paper-input-container>`'s `alwaysFloatLabel` property.
-          *@private**/
-        alwaysFloatLabel: {
-          type: Boolean,
-          value: false
-        },
+    return null;
+  },
 
-        /**
-         * For localization formatting.
-         */
-        locale: {
-          type: String,
-          notify: true
-        },
-        /**
-        * The minimum allowed date
-        */
-        minDate: {
-          type: Date,
-          notify: true
-        },
-        /**
-        * The maximum allowed date
-        */
-        maxDate: {
-          type: Date,
-          notify: true
-        },
-        /**@private**/
-        keyEventTarget: {
-          type: Object,
-          value: function () {
-            return this;
-          }
-        },
-        /**
-        *To hold the value of datepicker.
-        **/
-        value: {
-          type: Date,
-          notify: true
-        },
-        /**
-        *To set the display format of input.
-        *@private
-        **/
-        inputDisplayFormat: {
-          type: String,
-          value: 'L',
-          notify: true
-        }
-      },
+  listeners: {
+    'focus': '_onFocus'
+  },
 
-      get $picker() {
-        return this.$.picker;
-      },
+  _onFocus: function _onFocus(e) {
+    this._inputElement.focus();
+    this.setAttribute('tabindex', '-1');
+  },
 
-      get _inputElement() {
-        return this.$.input;
-      },
+  _onInputBlur: function _onInputBlur(e) {
+    this.setAttribute('tabindex', '0');
+    e.stopPropagation();
+  },
 
-      _computeMinDate: function (minDate) {
-        if (minDate) {
-          return minDate;
-        }
-        return null;
-      },
+  _onInputKeyDown: function _onInputKeyDown(e) {
+    if (e.keyCode === 13) {
+      this._showDialog();
+      e.stopPropagation();
+    }
+  },
 
-      _computeMaxDate: function (maxDate) {
-        if (maxDate) {
-          return maxDate;
-        }
+  _onInputKeyUp: function _onInputKeyUp(e) {
+    if (e.keyCode === 46) {
+      this._clearValue();
+    }
+    e.stopPropagation();
+  },
 
-        return null;
-      },
+  _onTapClearValue: function _onTapClearValue() {
+    this.value = null;
+  },
 
-      listeners: {
-        'focus': '_onFocus'
-      },
+  // Element Lifecycle
 
-      _onFocus: function (e) {
-        this._inputElement.focus();
-        this.setAttribute('tabindex', '-1');
-      },
+  ready: function ready() {
+    if (!this.locale) {
+      this.locale = window.navigator.userLanguage || window.navigator.language;
+    }
+  },
 
-      _onInputBlur: function (e) {
-        this.setAttribute('tabindex', '0');
-        e.stopPropagation();
-      },
+  // Element Behavior
+  keyBindings: {
+    'del': '_delPressed'
+  },
 
-      _onInputKeyDown: function (e) {
-        if (e.keyCode === 13) {
-          this._showDialog();
-          e.stopPropagation();
-        }
-      },
+  _delPressed: function _delPressed() {
+    this._clearValue();
+  },
 
-      _onInputKeyUp: function (e) {
-        if (e.keyCode === 46) {
-          this._clearValue();
-        }
-        e.stopPropagation();
-      },
+  _clearValue: function _clearValue() {
+    this.value = null;
+  },
 
-      _onTapClearValue: function () {
-        this.value = null;
-      },
+  /**
+    * Compute the text for the input given a selected date.
+    *
+    * @param {Object} value A selected date from picker dialog.
+    */
+  _computeInputText: function _computeInputText(value) {
 
-      // Element Lifecycle
+    if (!value) {
+      return '';
+    }
 
-      ready: function () {
-        if (!this.locale) {
-          this.locale = window.navigator.userLanguage || window.navigator.language;
-        }
-      },
+    return this.$.picker.dateFormat(value, this.inputDisplayFormat);
+  },
 
-      // Element Behavior
-      keyBindings: {
-        'del': '_delPressed'
-      },
+  getValue: function getValue(formate) {
+    return this.$picker.dateFormat(this.value, this.inputDisplayFormat);
+  },
 
-      _delPressed: function () {
-        this._clearValue();
-      },
+  close: function close() {
+    this.$.dialog.style.display = "none";
+  },
 
-      _clearValue: function () {
-        this.value = null;
-      },
-
-      /**
-        * Compute the text for the input given a selected date.
-        *
-        * @param {Object} value A selected date from picker dialog.
-        */
-      _computeInputText: function (value) {
-
-        if (!value) {
-          return '';
-        }
-
-        return this.$.picker.dateFormat(value, this.inputDisplayFormat);
-      },
-
-      getValue: function (formate) {
-        return this.$picker.dateFormat(this.value, this.inputDisplayFormat);
-      },
-
-      close : function(){
-          this.$.dialog.style.display = "none";
-      },
-
-
-      _dismissDialog: function (event) {
-        //TODO
-        this.async(function () {
-          //   var $this = this;
-          var startDate = this.domHost.$.start;
-          var endDate = this.domHost.$.end;
-          if (this.isMobile) {
-            if (this.id == 'end' && startDate.value != undefined) {
-              endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-            }
-            else if (this.id == 'start') {
-              startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-            }
-          }
-          else {
-            if (this.id == 'end' && startDate.value != undefined) {
-              endDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-              endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-            }
-            else if (this.id == 'start') {
-              startDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
-              startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-            }
-            if ((!event.detail.canceled) && (event.detail.confirmed)) {
-              event.stopPropagation();
-            }
-          }
-        });
-
-      },
-
-      _showDialog: function (event) {
-        var startDate = this.domHost.$.start;
-        var endDate = this.domHost.$.end;
-        this.domHost.$.start.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
-        this.domHost.$.end.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
-
-        this.$.input.$.container.shadowRoot.querySelector(".underline").style.height="0px";
-
+  _dismissDialog: function _dismissDialog(event) {
+    //TODO
+    this.async(function () {
+      //   var $this = this;
+      var startDate = this.domHost.$.start;
+      var endDate = this.domHost.$.end;
+      if (this.isMobile) {
         if (this.id == 'end' && startDate.value != undefined) {
-          endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "1px solid #4cb050";
-          endDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "none";
-          this.$picker.date = (this.value) ? this.value : new Date();
-          var deskView = window.matchMedia("(max-width:767px)").matches;
-          if (deskView) {
-            this.$.dialog.style.display = "block";
-            startDate.$.dialog.style.display = "none";
-            startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-          }
-          else {
-            this.$.dialog.toggle();
-          }
-          if (startDate.value) {
-            this.$picker.date = endDate.value;
-          }
-          this.async(function () {
-            if (this.LastStartDate.getTime() != startDate.value.getTime()) {
-              this.$.dialog.querySelector("#picker").$.calendar._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
-              this.LastStartDate = startDate.value;
-            }
-          });
-        }
-        else if (this.id == 'start') {
-          startDate.placeholder = this.placeholder;
-          endDate.placeholder = this.placeholder;
-          startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "1px solid #4cb050";
-          startDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "none";
-          startDate.invalid = false;
-          this.$picker.date = (this.value) ? this.value : new Date();
-          var deskView = window.matchMedia("(max-width:767px)").matches;
-          if (deskView) {
-            this.$.dialog.style.display = "block";
-            endDate.$.dialog.style.display = "none";
-            endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-          }
-          else {
-            this.$.dialog.toggle();
-          }
-          if (endDate.value) {
-            this.$picker.date = endDate.value;
-          }
-        }
-        if (this.id == 'end' && startDate.value == undefined) {
-          startDate.invalid = true;
+          endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+        } else if (this.id == 'start') {
           startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
-          // startDate.$.input.$.container.querySelector("#paper-input-add-on-1").style.width = "123%";
         }
-        //TODO
-        // var pcard = this.domHost.querySelector("#paperCard");
-        // pcard.style.display = "none";
-      },
-
+      } else {
+        if (this.id == 'end' && startDate.value != undefined) {
+          endDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+          endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+        } else if (this.id == 'start') {
+          startDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "block";
+          startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+        }
+        if (!event.detail.canceled && event.detail.confirmed) {
+          event.stopPropagation();
+        }
+      }
     });
-  </script>
+  },
+
+  _showDialog: function _showDialog(event) {
+    var startDate = this.domHost.$.start;
+    var endDate = this.domHost.$.end;
+    this.domHost.$.start.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+    this.domHost.$.end.shadowRoot.querySelector("paper-input").shadowRoot.querySelector("[id^='paper-input-label']").style.color = "lightgray";
+
+    this.$.input.$.container.shadowRoot.querySelector(".underline").style.height = "0px";
+
+    if (this.id == 'end' && startDate.value != undefined) {
+      endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "1px solid #4cb050";
+      endDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "none";
+      this.$picker.date = this.value ? this.value : new Date();
+      var deskView = window.matchMedia("(max-width:767px)").matches;
+      if (deskView) {
+        this.$.dialog.style.display = "block";
+        startDate.$.dialog.style.display = "none";
+        startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+      } else {
+        this.$.dialog.toggle();
+      }
+      if (startDate.value) {
+        this.$picker.date = endDate.value;
+      }
+      this.async(function () {
+        if (this.LastStartDate.getTime() != startDate.value.getTime()) {
+          this.$.dialog.querySelector("#picker").$.calendar._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
+          this.LastStartDate = startDate.value;
+        }
+      });
+    } else if (this.id == 'start') {
+      startDate.placeholder = this.placeholder;
+      endDate.placeholder = this.placeholder;
+      startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "1px solid #4cb050";
+      startDate.$.input.$.container.shadowRoot.querySelector(".unfocused-line").style.display = "none";
+      startDate.invalid = false;
+      this.$picker.date = this.value ? this.value : new Date();
+      var deskView = window.matchMedia("(max-width:767px)").matches;
+      if (deskView) {
+        this.$.dialog.style.display = "block";
+        endDate.$.dialog.style.display = "none";
+        endDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+      } else {
+        this.$.dialog.toggle();
+      }
+      if (endDate.value) {
+        this.$picker.date = endDate.value;
+      }
+    }
+    if (this.id == 'end' && startDate.value == undefined) {
+      startDate.invalid = true;
+      startDate.$.input.$.container.shadowRoot.querySelector(".underline").style.border = "none";
+      // startDate.$.input.$.container.querySelector("#paper-input-add-on-1").style.width = "123%";
+    }
+    //TODO
+    // var pcard = this.domHost.querySelector("#paperCard");
+    // pcard.style.display = "none";
+  }
+
+});</script>
 </dom-module>

@@ -540,9 +540,8 @@
             <template is="dom-repeat" items="{{month.weeks}}" as="row">
               <div class="month-row month-days">
                 <template is="dom-repeat" items="{{row}}">
-                  <div dialog-confirm class="month-col">
-                    <div class$="{{_getDayClass('day-item selection', item.date, today, date)}}" disabled$="{{_isDisabled(item.day, item.date, minDate, maxDate)}}"
-                      on-tap="_tapDay" date$="{{item.name}}">
+                  <div dialog-confirm="" class="month-col">
+                    <div class$="{{_getDayClass('day-item selection', item.date, today, date)}}" disabled$="{{_isDisabled(item.day, item.date, minDate, maxDate)}}" on-tap="_tapDay" date$="{{item.name}}">
                       <div class="borderDiv" style="width:50%;height:96%;"></div>
                       <div style="width:50%; margin-left:22%;" class="day">{{item.day}}</div>
                     </div>
@@ -556,14 +555,14 @@
       <div id="monthNav" class="month-nav">
         <div class="flex col self-stretch">
           <div class="btn" on-tap="_swipePrevMonth">
-            <paper-ripple center class="ripple circle"></paper-ripple>
+            <paper-ripple center="" class="ripple circle"></paper-ripple>
             <iron-icon class="icon flex" icon="date-picker:chevron-left"></iron-icon>
           </div>
         </div>
         <div class="flex-5"></div>
         <div class="flex col self-stretch">
           <div class="btn" on-tap="_swipeNextMonth">
-            <paper-ripple center class="ripple circle"></paper-ripple>
+            <paper-ripple center="" class="ripple circle"></paper-ripple>
             <iron-icon class="icon flex" icon="date-picker:chevron-right"></iron-icon>
           </div>
         </div>
@@ -571,677 +570,661 @@
     </div>
   </template>
   <script>
-    (function () {
+(function () {
 
-      // Ignore movement within this distance (px)
-      var WIGGLE_THRESHOLD = 4;
-      var WIGGLE_THRESHOLD_SQUARE = WIGGLE_THRESHOLD * WIGGLE_THRESHOLD;
+  // Ignore movement within this distance (px)
+  var WIGGLE_THRESHOLD = 4;
+  var WIGGLE_THRESHOLD_SQUARE = WIGGLE_THRESHOLD * WIGGLE_THRESHOLD;
 
-      // what constitues a flick (px/ms)
-      var FLICK_SPEED = 0.5;
+  // what constitues a flick (px/ms)
+  var FLICK_SPEED = 0.5;
 
-      // Factor for "springy" resistence effect when swiping too far.
-      var RESIST_LENGTH = 40;
-      var RESIST_FACTOR = 2;
+  // Factor for "springy" resistence effect when swiping too far.
+  var RESIST_LENGTH = 40;
+  var RESIST_FACTOR = 2;
 
-      // Number of months to preload on both sides of the current month
-      var PRELOAD_MONTHS = 1;
+  // Number of months to preload on both sides of the current month
+  var PRELOAD_MONTHS = 1;
 
-      function dateDiff(a, b) {
-        a = new Date(a.getTime());
-        b = new Date(b.getTime());
-        a.setHours(0, 0, 0, 0);
-        b.setHours(0, 0, 0, 0);
-        return (a.getTime() - b.getTime()) / 86400000;
+  function dateDiff(a, b) {
+    a = new Date(a.getTime());
+    b = new Date(b.getTime());
+    a.setHours(0, 0, 0, 0);
+    b.setHours(0, 0, 0, 0);
+    return (a.getTime() - b.getTime()) / 86400000;
+  }
+
+  Polymer({
+    is: 't-calendar',
+    properties: {
+      /*
+       * The selected date
+       */
+      date: {
+        type: Date,
+        notify: true,
+        value: function value() {
+          return new Date();
+        }
+      },
+
+      isMobile: Boolean,
+      /**
+       * The current locale
+       */
+      locale: {
+        type: String,
+        value: 'en',
+        notify: true,
+        observer: '_localeChanged'
+      },
+      /**
+       * The minimum allowed date
+       */
+      minDate: {
+        type: Date,
+        value: null
+      },
+      /**
+       * The maximum allowed date
+       */
+      maxDate: {
+        type: Date,
+        value: null
+      },
+      /**
+       *currently selected month (1-12)
+       */
+      currentMonth: {
+        type: Number
+      },
+      /**
+       *currently selected year
+       */
+      currentYear: {
+        type: Number
+      },
+      _contentClass: String,
+      _months: Array,
+      _firstDayOfWeek: Number,
+      /**
+       *To check if given date is first day of week.
+      **/
+      isFirstDayofWeek: String
+    },
+    behaviors: [Polymer.IronResizableBehavior],
+    observers: ['_populate(currentYear, currentMonth, locale)'],
+    listeners: {
+      'iron-resize': '_resizeHandler',
+      'swiped': '_onSwipe'
+    },
+    ready: function ready() {
+      this._updateToday();
+      this.currentMonth = this.date.getMonth() + 1;
+      this.currentYear = this.date.getFullYear();
+      this._transitionEvent = this._whichTransitionEnd();
+    },
+    /**
+    *To set the month name.
+    **/
+    dateFormat: function dateFormat(date, format, locale) {
+      if (!date) {
+        return '';
+      }
+      var value = moment(date);
+      value.locale(locale || this.locale);
+      return value.format(format);
+    },
+    /**
+     * To set the locale.
+     **/
+    _localeChanged: function _localeChanged(locale) {
+      var localeMoment = moment();
+      localeMoment.locale(locale);
+      var weekdays = [];
+      for (var i = 0; i < 7; i++) {
+        weekdays.push(localeMoment.weekday(i).format('dd'));
+        if (i === 0) {
+          this.isFirstDayOfWeek = localeMoment.weekday(i).format('dddd');
+        }
+      }
+      this._weekdays = weekdays;
+      this._firstDayOfWeek = localeMoment.weekday(0).format('d');
+      var d = localeMoment.weekday(0).format('d');
+      return d;
+    },
+    /**
+    * Number of months to preload on both sides of the current month.
+    **/
+    _changeMinDate: function _changeMinDate() {
+      if (this.minDate === null) {
+        this.minDate = new Date();
+      }
+      if (this.maxDate === null) {
+        this.maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
+      }
+      if (this.minDate.getFullYear() === this.maxDate.getFullYear()) {
+        var setMinDate = this.maxDate.getMonth() - this.minDate.getMonth();
+      } else {
+        var setMinDate = 12 - this.minDate.getMonth() + this.maxDate.getMonth();
+      }
+      return setMinDate;
+    },
+    /**
+     * To render the calendar according to month display.
+     **/
+    _populate: function _populate(currentYear, currentMonth) {
+
+      var date,
+          month,
+          weeks,
+          day,
+          d,
+          dayInfo,
+          monthData,
+          months = [];
+      var screen = window.matchMedia("(max-width:767px)");
+      if (screen.matches) {
+        PRELOAD_MONTHS = this._changeMinDate();
+      }
+      // Make sure currentYear/currentMonth are in min/max range
+      if (this.minDate && new Date(currentYear, currentMonth, 0) < this.minDate) {
+
+        this.currentYear = this.minDate.getFullYear();
+        this.currentMonth = this.minDate.getMonth() + 1;
+        return;
+      } else if (this.maxDate && new Date(currentYear, currentMonth - 1, 1) > this.maxDate) {
+        this.currentYear = this.maxDate.getFullYear();
+        this.currentMonth = this.maxDate.getMonth() + 1;
+        return;
       }
 
-      Polymer({
-        is: 't-calendar',
-        properties: {
-          /*
-           * The selected date
-           */
-          date: {
-            type: Date,
-            notify: true,
-            value: function () {
-              return new Date();
-            },
-          },
+      for (var i = 0; i <= PRELOAD_MONTHS; i++) {
+        weeks = [[]];
+        day = 1;
+        date = new Date(currentYear, currentMonth - 1 + i, 1);
+        month = date.getMonth();
+        monthData = {
+          year: date.getFullYear(),
+          month: date.getMonth() + 1,
+          date: new Date(date)
+        };
+        var firstDay = date.getDay() - this._firstDayOfWeek;
+        if (firstDay < 0) {
+          firstDay = 7 + firstDay;
+        }
+        for (d = 0; d < firstDay; d++) {
+          weeks[0].push({ day: null, date: null });
+        }
 
-          isMobile:Boolean,
-          /**
-           * The current locale
-           */
-          locale: {
-            type: String,
-            value: 'en',
-            notify: true,
-            observer: '_localeChanged'
-          },
-          /**
-           * The minimum allowed date
-           */
-          minDate: {
-            type: Date,
-            value: null
-          },
-          /**
-           * The maximum allowed date
-           */
-          maxDate: {
-            type: Date,
-            value: null
-          },
-          /**
-           *currently selected month (1-12)
-           */
-          currentMonth: {
-            type: Number
-          },
-          /**
-           *currently selected year
-           */
-          currentYear: {
-            type: Number
-          },
-          _contentClass: String,
-          _months: Array,
-          _firstDayOfWeek: Number,
-          /**
-           *To check if given date is first day of week.
-          **/
-          isFirstDayofWeek: String,
-        },
-        behaviors: [
-          Polymer.IronResizableBehavior
-        ],
-        observers: [
-          '_populate(currentYear, currentMonth, locale)',
-        ],
-        listeners: {
-          'iron-resize': '_resizeHandler',
-          'swiped': '_onSwipe'
-        },
-        ready: function () {
-          this._updateToday();
-          this.currentMonth = this.date.getMonth() + 1;
-          this.currentYear = this.date.getFullYear();
-          this._transitionEvent = this._whichTransitionEnd();
-        },
-        /**
-        *To set the month name.
-        **/
-        dateFormat: function (date, format, locale) {
-          if (!date) {
-            return '';
+        // add actual days
+        while (date.getMonth() === month) {
+          if (weeks[0].length && d % 7 === 0) {
+            // start new week
+            weeks.push([]);
           }
-          var value = moment(date);
-          value.locale(locale || this.locale);
-          return value.format(format);
-        },
-        /**
-         * To set the locale.
-         **/
-        _localeChanged: function (locale) {
-          var localeMoment = moment();
-          localeMoment.locale(locale);
-          var weekdays = [];
-          for (var i = 0; i < 7; i++) {
-            weekdays.push(localeMoment.weekday(i).format('dd'));
-            if (i === 0) {
-              this.isFirstDayOfWeek = localeMoment.weekday(i).format('dddd');
-            }
-          }
-          this._weekdays = weekdays;
-          this._firstDayOfWeek = localeMoment.weekday(0).format('d');
-          var d = localeMoment.weekday(0).format('d');
-          return d;
-        },
-        /**
-        * Number of months to preload on both sides of the current month.
-        **/
-        _changeMinDate: function () {
-          if (this.minDate === null) {
-            this.minDate = new Date();
-          }
-          if (this.maxDate === null) {
-            this.maxDate = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
-          }
-          if (this.minDate.getFullYear() === this.maxDate.getFullYear()) {
-            var setMinDate = this.maxDate.getMonth() - this.minDate.getMonth();
-          } else {
-            var setMinDate = (12 - this.minDate.getMonth()) + this.maxDate.getMonth();
-          }
-          return setMinDate;
-        },
-        /**
-         * To render the calendar according to month display.
-         **/
-        _populate: function (currentYear, currentMonth) {
-
-          var date, month, weeks, day, d, dayInfo, monthData, months = [];
-          var screen = window.matchMedia("(max-width:767px)");
-          if (screen.matches) {
-            PRELOAD_MONTHS = this._changeMinDate();
-          }
-          // Make sure currentYear/currentMonth are in min/max range
-          if (this.minDate && new Date(currentYear, currentMonth, 0) < this.minDate) {
-
-            this.currentYear = this.minDate.getFullYear();
-            this.currentMonth = this.minDate.getMonth() + 1;
-            return;
-          } else if (this.maxDate && new Date(currentYear, currentMonth - 1, 1) > this.maxDate) {
-            this.currentYear = this.maxDate.getFullYear();
-            this.currentMonth = this.maxDate.getMonth() + 1;
-            return;
-          }
-
-          for (var i = 0; i <= PRELOAD_MONTHS; i++) {
-            weeks = [[]];
-            day = 1;
-            date = new Date(currentYear, currentMonth - 1 + i, 1);
-            month = date.getMonth();
-            monthData = {
-              year: date.getFullYear(),
-              month: date.getMonth() + 1,
-              date: new Date(date)
-            };
-            var firstDay = date.getDay() - this._firstDayOfWeek;
-            if (firstDay < 0) {
-              firstDay = 7 + firstDay;
-            }
-            for (d = 0; d < firstDay; d++) {
-              weeks[0].push({ day: null, date: null });
-            }
-
-            // add actual days
-            while (date.getMonth() === month) {
-              if (weeks[0].length && d % 7 === 0) {
-                // start new week
-                weeks.push([]);
-              }
-              dayInfo = {
-                date: new Date(date.getFullYear(), month, day),
-                name: this.dateFormat(date, 'YYYY-MM-DD'),
-                year: currentYear,
-                month: month,
-                day: day,
-              };
-              weeks[weeks.length - 1].push(dayInfo);
-              date.setDate(++day);
-              d++;
-            }
-
-            // add remaining "padding" days
-            while (d < 42) {
-              if (d % 7 === 0) {
-                weeks.push([]);
-              }
-              weeks[weeks.length - 1].push({ day: null, date: null });
-              d += 1;
-            }
-
-            monthData.weeks = weeks;
-            months.push(monthData);
-
-          }
-          if (!months.length) {
-            return;
-          }
-          this.set('_months', months);
-          this.async(function () {
-            this._updateSelection();
-            this._positionSlider();
-          });
-        },
-
-        /**
-         * To set CSS for selected dates and selected range.
-         **/
-        _getDayClass: function (cssClass, date) {
-          var startDateDefined = true;
-          if (date) {
-            if (date < this.today) {
-              return cssClass;
-            }
-            if (date > this.maxDate) {
-              return cssClass;
-            }
-            var startdate = this.domHost.domHost.domHost.$.start.value;
-            var endDate = this.domHost.domHost.domHost.$.end.value;
-            if (startdate === undefined) {
-              startDateDefined = false;
-            }
-            if (dateDiff(date, this.today) === 0 && startdate === undefined) {
-              cssClass += ' selectToday';
-              this.async(function () {
-                this._updateSelection();
-              });
-            }
-            else if (dateDiff(date, this.today) === 0 && dateDiff(startdate, this.today) != 0) {
-              cssClass += ' selectToday';
-              this.async(function () {
-                this._updateSelection();
-              });
-            }
-
-            var enddate;
-            var startNotSelected = false;
-
-            if (startdate === undefined) {
-              startNotSelected = true;
-              startdate = this.today;
-            }
-            startdate.setHours(0, 0, 0, 0);
-
-            if (endDate === undefined) {
-              enddate = startdate;
-            }
-            else {
-              enddate = endDate;
-              enddate.setHours(0, 0, 0, 0);
-            }
-            date.setHours(0, 0, 0, 0);
-            if (date.getTime() === startdate.getTime() && this.today.getTime() != startdate.getTime()) {
-              cssClass += ' selected';
-              this.async(function () {
-                this._updateSelection();
-              });
-            }
-            if (date > startdate && date > enddate && this.domHost.domHost.LastStartDate === startdate) {
-              return cssClass;
-            }
-            var checkDayName = this._checkDayName(date);
-            var checkFirstDayWeek = this._checkFirstDayofWeek(date);
-            var checkFirstDayOfMonth = this._checkFirstDayofMonth(date);
-            var checkLastDayOfMonth = this._checkLastDayofMonth(date);
-            var checkLastDayOfWeek = this._checkLastDayofWeek(date);
-
-            if (date > startdate && date < enddate) {
-              if (checkDayName != checkFirstDayWeek && date.getTime() != checkFirstDayOfMonth.getTime()) {
-                cssClass += ' selectedRange';
-                this.async(function () {
-                  this._updateSelection();
-                });
-              }
-            }
-            if (date.getTime() === startdate.getTime() && startNotSelected == false) {
-              cssClass += ' selectfirst';
-              if (checkDayName != checkLastDayOfWeek && date.getTime() != checkLastDayOfMonth.getTime()) {
-                cssClass += ' selectStartBorder';
-              }
-              this.async(function () {
-                this._updateSelection();
-              });
-            }
-            if (enddate != startdate) {
-              if (date.getTime() === enddate.getTime()) {
-                cssClass += ' selectlast';
-                if (date.getTime() != checkFirstDayOfMonth.getTime() && checkDayName != checkFirstDayWeek) {
-                  cssClass += ' selectEndBorder';
-                }
-                this.async(function () {
-                  this._updateSelection();
-                });
-              }
-            }
-
-            if (date >= startdate && date < enddate) {
-
-              if ((checkDayName === checkFirstDayWeek || date.getTime() === checkFirstDayOfMonth.getTime())) {
-                cssClass += ' selectedRangeSun';
-              }
-              else if ((checkDayName === checkLastDayOfWeek || date.getTime() === checkLastDayOfMonth.getTime())) {
-                cssClass += ' selectedRangeSat';
-              }
-              if ((checkDayName === checkLastDayOfWeek && date.getTime() === checkFirstDayOfMonth.getTime())) {
-                cssClass += ' selectedRangeSat';
-              }
-              if ((checkDayName === checkFirstDayWeek && date.getTime() === checkLastDayOfMonth.getTime())) {
-                cssClass += ' selectedRangeSat';
-              }
-            }
-
-            var maxDt = this.maxDate;
-            maxDt.setHours(0, 0, 0, 0);
-            cssClass = this._removeDuplicateWord(cssClass);
-            if (date.getTime() === startdate.getTime()) {
-              if (checkDayName === checkLastDayOfWeek) {
-                cssClass = cssClass.replace("selectedRange", "");
-                cssClass = cssClass.replace("selectedRangeSat", "");
-              }
-              else if (date.getTime() === checkLastDayOfMonth.getTime()) {
-                cssClass = cssClass.replace("selectedRange", "");
-                cssClass = cssClass.replace("selectedRangeSat", "");
-              }
-            }
-            if (date.getTime() === startdate.getTime() && date.getTime() === maxDt.getTime()) {
-              cssClass = cssClass.replace("selectlast", "");
-              cssClass = cssClass.replace("selectedRange", "");
-            }
-            if (date.getTime() === this.today.getTime() && !startDateDefined) {
-              cssClass = cssClass.replace("selectedRange", "");
-            }
-            if (date.getTime() === startdate.getTime() && checkDayName === checkFirstDayWeek) {
-              cssClass = cssClass.replace("selectedRangeSun", "");
-            }
-            if (date.getTime() === startdate.getTime() && date.getTime() === checkFirstDayOfMonth.getTime()) {
-              cssClass = cssClass.replace("selectedRangeSun", "");
-            }
-            if (date.getTime() === startdate.getTime() && date.getTime() === enddate.getTime()) {
-              cssClass = cssClass.replace("selectStartBorder", "");
-              cssClass = cssClass.replace("selectEndBorder", "");
-            }
-          }
-          return cssClass;
-        },
-        /**
-         * To remove duplicate css class from element.
-         **/
-        _removeDuplicateWord: function (string) {
-          var uniqueList = string.split(' ').filter(function (item, i, allItems) {
-            return i == allItems.indexOf(item);
-          }).join(' ');
-
-
-          return uniqueList;
-        },
-        /**
-         * To check day name.
-         **/
-        _checkDayName: function (date) {
-          var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-          var d = new Date(date);
-          var dayName = days[d.getDay()];
-          return dayName;
-        },
-        /**
-         * To check last day of month.
-         **/
-        _checkLastDayofMonth: function (date) {
-          var d = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-          return d;
-        },
-        /**
-         * To check first day of month.
-         **/
-        _checkFirstDayofMonth: function (date) {
-          var d = new Date(date);
-          d.setMonth(d.getMonth(), 1);
-          d.setHours(0, 0, 0, 0);
-          return d;
-        },
-        /**
-         * To check first day of week.
-         **/
-        _checkFirstDayofWeek: function (date) {
-          var dayName = this.shadowRoot.querySelector("#weekday").textContent;
-          if (dayName === "M") {
-            return "Monday";
-          }
-          else {
-            return "Sunday";
-          }
-        },
-        /**
-         * To check last day of week.
-         **/
-        _checkLastDayofWeek: function (date) {
-          var dayName = this.shadowRoot.querySelector("#weekday").textContent;
-          if (dayName === "M") {
-            return "Sunday";
-          }
-          else {
-            return "Saturday";
-          }
-        },
-        /**
-         * To check disabled dates.
-         **/
-        _isDisabled: function (day, date) {
-          return !day || !this._withinValidRange(date);
-        },
-        
-        _getMonthClass: function (name, month) {
-          return name + ' month-' + month.year + '-' + month.month;
-        },
-        /**
-         * To swipe on previous month after clicking on back arrow.
-         **/
-        _swipePrevMonth: function () {
-          var startDate = this.domHost.domHost.domHost.$.start;
-          var endDate = this.domHost.domHost.domHost.$.end;
-          var scrollPrevMonth = this.domHost.domHost.id;
-          if (scrollPrevMonth === "start" && this.today.getMonth() + 1 === this.currentMonth && this.today.getFullYear() === this.currentYear) {
-            this._populate(this.today.getFullYear(), this.today.getMonth() + 1);
-          }
-          else if (scrollPrevMonth === "end" && startDate.value.getMonth() + 1 === this.currentMonth && startDate.value.getFullYear() === this.currentYear) {
-            this._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
-          }
-          else {
-            this.fire('swiped', { direction: 'right' });
-          }
-        },
-        /**
-         * To swipe on next month after clicking on next arrow.
-         **/
-        _swipeNextMonth: function () {
-          if (!this.maxDate || this.currentYear < this.maxDate.getFullYear() || this.currentMonth < this.maxDate.getMonth() + 1) {
-            this.fire('swiped', { direction: 'left' });
-          }
-          else{
-            return;
-          }
-        },
-        /**
-         * This function works as listener swipe.
-         **/
-        _onSwipe: function (event) {
-          if (event.detail.direction === 'right') {
-            this._prevMonth();
-            return true;
-          }
-          else {
-            this._nextMonth();
-            return true;
-          }
-        },
-        /**
-         * To increase or decrease next month and previous month.
-         **/
-        _incrMonth: function (i) {
-          var date = new Date(this.currentYear, this.currentMonth - 1 + i);
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          if (this._monthWithinValidRange(year, month)) {
-            this.currentYear = year;
-            this.currentMonth = month;
-          }
-        },
-         /**
-         * To decrease previous month.
-         **/
-        _prevMonth: function () {
-          this._incrMonth(-1);
-        },
-         /**
-         * To increase next month.
-         **/
-        _nextMonth: function () {
-          this._incrMonth(1);
-        },
-         /**
-         * To select dates after clicking or tapping on date.
-         **/
-        _tapDay: function (event) {
-          var startDate = this.domHost.domHost.domHost.$.start;
-          var endDate = this.domHost.domHost.domHost.$.end;
-          var modelItemDate = event.model.item.date;
-          var newDate;
-          if (!this._withinValidRange(modelItemDate)) {
-            event.preventDefault();
-            event.stopPropagation();
-            return;
-          }
-          var item = event.model.item;
-          item.year = modelItemDate.getFullYear();
-          if (item.date.getTime() == this._checkLastDayofMonth(item.date).getTime()) {
-            newDate = new Date(item.date.getTime());
-          }
-          else {
-            newDate = new Date(this.date.getTime());
-          }
-          newDate.setDate(item.day);
-          newDate.setYear(item.year);
-          newDate.setMonth(item.month);
-          this.date = newDate;
-          if (this.domHost.domHost.id === "start") {
-            startDate.value = newDate;
-            if(endDate.value === undefined || startDate.value > endDate.value){
-              var startDateValue = new Date(startDate.value);
-              startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost._searchOption.defaultStayDuration);
-              var maxDt = this.maxDate;
-                maxDt.setHours(0, 0, 0, 0);
-                if (startDateValue > maxDt) {
-                  endDate.value = maxDt;
-                }
-                else{
-              endDate.value = startDateValue;
-                }
-            }
-                endDate.minDate = startDate.value;
-                var setCheckOutMin = startDate.value;
-                var setMax = new Date(setCheckOutMin);
-                setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost._searchOption.maxStayDuration);
-                 if(setMax < this.maxDate){
-                endDate.maxDate = setMax;
-                }
-                else{
-                  endDate.maxDate = this.maxDate;
-                }
-                endDate._showDialog();
-               
-                    if( endDate.value > setMax){
-                  endDate.value = setMax;
-                }
-            if (startDate.value > endDate.value) {
-              endDate.value = newDate;
-            }
-          }
-          else if (this.domHost.domHost.id === "end") {
-            if (item.date.getTime() === startDate.value.getTime()) {
-              event.preventDefault();
-              event.stopPropagation();
-              return;
-            }
-            endDate.value = newDate;
-            if (this.isMobile) {
-              event.stopPropagation();
-            }
-            if (startDate.value.getMonth() === endDate.value.getMonth()) {
-              this._populate(endDate.value.getFullYear(), endDate.value.getMonth() + 1);
-            }
-            else {
-              this._populate(endDate.value.getFullYear(), endDate.value.getMonth());
-            }
-          }
-
-          var isIE = /*@cc_on!@*/false || !!document.documentMode;
-          if (isIE) {
-            //TODO
-            // this.domHost.domHost.querySelector("#input").querySelector("#input").focus();
-            // this.domHost.domHost.querySelector("#input").querySelector("#input").blur();
-          }
-        },
-
-         /**
-         * To check date is valid or not.
-         **/
-        _isValidDate: function (date) {
-          return date && date.getTime && !isNaN(date.getTime());
-        },
-         /**
-         *To check date is within valid range or not. 
-         **/
-        _withinValidRange: function (date) {
-          if (this._isValidDate(date)) {
-            return (!this.minDate || date >= this.minDate) && (!this.maxDate || date <= this.maxDate);
-          }
-          return false;
-        },
-        /**
-         * To check month is within valid range or not.
-         **/
-        _monthWithinValidRange: function (year, month) {
-          var monthStart = new Date(year, month - 1, 1);
-          var monthEnd = new Date(year, month, 0);
-          return this._withinValidRange(monthStart) || this._withinValidRange(monthEnd);
-        },
-        
-        _positionSlider: function () {
-          if (!this._months || !this._containerWidth) {
-            return;
-          }
-        },
-        /**
-         * To update the selected dates and css class.
-         **/
-        
-        _updateSelection: function () {
-          // Force the day selection circle to maintain a 1:1 ratio
-          this.async(function () {
-            var selected = this.$$('.selected');
-            if (!selected) {
-              return;
-            }
-            selected.style.height = '';
-            selected.style.width = '';
-            var w = selected.parentElement.offsetWidth;
-            var h = selected.parentElement.offsetHeight;
-            selected.style.flex = '';
-            window.requestAnimationFrame(function () {
-              if (w > 0 && w < h) {
-                selected.style.height = h + 'px';
-              }
-              else if (h > 0) {
-                selected.style.width = w + 'px';
-              }
-            });
-          });
-        },
-        
-        _resizeHandler: function () {
-          this.async(function () {
-            this._containerWidth = this.$.calendar.offsetWidth;
-            this._updateSelection();
-          });
-        },
-        /**
-         * To get the name of name.
-         **/
-        _getDayName: function (date) {
-          return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
-        },
-        _updateToday: function () {
-          this.today = new Date();
-          this.today.setHours(0, 0, 0, 0);
-        },
-        _whichTransitionEnd: function () {
-          var transitions = {
-            'WebkitTransition': 'webkitTransitionEnd',
-            'MozTransition': 'transitionend',
-            'OTransition': 'oTransitionEnd otransitionend',
-            'transition': 'transitionend'
+          dayInfo = {
+            date: new Date(date.getFullYear(), month, day),
+            name: this.dateFormat(date, 'YYYY-MM-DD'),
+            year: currentYear,
+            month: month,
+            day: day
           };
+          weeks[weeks.length - 1].push(dayInfo);
+          date.setDate(++day);
+          d++;
+        }
 
-          for (var t in transitions) {
-            if (this.style[t] !== undefined) {
-              return transitions[t];
-            }
+        // add remaining "padding" days
+        while (d < 42) {
+          if (d % 7 === 0) {
+            weeks.push([]);
+          }
+          weeks[weeks.length - 1].push({ day: null, date: null });
+          d += 1;
+        }
+
+        monthData.weeks = weeks;
+        months.push(monthData);
+      }
+      if (!months.length) {
+        return;
+      }
+      this.set('_months', months);
+      this.async(function () {
+        this._updateSelection();
+        this._positionSlider();
+      });
+    },
+
+    /**
+     * To set CSS for selected dates and selected range.
+     **/
+    _getDayClass: function _getDayClass(cssClass, date) {
+      var startDateDefined = true;
+      if (date) {
+        if (date < this.today) {
+          return cssClass;
+        }
+        if (date > this.maxDate) {
+          return cssClass;
+        }
+        var startdate = this.domHost.domHost.domHost.$.start.value;
+        var endDate = this.domHost.domHost.domHost.$.end.value;
+        if (startdate === undefined) {
+          startDateDefined = false;
+        }
+        if (dateDiff(date, this.today) === 0 && startdate === undefined) {
+          cssClass += ' selectToday';
+          this.async(function () {
+            this._updateSelection();
+          });
+        } else if (dateDiff(date, this.today) === 0 && dateDiff(startdate, this.today) != 0) {
+          cssClass += ' selectToday';
+          this.async(function () {
+            this._updateSelection();
+          });
+        }
+
+        var enddate;
+        var startNotSelected = false;
+
+        if (startdate === undefined) {
+          startNotSelected = true;
+          startdate = this.today;
+        }
+        startdate.setHours(0, 0, 0, 0);
+
+        if (endDate === undefined) {
+          enddate = startdate;
+        } else {
+          enddate = endDate;
+          enddate.setHours(0, 0, 0, 0);
+        }
+        date.setHours(0, 0, 0, 0);
+        if (date.getTime() === startdate.getTime() && this.today.getTime() != startdate.getTime()) {
+          cssClass += ' selected';
+          this.async(function () {
+            this._updateSelection();
+          });
+        }
+        if (date > startdate && date > enddate && this.domHost.domHost.LastStartDate === startdate) {
+          return cssClass;
+        }
+        var checkDayName = this._checkDayName(date);
+        var checkFirstDayWeek = this._checkFirstDayofWeek(date);
+        var checkFirstDayOfMonth = this._checkFirstDayofMonth(date);
+        var checkLastDayOfMonth = this._checkLastDayofMonth(date);
+        var checkLastDayOfWeek = this._checkLastDayofWeek(date);
+
+        if (date > startdate && date < enddate) {
+          if (checkDayName != checkFirstDayWeek && date.getTime() != checkFirstDayOfMonth.getTime()) {
+            cssClass += ' selectedRange';
+            this.async(function () {
+              this._updateSelection();
+            });
           }
         }
+        if (date.getTime() === startdate.getTime() && startNotSelected == false) {
+          cssClass += ' selectfirst';
+          if (checkDayName != checkLastDayOfWeek && date.getTime() != checkLastDayOfMonth.getTime()) {
+            cssClass += ' selectStartBorder';
+          }
+          this.async(function () {
+            this._updateSelection();
+          });
+        }
+        if (enddate != startdate) {
+          if (date.getTime() === enddate.getTime()) {
+            cssClass += ' selectlast';
+            if (date.getTime() != checkFirstDayOfMonth.getTime() && checkDayName != checkFirstDayWeek) {
+              cssClass += ' selectEndBorder';
+            }
+            this.async(function () {
+              this._updateSelection();
+            });
+          }
+        }
+
+        if (date >= startdate && date < enddate) {
+
+          if (checkDayName === checkFirstDayWeek || date.getTime() === checkFirstDayOfMonth.getTime()) {
+            cssClass += ' selectedRangeSun';
+          } else if (checkDayName === checkLastDayOfWeek || date.getTime() === checkLastDayOfMonth.getTime()) {
+            cssClass += ' selectedRangeSat';
+          }
+          if (checkDayName === checkLastDayOfWeek && date.getTime() === checkFirstDayOfMonth.getTime()) {
+            cssClass += ' selectedRangeSat';
+          }
+          if (checkDayName === checkFirstDayWeek && date.getTime() === checkLastDayOfMonth.getTime()) {
+            cssClass += ' selectedRangeSat';
+          }
+        }
+
+        var maxDt = this.maxDate;
+        maxDt.setHours(0, 0, 0, 0);
+        cssClass = this._removeDuplicateWord(cssClass);
+        if (date.getTime() === startdate.getTime()) {
+          if (checkDayName === checkLastDayOfWeek) {
+            cssClass = cssClass.replace("selectedRange", "");
+            cssClass = cssClass.replace("selectedRangeSat", "");
+          } else if (date.getTime() === checkLastDayOfMonth.getTime()) {
+            cssClass = cssClass.replace("selectedRange", "");
+            cssClass = cssClass.replace("selectedRangeSat", "");
+          }
+        }
+        if (date.getTime() === startdate.getTime() && date.getTime() === maxDt.getTime()) {
+          cssClass = cssClass.replace("selectlast", "");
+          cssClass = cssClass.replace("selectedRange", "");
+        }
+        if (date.getTime() === this.today.getTime() && !startDateDefined) {
+          cssClass = cssClass.replace("selectedRange", "");
+        }
+        if (date.getTime() === startdate.getTime() && checkDayName === checkFirstDayWeek) {
+          cssClass = cssClass.replace("selectedRangeSun", "");
+        }
+        if (date.getTime() === startdate.getTime() && date.getTime() === checkFirstDayOfMonth.getTime()) {
+          cssClass = cssClass.replace("selectedRangeSun", "");
+        }
+        if (date.getTime() === startdate.getTime() && date.getTime() === enddate.getTime()) {
+          cssClass = cssClass.replace("selectStartBorder", "");
+          cssClass = cssClass.replace("selectEndBorder", "");
+        }
+      }
+      return cssClass;
+    },
+    /**
+     * To remove duplicate css class from element.
+     **/
+    _removeDuplicateWord: function _removeDuplicateWord(string) {
+      var uniqueList = string.split(' ').filter(function (item, i, allItems) {
+        return i == allItems.indexOf(item);
+      }).join(' ');
+
+      return uniqueList;
+    },
+    /**
+     * To check day name.
+     **/
+    _checkDayName: function _checkDayName(date) {
+      var days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      var d = new Date(date);
+      var dayName = days[d.getDay()];
+      return dayName;
+    },
+    /**
+     * To check last day of month.
+     **/
+    _checkLastDayofMonth: function _checkLastDayofMonth(date) {
+      var d = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+      return d;
+    },
+    /**
+     * To check first day of month.
+     **/
+    _checkFirstDayofMonth: function _checkFirstDayofMonth(date) {
+      var d = new Date(date);
+      d.setMonth(d.getMonth(), 1);
+      d.setHours(0, 0, 0, 0);
+      return d;
+    },
+    /**
+     * To check first day of week.
+     **/
+    _checkFirstDayofWeek: function _checkFirstDayofWeek(date) {
+      var dayName = this.shadowRoot.querySelector("#weekday").textContent;
+      if (dayName === "M") {
+        return "Monday";
+      } else {
+        return "Sunday";
+      }
+    },
+    /**
+     * To check last day of week.
+     **/
+    _checkLastDayofWeek: function _checkLastDayofWeek(date) {
+      var dayName = this.shadowRoot.querySelector("#weekday").textContent;
+      if (dayName === "M") {
+        return "Sunday";
+      } else {
+        return "Saturday";
+      }
+    },
+    /**
+     * To check disabled dates.
+     **/
+    _isDisabled: function _isDisabled(day, date) {
+      return !day || !this._withinValidRange(date);
+    },
+
+    _getMonthClass: function _getMonthClass(name, month) {
+      return name + ' month-' + month.year + '-' + month.month;
+    },
+    /**
+     * To swipe on previous month after clicking on back arrow.
+     **/
+    _swipePrevMonth: function _swipePrevMonth() {
+      var startDate = this.domHost.domHost.domHost.$.start;
+      var endDate = this.domHost.domHost.domHost.$.end;
+      var scrollPrevMonth = this.domHost.domHost.id;
+      if (scrollPrevMonth === "start" && this.today.getMonth() + 1 === this.currentMonth && this.today.getFullYear() === this.currentYear) {
+        this._populate(this.today.getFullYear(), this.today.getMonth() + 1);
+      } else if (scrollPrevMonth === "end" && startDate.value.getMonth() + 1 === this.currentMonth && startDate.value.getFullYear() === this.currentYear) {
+        this._populate(startDate.value.getFullYear(), startDate.value.getMonth() + 1);
+      } else {
+        this.fire('swiped', { direction: 'right' });
+      }
+    },
+    /**
+     * To swipe on next month after clicking on next arrow.
+     **/
+    _swipeNextMonth: function _swipeNextMonth() {
+      if (!this.maxDate || this.currentYear < this.maxDate.getFullYear() || this.currentMonth < this.maxDate.getMonth() + 1) {
+        this.fire('swiped', { direction: 'left' });
+      } else {
+        return;
+      }
+    },
+    /**
+     * This function works as listener swipe.
+     **/
+    _onSwipe: function _onSwipe(event) {
+      if (event.detail.direction === 'right') {
+        this._prevMonth();
+        return true;
+      } else {
+        this._nextMonth();
+        return true;
+      }
+    },
+    /**
+     * To increase or decrease next month and previous month.
+     **/
+    _incrMonth: function _incrMonth(i) {
+      var date = new Date(this.currentYear, this.currentMonth - 1 + i);
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      if (this._monthWithinValidRange(year, month)) {
+        this.currentYear = year;
+        this.currentMonth = month;
+      }
+    },
+    /**
+    * To decrease previous month.
+    **/
+    _prevMonth: function _prevMonth() {
+      this._incrMonth(-1);
+    },
+    /**
+    * To increase next month.
+    **/
+    _nextMonth: function _nextMonth() {
+      this._incrMonth(1);
+    },
+    /**
+    * To select dates after clicking or tapping on date.
+    **/
+    _tapDay: function _tapDay(event) {
+      var startDate = this.domHost.domHost.domHost.$.start;
+      var endDate = this.domHost.domHost.domHost.$.end;
+      var modelItemDate = event.model.item.date;
+      var newDate;
+      if (!this._withinValidRange(modelItemDate)) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      var item = event.model.item;
+      item.year = modelItemDate.getFullYear();
+      if (item.date.getTime() == this._checkLastDayofMonth(item.date).getTime()) {
+        newDate = new Date(item.date.getTime());
+      } else {
+        newDate = new Date(this.date.getTime());
+      }
+      newDate.setDate(item.day);
+      newDate.setYear(item.year);
+      newDate.setMonth(item.month);
+      this.date = newDate;
+      if (this.domHost.domHost.id === "start") {
+        startDate.value = newDate;
+        if (endDate.value === undefined || startDate.value > endDate.value) {
+          var startDateValue = new Date(startDate.value);
+          startDateValue.setDate(startDateValue.getDate() + this.domHost.domHost.domHost._searchOption.defaultStayDuration);
+          var maxDt = this.maxDate;
+          maxDt.setHours(0, 0, 0, 0);
+          if (startDateValue > maxDt) {
+            endDate.value = maxDt;
+          } else {
+            endDate.value = startDateValue;
+          }
+        }
+        endDate.minDate = startDate.value;
+        var setCheckOutMin = startDate.value;
+        var setMax = new Date(setCheckOutMin);
+        setMax.setDate(setCheckOutMin.getDate() + this.domHost.domHost.domHost._searchOption.maxStayDuration);
+        if (setMax < this.maxDate) {
+          endDate.maxDate = setMax;
+        } else {
+          endDate.maxDate = this.maxDate;
+        }
+        endDate._showDialog();
+
+        if (endDate.value > setMax) {
+          endDate.value = setMax;
+        }
+        if (startDate.value > endDate.value) {
+          endDate.value = newDate;
+        }
+      } else if (this.domHost.domHost.id === "end") {
+        if (item.date.getTime() === startDate.value.getTime()) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+        endDate.value = newDate;
+        if (this.isMobile) {
+          event.stopPropagation();
+        }
+        if (startDate.value.getMonth() === endDate.value.getMonth()) {
+          this._populate(endDate.value.getFullYear(), endDate.value.getMonth() + 1);
+        } else {
+          this._populate(endDate.value.getFullYear(), endDate.value.getMonth());
+        }
+      }
+
+      var isIE = /*@cc_on!@*/false || !!document.documentMode;
+      if (isIE) {
+        //TODO
+        // this.domHost.domHost.querySelector("#input").querySelector("#input").focus();
+        // this.domHost.domHost.querySelector("#input").querySelector("#input").blur();
+      }
+    },
+
+    /**
+    * To check date is valid or not.
+    **/
+    _isValidDate: function _isValidDate(date) {
+      return date && date.getTime && !isNaN(date.getTime());
+    },
+    /**
+    *To check date is within valid range or not. 
+    **/
+    _withinValidRange: function _withinValidRange(date) {
+      if (this._isValidDate(date)) {
+        return (!this.minDate || date >= this.minDate) && (!this.maxDate || date <= this.maxDate);
+      }
+      return false;
+    },
+    /**
+     * To check month is within valid range or not.
+     **/
+    _monthWithinValidRange: function _monthWithinValidRange(year, month) {
+      var monthStart = new Date(year, month - 1, 1);
+      var monthEnd = new Date(year, month, 0);
+      return this._withinValidRange(monthStart) || this._withinValidRange(monthEnd);
+    },
+
+    _positionSlider: function _positionSlider() {
+      if (!this._months || !this._containerWidth) {
+        return;
+      }
+    },
+    /**
+     * To update the selected dates and css class.
+     **/
+
+    _updateSelection: function _updateSelection() {
+      // Force the day selection circle to maintain a 1:1 ratio
+      this.async(function () {
+        var selected = this.$$('.selected');
+        if (!selected) {
+          return;
+        }
+        selected.style.height = '';
+        selected.style.width = '';
+        var w = selected.parentElement.offsetWidth;
+        var h = selected.parentElement.offsetHeight;
+        selected.style.flex = '';
+        window.requestAnimationFrame(function () {
+          if (w > 0 && w < h) {
+            selected.style.height = h + 'px';
+          } else if (h > 0) {
+            selected.style.width = w + 'px';
+          }
+        });
       });
-    })();
-  </script>
+    },
+
+    _resizeHandler: function _resizeHandler() {
+      this.async(function () {
+        this._containerWidth = this.$.calendar.offsetWidth;
+        this._updateSelection();
+      });
+    },
+    /**
+     * To get the name of name.
+     **/
+    _getDayName: function _getDayName(date) {
+      return date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    },
+    _updateToday: function _updateToday() {
+      this.today = new Date();
+      this.today.setHours(0, 0, 0, 0);
+    },
+    _whichTransitionEnd: function _whichTransitionEnd() {
+      var transitions = {
+        'WebkitTransition': 'webkitTransitionEnd',
+        'MozTransition': 'transitionend',
+        'OTransition': 'oTransitionEnd otransitionend',
+        'transition': 'transitionend'
+      };
+
+      for (var t in transitions) {
+        if (this.style[t] !== undefined) {
+          return transitions[t];
+        }
+      }
+    }
+  });
+})();</script>
 </dom-module>
