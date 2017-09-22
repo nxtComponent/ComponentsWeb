@@ -143,7 +143,7 @@ The form handles below mentioned scenarios on its own.
                 <paper-dropdown-menu on-tap="_dismisCard" required="" auto-validate="" error-message="Required Field" id="travelerInput" label="[[_resources.travelers]]" readonly="" on-keydown="_tabPress">
                   <paper-listbox slot="dropdown-content" class="dropdown-content" id="listbox" selected="{{choice}}">
                     <template is="dom-repeat" items="{{choices}}">
-                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" count-adult$="{{item.adult}}" count-room$="{{item.room}}" value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
+                      <paper-item class="trvellerItem" id="adult{{item.adult}}Room1" on-tap="_onTravelerSelected" count-adult$="{{item.adult}}" count-room$="{{item.room}}" value="{{item}}">{{item.adult}} {{_adultLabel(item.adult)}} in {{item.room}} {{_roomLabel(item.room)}}</paper-item>
                     </template>
                     <paper-item id="customTravelerMenu" class="hidden">[[_getTravelerMenuLabel()]] </paper-item>
                     <paper-item on-tap="_openChildForm" id="needRoom" class="trvellerItem">Need more rooms or have children? </paper-item>
@@ -246,6 +246,14 @@ var THotelSearch = function (_Polymer$Element) {
         var inputContent = this.$.travelerInput.children[1].children[1];
         inputContent.style.width = "120%";
       }
+    }
+  }, {
+    key: "_onTravelerSelected",
+    value: function _onTravelerSelected(e) {
+
+      var eventData = e.target.value;
+      var traveler = { adult: eventData.adult, room: eventData.eventData, child: 0, childAge: [] };
+      this.set("_selectedTraveller", [traveler]);
     }
   }, {
     key: "_defaultOptionValue",
@@ -738,7 +746,7 @@ var THotelSearch = function (_Polymer$Element) {
           detail: searchModel
         }));
 
-        // console.log(searchModel);
+        console.log(searchModel);
       }
     }
   }], [{
