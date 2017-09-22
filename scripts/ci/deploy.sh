@@ -9,7 +9,9 @@ function doCompile {
     echo "build started."
     echo "*******************************"
     
-    gulp build
+    polymer build
+
+    cp -ar build/es5-bundled/* out/
      
     echo "*******************************"
     echo "build completed."
