@@ -639,7 +639,9 @@ Polymer({
   },
 
   ready: function ready() {
-
+    this.init();
+  },
+  init: function init() {
     if (!this.data) return;
 
     // create __id

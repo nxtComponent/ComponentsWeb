@@ -82,7 +82,7 @@
       <template is="dom-if" if="[[isResultLoaded]]">
 
 
-        <t-filter id="tFilter" on-t-filter-changed="_onFilterChange" data="{{filterData}}" settings="[[filterSettings]]" resources="[[filterResources]]">
+        <t-filter id="tFilter" on-t-filter-changed="_onFilterChange" data="[[filterData]]" settings="[[filterSettings]]" resources="[[filterResources]]">
         </t-filter>
 
         <t-hotel-list on-t-list-filter-updated="_onFilterUpdateFromResult" support-number="[[supportNumber]]" filters="{{filterData}}" items="[[resultItems]]" settings="[[resultSettings]]" resources="[[resultResources]]" on-t-hotel-item-show-details-tap="_redirectToHotelDetails">
@@ -222,6 +222,8 @@
     value: function _onFilterDataLoaded(evt) {
 
       this.set("filterData", this.getFilterSection(this.filterDataRS, "US"));
+      var tFilter = this.shadowRoot.querySelector("#tFilter");
+      tFilter && tFilter.init();
     }
   }, {
     key: '_onFilterChange',
