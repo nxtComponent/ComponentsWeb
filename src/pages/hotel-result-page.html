@@ -85,7 +85,7 @@
         <t-filter id="tFilter" on-t-filter-changed="_onFilterChange" data="[[filterData]]" settings="[[filterSettings]]" resources="[[filterResources]]">
         </t-filter>
 
-        <t-hotel-list on-t-list-filter-updated="_onFilterUpdateFromResult" support-number="[[supportNumber]]" filters="{{filterData}}" items="[[resultItems]]" settings="[[resultSettings]]" resources="[[resultResources]]" on-t-hotel-item-show-details-tap="_redirectToHotelDetails">
+        <t-hotel-list on-t-list-filter-updated="_onFilterUpdateFromResult" support-number="[[supportNumber]]" filters="{{filterData}}" items="[[resultItems]]" settings="[[resultSettings]]" resources="[[resultResources]]" on-t-hotel-item-show-details-tap="_redirectToHotelDetails" on-t-hotel-item-title-tap="_redirectToHotelDetails">
 
           <!-- template to render when no data is present-->
           <!-- Styling and content is not part of t-list component, should be done by consumer.-->
