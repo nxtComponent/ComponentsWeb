@@ -23,7 +23,7 @@
       }
 
       .search-container {
-      
+             
         height: calc(100vh - 64px);
         padding: 0 16px;
         background-image: url('/images/background.jpg');
@@ -189,7 +189,7 @@
 
           this.dispatchEvent(new CustomEvent("page-redirect", {
             detail: {
-              url: "/hotel-result?sid=" + this.searchRS.searchId,
+              url: "hotel-result?sid=" + this.searchRS.searchId,
               routeModel: e.detail
             },
             bubbles: true,
