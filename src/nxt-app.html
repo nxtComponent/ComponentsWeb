@@ -36,7 +36,9 @@
 <dom-module id="nxt-app">
   <template>
     <style is="custom-style" include="shared-styles">
-
+      :host {
+               width: 100%;
+            }
     </style>
 
     <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
