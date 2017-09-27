@@ -1,0 +1,61 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../nxt-shared-styles.html">
+
+<dom-module id="car-page">
+  <template>
+    <style include="shared-styles">
+        .search-container {
+       
+      
+        height: calc(100vh - 64px);
+        padding: 0 16px;
+        background-image: url('/images/background.jpg');
+        background-size: cover;
+        color: white;
+      }
+
+
+      .search-heading {
+        font-size: 3em;
+        font-weight: bolder;
+      }
+    </style>
+
+    <div class="search-container">      
+      <div class="search-heading">
+       Coming Soon!
+      </div>
+   
+    </div>
+
+  </template>
+
+  <script>var CarPage = function (_Polymer$Element) {
+  babelHelpers.inherits(CarPage, _Polymer$Element);
+
+  function CarPage() {
+    babelHelpers.classCallCheck(this, CarPage);
+    return babelHelpers.possibleConstructorReturn(this, (CarPage.__proto__ || Object.getPrototypeOf(CarPage)).apply(this, arguments));
+  }
+
+  babelHelpers.createClass(CarPage, null, [{
+    key: 'is',
+    get: function get() {
+      return 'car-page';
+    }
+  }, {
+    key: 'properties',
+    get: function get() {
+      return {
+        pageLoader: {
+          type: Boolean,
+          notify: true
+        }
+      };
+    }
+  }]);
+  return CarPage;
+}(Polymer.Element);
+
+window.customElements.define(CarPage.is, CarPage);</script>
+</dom-module>
