@@ -282,7 +282,7 @@
         console.log("hotel details", e);
         this.dispatchEvent(new CustomEvent("page-redirect", {
           detail: {
-            url: `hotel-details?sid=${this.searchId}&hid=${e.detail.id}`,
+            url: `\hotel-details?sid=${this.searchId}&hid=${e.detail.id}`,
             routeModel: e.detail
           },
           bubbles: true,
