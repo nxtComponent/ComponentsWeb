@@ -42,7 +42,7 @@
             }
     </style>
 
-    <app-location route="{{route}}" query-params="{{queryParams}}" use-hash-as-path=""></app-location>
+    <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
 
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" query-params="{{queryParams}}" tail="{{subroute}}"></app-route>
@@ -50,7 +50,7 @@
 
     <app-header-layout>
       <app-header disabled="">
-        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="menuHandler"></t-header>
+        <t-header data="[[_headerData]]" user="[[_user]]"></t-header>
       </app-header>
 
       <template is="dom-if" if="[[pageLoader]]">
@@ -329,27 +329,38 @@
   }, {
     key: '_redirect',
     value: function _redirect(e) {
-      // this.set('route.path', url);
-      if (!e.detail || !e.detail.url) {
-        return;
+
+      if (e.detail && e.detail.url) {
+        window.history.pushState({}, null, e.detail.url);
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        // this.set("route.path", e.detail.url);
+        // this.routeModel =e.detail.routeModel;
       }
-      var tokens = e.detail.url.split("?");
-      var page = tokens[0];
-      var queryParams = {};
-      var queryString = "";
-      if (tokens.length == 2) {
-        queryString = "?" + tokens[1];
-        var hashes = tokens[1].split('&');
-        for (var i = 0; i < hashes.length; i++) {
-          var hash = hashes[i].split('=');
-          queryParams[hash[0]] = hash[1];
-        }
-      }
-      var path = "/" + queryString + "#" + page;
-      window.history.pushState({}, null, path);
-      this.set('routeData.page', page);
-      this.queryParams = queryParams;
     }
+    // _redirect(e) {
+    //  // this.set('route.path', url);
+    //   if (!e.detail || !e.detail.url) {
+    //     return
+    //   }
+    //    var tokens = e.detail.url.split("?");
+    //    var page = tokens[0];
+    //    var queryParams = {};
+    //    var queryString = "";
+    //    if(tokens.length==2){
+    //     queryString = "?"+tokens[1];
+    //     var hashes = tokens[1].split('&');          
+    //       for (var i = 0; i < hashes.length; i++) {
+    //          var hash = hashes[i].split('=');
+    //           queryParams[hash[0]] = hash[1];
+    //       }
+    //    }
+    //   var path ="/"+queryString+"#"+page;
+    //   window.history.pushState({}, null,path);        
+    //   this.set('routeData.page',page);
+    //   this.queryParams = queryParams;      
+
+    // }
+
   }, {
     key: 'menuHandler',
     value: function menuHandler(e) {
