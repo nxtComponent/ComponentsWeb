@@ -60,11 +60,11 @@ window.Polymer = {
 <script src="bower_components/webcomponentsjs/webcomponents-loader.js"></script>
 
     </head><body><environment names="Development">
-        
+
     </environment>
 
     <environment names="Staging,Production">
-    
+
     </environment>
 
     <link rel="import" href="src/nxt-app.html">
@@ -82,11 +82,26 @@ window.Polymer = {
         -moz-box-sizing: border-box;
         box-sizing: border-box;
     }
+    .apploading {
+        margin: auto;
+        font-weight: bold;
+        height: 80px;
+        width: 80px;
+        position: absolute;
+        top: 50%;
+        text-align: center;
+        left: 50%;
+        padding-top: 25px;
+        margin-left: -40px;
+        margin-top: -40px;
+    }
+
     </style>
   
   
-    <nxt-app></nxt-app>
-    <!-- Built with love using Polymer Starter Kit -->
+
+      <nxt-app> <div class="apploading"> Loading...</div></nxt-app>
+  
   
 
 </body></html>
