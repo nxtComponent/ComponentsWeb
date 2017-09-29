@@ -205,11 +205,12 @@
         // this.addEventListener("t-hotel-item-show-details-tap", e=>this._redirectToHotelDetails(e));
       }
       _init(){
-          this.set("isResultLoaded", false);
-          this.set("isPreloader", true);
-          this.set("pageLoader", false);
-          this.set("resultItems", null);
-          this.set("filterData", null);
+          this.isResultLoaded = false;
+          this.isPreloader= true;
+          this.pageLoader= false;
+          this.resultItems= null;
+          this.filterData= null;
+          this.progressValue = 0;
       }
 
       __progressIncrement() {
