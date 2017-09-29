@@ -116,6 +116,10 @@
 
       static get properties() {
         return {
+          isActivePage:{
+            type:Boolean,
+            value:false
+          },
           pageModel: Object,
           route: String,
 
@@ -123,7 +127,7 @@
             type: Boolean,
             notify: true
           },
-
+        
           isPreloader: {
             type: Boolean,
             value: true
@@ -168,12 +172,17 @@
 
       static get observers() {
         return [
-          "_onPageLoad(pageModel, routeData)"
+          "_onActivePageChanged(isActivePage)"       
         ]
       }
+      _onActivePageChanged(isActivePage){
 
+        if(isActivePage){
+          this._init();
+          setTimeout(function(){ this._onPageLoad()}.bind(this),16)
+        }
+      }
       _onPageLoad(pageModel) {
-        console.log("page model ", pageModel);
         if (pageModel) {
           this.searchCriteria = pageModel;
         }
@@ -194,6 +203,13 @@
       ready() {
         super.ready();
         // this.addEventListener("t-hotel-item-show-details-tap", e=>this._redirectToHotelDetails(e));
+      }
+      _init(){
+          this.set("isResultLoaded", false);
+          this.set("isPreloader", true);
+          this.set("pageLoader", false);
+          this.set("resultItems", null);
+          this.set("filterData", null);
       }
 
       __progressIncrement() {
@@ -282,7 +298,7 @@
         console.log("hotel details", e);
         this.dispatchEvent(new CustomEvent("page-redirect", {
           detail: {
-            url: `\hotel-details?sid=${this.searchId}&hid=${e.detail.id}`,
+            url: `/hotel-details?sid=${this.searchId}&hid=${e.detail.id}`,
             routeModel: e.detail
           },
           bubbles: true,
