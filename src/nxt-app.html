@@ -23,7 +23,7 @@
 
 <link rel="import" href="mock/mock-data.html">
 
-<link rel="lazy-import" href="pages/home-page.html">
+<link rel="import" href="pages/home-page.html">
 <link rel="lazy-import" href="pages/car-page.html">
 <link rel="lazy-import" href="pages/hotel-result-page.html">
 <link rel="lazy-import" href="pages/hotel-details-page.html">
@@ -42,7 +42,7 @@
             }
     </style>
 
-    <app-location route="{{route}}" query-params="{{queryParams}}"></app-location>
+    <app-location route="{{route}}" query-params="{{queryParams}}" use-hash-as-path=""></app-location>
 
 
     <app-route route="{{route}}" pattern="/:page" data="{{routeData}}" query-params="{{queryParams}}" tail="{{subroute}}"></app-route>
@@ -50,7 +50,7 @@
 
     <app-header-layout>
       <app-header disabled="">
-        <t-header data="[[_headerData]]" user="[[_user]]"></t-header>
+        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="menuHandler"></t-header>
       </app-header>
 
       <template is="dom-if" if="[[pageLoader]]">
@@ -61,9 +61,9 @@
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
 
-          <home-page name="home" page-loader="{{pageLoader}}" api-base-url="{{apiBaseUrl}}"></home-page>
+          <home-page name="home" is-active-page="_isActivePage(home',page)" page-loader="{{pageLoader}}" api-base-url="{{apiBaseUrl}}"></home-page>
           <car-page name="car" page-loader="{{pageLoader}}"></car-page>
-          <hotel-result-page name="hotel-result" support-number="[[hotelSupportNumber]]" api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-result-page>
+          <hotel-result-page name="hotel-result" is-active-page="[[_isActivePage('hotel-result',page)]]" support-number="[[hotelSupportNumber]]" api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-result-page>
           <hotel-details-page name="hotel-details" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-details-page>
 
           <view404-page name="view404">
@@ -177,7 +177,6 @@
     key: 'ready',
     value: function ready() {
       babelHelpers.get(NxtApp.prototype.__proto__ || Object.getPrototypeOf(NxtApp.prototype), 'ready', this).call(this);
-      console.log(this.route);
       this.addEventListener('page-redirect', this._redirect.bind(this));
     }
   }, {
@@ -201,7 +200,6 @@
     key: '_pageChanged',
     value: function _pageChanged(page) {
       // Load page import on demand. Show 404 page if fails
-      console.log(page);
       var resolvedPageUrl = this.resolveUrl("pages/" + page + '-page.html');
       Polymer.importHref(resolvedPageUrl, null, this._showPage404.bind(this), true);
     }
@@ -327,40 +325,44 @@
     key: '_redirectHandler',
     value: function _redirectHandler(e) {}
   }, {
-    key: '_redirect',
-    value: function _redirect(e) {
-
-      if (e.detail && e.detail.url) {
-        window.history.pushState({}, null, e.detail.url);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-        // this.set("route.path", e.detail.url);
-        // this.routeModel =e.detail.routeModel;
-      }
+    key: '_isActivePage',
+    value: function _isActivePage(page, selectedPage) {
+      return page === selectedPage;
     }
     // _redirect(e) {
-    //  // this.set('route.path', url);
-    //   if (!e.detail || !e.detail.url) {
-    //     return
-    //   }
-    //    var tokens = e.detail.url.split("?");
-    //    var page = tokens[0];
-    //    var queryParams = {};
-    //    var queryString = "";
-    //    if(tokens.length==2){
-    //     queryString = "?"+tokens[1];
-    //     var hashes = tokens[1].split('&');          
-    //       for (var i = 0; i < hashes.length; i++) {
-    //          var hash = hashes[i].split('=');
-    //           queryParams[hash[0]] = hash[1];
-    //       }
-    //    }
-    //   var path ="/"+queryString+"#"+page;
-    //   window.history.pushState({}, null,path);        
-    //   this.set('routeData.page',page);
-    //   this.queryParams = queryParams;      
 
+    //   if (e.detail && e.detail.url) {
+    //     window.history.pushState({}, null, e.detail.url);
+    //     window.dispatchEvent(new CustomEvent('location-changed'));
+    //     // this.set("route.path", e.detail.url);
+    //     // this.routeModel =e.detail.routeModel;
+    //   }
     // }
 
+  }, {
+    key: '_redirect',
+    value: function _redirect(e) {
+      // this.set('route.path', url);
+      if (!e.detail || !e.detail.url) {
+        return;
+      }
+      var tokens = e.detail.url.split("?");
+      var page = tokens[0];
+      var queryParams = {};
+      var queryString = "";
+      if (tokens.length == 2) {
+        queryString = "?" + tokens[1];
+        var hashes = tokens[1].split('&');
+        for (var i = 0; i < hashes.length; i++) {
+          var hash = hashes[i].split('=');
+          queryParams[hash[0]] = hash[1];
+        }
+      }
+      var path = "/" + queryString + "#" + page;
+      window.history.pushState({}, null, path);
+      //this.set('routeModel',e.detail.routeModel);
+      window.dispatchEvent(new CustomEvent('location-changed'));
+    }
   }, {
     key: 'menuHandler',
     value: function menuHandler(e) {
@@ -376,7 +378,7 @@
 
       var path = '/#/' + page;
       window.history.pushState({}, null, path);
-      this.set('routeData.page', page);
+      window.dispatchEvent(new CustomEvent('location-changed'));
     }
   }]);
   return NxtApp;

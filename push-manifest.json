@@ -579,6 +579,158 @@
     "src/mock/mock-data.html": {
       "type": "document",
       "weight": 1
+    },
+    "src/pages/home-page.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-mystique-auth/t-mystique-auth.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-ajax/iron-ajax.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-ajax/iron-request.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/promise-polyfill/promise-polyfill-lite.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/promise-polyfill/Promise.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-homepage-deal/t-homepage-deal.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-image/iron-image.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-spinner/paper-spinner.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-spinner/paper-spinner-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-spinner/paper-spinner-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-homepage-deal/t-homepage-deal-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-homepage-deal/nested/style.css": {
+      "type": "style",
+      "weight": 1
+    },
+    "bower_components/t-homepage-deal/nested/jquery.nested.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-hotel-search.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-dialog/paper-dialog.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-dialog-behavior/paper-dialog-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-dialog-behavior/paper-dialog-shared-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-input-date-picker.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-date-picker/t-date-picker.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/neon-animation/neon-animated-pages.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/neon-animation/neon-animatable.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/moment-element/moment-with-locales-import.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/moment/min/moment-with-locales.min.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-date-picker/t-calendar.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/moment-element/moment-import.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/moment/min/moment.min.js": {
+      "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-date-picker/t-date-picker-icons.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-date-picker/t-date-picker-dialog-style.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/t-date-picker/t-year-list.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-list/iron-list.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-input-date-picker/moment-with-locales-import.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-hotel-search-style.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-grid-layout-style.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/choice-card.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/choice-form.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-autosuggest.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/autocomplete.js": {
+      "type": "script",
+      "weight": 1
     }
   },
   "src/pages/home-page.html": {

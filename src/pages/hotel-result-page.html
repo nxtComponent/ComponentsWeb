@@ -117,9 +117,19 @@
   }
 
   babelHelpers.createClass(HotelResultPage, [{
+    key: '_onActivePageChanged',
+    value: function _onActivePageChanged(isActivePage) {
+
+      if (isActivePage) {
+        this._init();
+        setTimeout(function () {
+          this._onPageLoad();
+        }.bind(this), 16);
+      }
+    }
+  }, {
     key: '_onPageLoad',
     value: function _onPageLoad(pageModel) {
-      console.log("page model ", pageModel);
       if (pageModel) {
         this.searchCriteria = pageModel;
       }
@@ -141,6 +151,15 @@
     value: function ready() {
       babelHelpers.get(HotelResultPage.prototype.__proto__ || Object.getPrototypeOf(HotelResultPage.prototype), 'ready', this).call(this);
       // this.addEventListener("t-hotel-item-show-details-tap", e=>this._redirectToHotelDetails(e));
+    }
+  }, {
+    key: '_init',
+    value: function _init() {
+      this.set("isResultLoaded", false);
+      this.set("isPreloader", true);
+      this.set("pageLoader", false);
+      this.set("resultItems", null);
+      this.set("filterData", null);
     }
   }, {
     key: '__progressIncrement',
@@ -239,7 +258,7 @@
       console.log("hotel details", e);
       this.dispatchEvent(new CustomEvent("page-redirect", {
         detail: {
-          url: 'hotel-details?sid=' + this.searchId + '&hid=' + e.detail.id,
+          url: '/hotel-details?sid=' + this.searchId + '&hid=' + e.detail.id,
           routeModel: e.detail
         },
         bubbles: true,
@@ -255,6 +274,10 @@
     key: 'properties',
     get: function get() {
       return {
+        isActivePage: {
+          type: Boolean,
+          value: false
+        },
         pageModel: Object,
         route: String,
 
@@ -306,7 +329,7 @@
   }, {
     key: 'observers',
     get: function get() {
-      return ["_onPageLoad(pageModel, routeData)"];
+      return ["_onActivePageChanged(isActivePage)"];
     }
   }]);
   return HotelResultPage;
