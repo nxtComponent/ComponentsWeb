@@ -120,7 +120,7 @@
     key: '_onActivePageChanged',
     value: function _onActivePageChanged(isActivePage) {
 
-      if (isActivePage) {
+      if (isActivePage && this._isNewSearch) {
         this._init();
         setTimeout(function () {
           this._onPageLoad();
@@ -265,6 +265,11 @@
         bubbles: true,
         composed: true
       }));
+    }
+  }, {
+    key: '_isNewSearch',
+    get: function get() {
+      return this.searchId !== this.subroute.__queryParams.sid || !this.resultItems && !this.filterData;
     }
   }], [{
     key: 'is',
