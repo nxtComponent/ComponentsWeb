@@ -177,7 +177,7 @@
       }
       _onActivePageChanged(isActivePage){
 
-        if(isActivePage){
+        if(isActivePage && this._isNewSearch ){
           this._init();
           setTimeout(function(){ this._onPageLoad()}.bind(this),16)
         }
@@ -196,7 +196,7 @@
 
         this.set("filterResources", this.getFilterResources());
         this.set("filterSettings", this.getFiterSettings());
-
+        
         this.__progressInterval = setInterval(this.__progressIncrement.bind(this), 200);
 
       }
@@ -307,6 +307,10 @@
         }));
       }
 
+     get _isNewSearch(){       
+     return this.searchId !== this.subroute.__queryParams.sid || (!this.resultItems && !this.filterData);
+    }
+    
     }
 
     window.customElements.define(HotelResultPage.is, HotelResultPage);
