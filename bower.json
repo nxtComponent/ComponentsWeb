@@ -31,7 +31,7 @@
     "t-mystique-auth": "travelnxtElements/t-mystique-auth",
     "t-header": "travelnxtComponents/t-header",
     "t-footer": "travelnxtComponents/t-footer",
-    "t-homepage-deal": "travelnxtComponents/t-home-page-deal",
+    "t-deals": "travelnxtComponents/t-deals",
     "t-hotel-search": "nxtComponent/t-hotel-search#v2.0.0",
     "t-hotel-list": "nxtComponent/t-hotel-list",
     "t-filter": "nxtComponent/t-filter",
