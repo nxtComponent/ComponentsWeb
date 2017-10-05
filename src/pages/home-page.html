@@ -1,14 +1,14 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../nxt-shared-styles.html">
 <link rel="import" href="../../bower_components/t-mystique-auth/t-mystique-auth.html">
-<link rel="import" href="../../bower_components/t-homepage-deal/t-homepage-deal.html">
+<link rel="import" href="../../bower_components/t-deals/t-deals.html">
 <link rel="import" href="../../bower_components/t-hotel-search/t-hotel-search.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="home-page">
   <template>
     <style include="shared-styles">
-    t-hotel-search {
+     t-hotel-search {
         --outer-container-color: #424d51;
         --search-button-color: #4CB050;
         --dropdown-element-link-color: #4CB050;
@@ -20,7 +20,7 @@
         --color-for-calendar-selected-range: #4CB050;
         --background-img-for-selected-date: url('../../bower_components/t-hotel-search/green-circle.svg');
         --background-img-for-today-date: url('../../bower_components/t-hotel-search/today-circle.svg');
-      }
+      } 
 
       .search-container {
              
@@ -68,12 +68,12 @@
         THE EASIEST WAY TO FIND YOUR HOTEL
       </div>
       <t-hotel-search option=[[searchOptions]] resources=[[searchResources]] data-Url="https://demo.travelnxt.com/api/content/autosuggest/"
-        token-response="{{tokenResponse}}" on-do-search="_onHotelSearchTrigger" auto-Suggest-Url="https://demo.travelnxt.com/api/content/autosuggest/">
+        token-response="{{tokenResponse}}" on-do-search="_onHotelSearchTrigger">
       </t-hotel-search>      
     </div>
 
     <div classs="homepage-deal-container">
-      <t-homepage-deal heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-homepage-deal>
+      <t-deals heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-deals>
     </div>
 
 
@@ -138,16 +138,16 @@
             value: function () {
               return {
                 "labels": {
-                  "adult": "Adult",
+                  "adult": "Adult cgfg",
                   "children": "Children",
                   "child": "Child",
                   "age": "Age",
                   "room": "Room"
                 },
                 "watermark": {
-                  "checkIn": "MM/DD/YY",
+                  "checkIn": "tert Hello",
                   "checkOut": "MM/DD/YY",
-                  "hotelLocation": "City, Airport, Address or Point of Interest"
+                  "hotelLocation": "123 City, Airport, Address or Point of Interest rddrydry"
                 },
                 "errorMessage": {
                   "destinationError": "Please enter your destination",
