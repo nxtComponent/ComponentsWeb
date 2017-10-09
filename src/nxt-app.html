@@ -50,7 +50,7 @@
 
     <app-header-layout>
       <app-header disabled>
-        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="menuHandler"></t-header>
+        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
       </app-header>
 
       <template is="dom-if" if="[[pageLoader]]">
@@ -172,8 +172,8 @@
 
       ready() {
         super.ready();
-        this.addEventListener('page-redirect', this._redirect.bind(this));
-        this.addEventListener('t-hotel-search-api-success', this._tHotelSearchApiSuccess.bind(this));
+        this.addEventListener('page-redirect', this._redirectHandler.bind(this));
+        this.addEventListener('search-success', this._onSearchSuccess.bind(this));
       }
 
       _routePageChanged(page) {
@@ -374,42 +374,43 @@
         }
       }
 
-      _tHotelSearchApiSuccess(e) {
-
-        let page = "hotel-result";
+      _onSearchSuccess(e) {
+        let page = this._getResultPageName(e.detail.product);
         let queryString = "?sid=" + e.detail.searchId;
 
         let url = `${page}${queryString}`;
+
+        this._redirect(url);
+
+      }
+
+
+      _isActivePage(page, selectedPage) {
+        return page === selectedPage;
+      }
+
+      _redirectHandler(e) {
+        if (!e.detail || !e.detail.url) {
+          return;
+        }
+        this._redirect(e.detail.url);
+      }
+      _redirect(url) {
+        if (!url) {
+          return;
+        }
 
         let path = this._buildHashedRedirectUrl(url);
 
         window.history.pushState({}, null, path);
         window.dispatchEvent(new CustomEvent('location-changed'));
 
-
       }
 
-      _redirectHandler(e) {
+      _menuHandler(e) {
 
-      }
-      _isActivePage(page, selectedPage) {
-        return page === selectedPage;
-      }
-
-      _redirect(e) {
-        if (!e.detail || !e.detail.url) {
-          return;
-        }
-        let path = this._buildHashedRedirectUrl(e.detail.url);
-
-        window.history.pushState({}, null, path);
-        window.dispatchEvent(new CustomEvent('location-changed'));
-
-      }
-      menuHandler(e) {
-
-        if (!this.firstTimeCalled || this.firstTimeCalled <= 2) {
-          this.firstTimeCalled = this.firstTimeCalled ? this.firstTimeCalled + 1 : 1;
+        if (!this._menuTriggered || this._menuTriggered <= 2) {
+          this._menuTriggered = this._menuTriggered ? this._menuTriggered + 1 : 1;
           if (this.page) {
             return;
           }
@@ -418,9 +419,7 @@
         let page = e.detail.label.toLowerCase();
         page = page === "hotel" ? "home" : page;
 
-        let path = this._buildHashedRedirectUrl(page);
-        window.history.pushState({}, null, path);
-        window.dispatchEvent(new CustomEvent('location-changed'));
+        this._redirect(page);
 
       }
 
@@ -442,6 +441,20 @@
         page = page.startsWith("/") ? page : `/${page}`;
 
         return `/${queryString}#${page}`;
+      }
+      _getResultPageName(product) {
+        if (!product) {
+          console.error("Product name is empty");
+          return;
+        }
+        product = product.toLowerCase();
+        let page = "";
+        switch (product) {
+          case "hotel":
+            page = "hotel-result";
+            break;
+        }
+        return page;
       }
 
     }
