@@ -1,0 +1,47 @@
+<script>
+    (() => {
+        'use strict';
+        /* @polymerMixin */
+        const TPageMixin = superClass => {
+            return class extends superClass {
+
+                constructor() {
+                    super();                  
+                }
+
+                static get properties() {
+                    return {
+                        name: {
+                            type: String,
+                            value: ''
+                        },
+                        isActivePage: {
+                            type: Boolean,
+                            value: false
+                        },
+                        pageLoader: {
+                            type: Boolean,
+                            notify: true
+                        },
+                    };
+                }
+
+                static get observers() {
+                    return [
+                        "_onActivePageChanged(isActivePage)"
+                    ]
+                }
+
+                _onActivePageChanged(isActivePage) {
+
+                    if (isActivePage) {
+                        console.log("Active page changed");
+                    }
+
+                }
+
+            }
+        }
+        window.TPageMixin = TPageMixin;
+    })();
+</script>

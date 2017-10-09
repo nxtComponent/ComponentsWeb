@@ -1,5 +1,6 @@
 
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../mixin/t-page-mixin.html">
 
 <dom-module id="view404-page">
   <template>
@@ -15,7 +16,7 @@
   </template>
 
   <script>
-    class View404Page extends Polymer.Element {
+    class View404Page extends TPageMixin(superClass) {
       static get is() { return 'view404-page'; }
       static get properties() {
         return {

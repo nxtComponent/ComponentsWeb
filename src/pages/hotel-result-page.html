@@ -11,7 +11,7 @@
 
 <link rel="import" href="../../bower_components/app-route/app-route-converter.html">
 
-<link rel="import" href="../mixin/hotel-result-mixin.html">
+<link rel="import" href="../mixin/t-hotel-result-mixin.html">
 
 <link rel="import" href="../nxt-shared-styles.html">
 
@@ -23,8 +23,6 @@
         min-height: 200px;
         padding: 50px 20px 0px 0px;
       }
-
-
 
       t-filter {
         width: 100%;
@@ -85,8 +83,9 @@
         <t-filter id="tFilter" on-t-filter-changed="_onFilterChange" data=[[filterData]] settings=[[filterSettings]] resources=[[filterResources]]>
         </t-filter>
 
-        <t-hotel-list on-t-list-filter-updated="_onFilterUpdateFromResult" support-number="[[supportNumber]]" filters={{filterData}} items=[[resultItems]] settings=[[resultSettings]]
-          resources=[[resultResources]] on-t-hotel-item-show-details-tap="_redirectToHotelDetails" on-t-hotel-item-title-tap="_redirectToHotelDetails">
+        <t-hotel-list on-t-list-filter-updated="_onFilterUpdateFromResult" support-number="[[supportNumber]]" filters={{filterData}}
+          items=[[resultItems]] settings=[[resultSettings]] resources=[[resultResources]] on-t-hotel-item-show-details-tap="_redirectToHotelDetails"
+          on-t-hotel-item-title-tap="_redirectToHotelDetails">
 
           <!-- template to render when no data is present-->
           <!-- Styling and content is not part of t-list component, should be done by consumer.-->
@@ -104,30 +103,24 @@
     <!--<iron-ajax auto url="/src/mock/result.json" handle-as="json" last-response="{{resultRS}}" on-response="_onResultLoaded"></iron-ajax>
     <iron-ajax auto url="/src/mock/filter.json" handle-as="json" last-response="{{filterRS}}" on-response="_onFilterDataLoaded"></iron-ajax>-->
 
-    <iron-ajax id="ajaxHotelResult" url="{{apiBaseUrl}}/api/hotel/search/result" handle-as="json" last-response="{{searchResult}}" on-response="_onResultLoaded"></iron-ajax>
+    <iron-ajax id="ajaxHotelResult" url="{{apiBaseUrl}}/api/hotel/search/result" handle-as="json" last-response="{{searchResult}}"
+      on-response="_onResultLoaded"></iron-ajax>
     <iron-ajax id="ajaxFilterData" url="{{apiBaseUrl}}/api/hotel/search/result/filterdata/[[searchId]]" handle-as="json" last-response="{{filterDataRS}}"
       on-response="_onFilterDataLoaded"></iron-ajax>
 
   </template>
 
   <script>
-    class HotelResultPage extends HotelResultMixin(Polymer.Element) {
-      static get is() { return 'hotel-result-page'; }
+    class HotelResultPage extends THotelResultMixin(Polymer.Element) {
+      static get is() {
+        return 'hotel-result-page';
+      }
 
       static get properties() {
         return {
-          isActivePage:{
-            type:Boolean,
-            value:false
-          },
+
           pageModel: Object,
           route: String,
-
-          pageLoader: {
-            type: Boolean,
-            notify: true
-          },
-        
           isPreloader: {
             type: Boolean,
             value: true
@@ -154,14 +147,10 @@
               return this.getFilterSection({}, "US");
             }
           },
-          supportNumber:String,
-          loadFakeData:{
-            type:Boolean,
-            value:false
-          }, 
-           apiBaseUrl:{
-            type:String,
-            value:''
+          supportNumber: String,
+          apiBaseUrl: {
+            type: String,
+            value: ''
           }
 
           // resultResources: Object,
@@ -170,16 +159,13 @@
         }
       }
 
-      static get observers() {
-        return [
-          "_onActivePageChanged(isActivePage)"       
-        ]
-      }
-      _onActivePageChanged(isActivePage){
+      _onActivePageChanged(isActivePage) {
 
-        if(isActivePage && this._isNewSearch ){
+        if (isActivePage && this._isNewSearch) {
           this._init();
-          setTimeout(function(){ this._onPageLoad()}.bind(this),16)
+          setTimeout(function () {
+            this._onPageLoad()
+          }.bind(this), 16)
         }
       }
       _onPageLoad(pageModel) {
@@ -196,7 +182,7 @@
 
         this.set("filterResources", this.getFilterResources());
         this.set("filterSettings", this.getFiterSettings());
-        
+
         this.__progressInterval = setInterval(this.__progressIncrement.bind(this), 200);
 
       }
@@ -204,13 +190,13 @@
         super.ready();
         // this.addEventListener("t-hotel-item-show-details-tap", e=>this._redirectToHotelDetails(e));
       }
-      _init(){
-          this.isResultLoaded = false;
-          this.isPreloader= true;
-          this.pageLoader= false;
-          this.resultItems= null;
-          this.filterData= null;
-          this.progressValue = 0;
+      _init() {
+        this.isResultLoaded = false;
+        this.isPreloader = true;
+        this.pageLoader = false;
+        this.resultItems = null;
+        this.filterData = null;
+        this.progressValue = 0;
       }
 
       __progressIncrement() {
@@ -221,22 +207,8 @@
 
       }
 
-      _loadFakeHotelData(){
-       var hotelResult = localStorage.getItem("HotelResult");     
 
-       this.searchResult= hotelResult?JSON.parse(hotelResult):null; 
-       this._onResultLoaded();     
-      }
-      _loadFakeHotelFilterData(){
-        var HotelFilter = localStorage.getItem("HotelFilter");
-        this.filterDataRS= HotelFilter?JSON.parse(HotelFilter):null;
-        this._onFilterDataLoaded();
-      }
       _loadResult() {
-        if(this.loadFakeData){
-          this._loadFakeHotelData();
-          return;
-        }
         this.$.ajaxHotelResult.body = {
           "searchId": this.searchId
         };
@@ -246,10 +218,7 @@
       }
 
       _loadFilterData() {
-        if(this.loadFakeData){
-          this._loadFakeHotelFilterData();
-          return;
-        }
+
         this.$.ajaxFilterData.method = "GET";
         this.$.ajaxHotelResult.contentType = "application/json";
         this.$.ajaxFilterData.generateRequest();
@@ -282,10 +251,10 @@
       }
 
       _onFilterDataLoaded(evt) {
-        
-       this.set("filterData", this.getFilterSection(this.filterDataRS, "US"));
-       var tFilter= this.shadowRoot.querySelector("#tFilter")
-       tFilter && tFilter.init();
+
+        this.set("filterData", this.getFilterSection(this.filterDataRS, "US"));
+        var tFilter = this.shadowRoot.querySelector("#tFilter")
+        tFilter && tFilter.init();
       }
 
       _onFilterChange(evt, filterData) {
@@ -307,10 +276,10 @@
         }));
       }
 
-     get _isNewSearch(){       
-     return this.searchId !== this.subroute.__queryParams.sid || (!this.resultItems && !this.filterData);
-    }
-    
+      get _isNewSearch() {
+        return this.searchId !== this.subroute.__queryParams.sid || (!this.resultItems && !this.filterData);
+      }
+
     }
 
     window.customElements.define(HotelResultPage.is, HotelResultPage);

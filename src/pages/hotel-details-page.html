@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../nxt-shared-styles.html">
+<link rel="import" href="../mixin/t-page-mixin.html">
 
 <dom-module id="hotel-details-page">
   <template>
@@ -12,7 +13,7 @@
   </template>
 
   <script>
-    class HotelDetailsPage extends Polymer.Element {
+    class HotelDetailsPage extends TPageMixin( Polymer.Element) {
       static get is() { return 'hotel-details-page'; }
 
       static get properties() {
