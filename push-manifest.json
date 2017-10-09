@@ -731,6 +731,18 @@
     "bower_components/t-hotel-search/autocomplete.js": {
       "type": "script",
       "weight": 1
+    },
+    "src/page-helper/t-hotel-search-api.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-search-page-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
+      "type": "document",
+      "weight": 1
     }
   },
   "src/pages/home-page.html": {
@@ -1309,6 +1321,18 @@
     "bower_components/t-hotel-search/autocomplete.js": {
       "type": "script",
       "weight": 1
+    },
+    "src/page-helper/t-hotel-search-api.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-search-page-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
+      "type": "document",
+      "weight": 1
     }
   },
   "src/pages/hotel-result-page.html": {
@@ -1864,7 +1888,11 @@
       "type": "document",
       "weight": 1
     },
-    "src/mixin/hotel-result-mixin.html": {
+    "src/mixin/t-hotel-result-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
       "type": "document",
       "weight": 1
     },
@@ -1933,6 +1961,10 @@
     "src/nxt-shared-styles.html": {
       "type": "document",
       "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
+      "type": "document",
+      "weight": 1
     }
   },
   "src/pages/checkout-page.html": {
@@ -1993,6 +2025,10 @@
       "weight": 1
     },
     "src/nxt-shared-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
       "type": "document",
       "weight": 1
     }
@@ -2057,6 +2093,10 @@
     "src/nxt-shared-styles.html": {
       "type": "document",
       "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
+      "type": "document",
+      "weight": 1
     }
   },
   "src/pages/view404-page.html": {
@@ -2113,6 +2153,10 @@
       "weight": 1
     },
     "bower_components/polymer/lib/mixins/template-stamp.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
       "type": "document",
       "weight": 1
     }
@@ -2175,6 +2219,14 @@
       "weight": 1
     },
     "src/nxt-shared-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-search-page-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "src/mixin/t-page-mixin.html": {
       "type": "document",
       "weight": 1
     }

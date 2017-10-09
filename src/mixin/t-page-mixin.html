@@ -1,0 +1,51 @@
+<script>
+(function () {
+    'use strict';
+    /* @polymerMixin */
+
+    var TPageMixin = function TPageMixin(superClass) {
+        return function (_superClass) {
+            babelHelpers.inherits(_class, _superClass);
+
+            function _class() {
+                babelHelpers.classCallCheck(this, _class);
+                return babelHelpers.possibleConstructorReturn(this, (_class.__proto__ || Object.getPrototypeOf(_class)).call(this));
+            }
+
+            babelHelpers.createClass(_class, [{
+                key: '_onActivePageChanged',
+                value: function _onActivePageChanged(isActivePage) {
+
+                    if (isActivePage) {
+                        console.log("Active page changed");
+                    }
+                }
+            }], [{
+                key: 'properties',
+                get: function get() {
+                    return {
+                        name: {
+                            type: String,
+                            value: ''
+                        },
+                        isActivePage: {
+                            type: Boolean,
+                            value: false
+                        },
+                        pageLoader: {
+                            type: Boolean,
+                            notify: true
+                        }
+                    };
+                }
+            }, {
+                key: 'observers',
+                get: function get() {
+                    return ["_onActivePageChanged(isActivePage)"];
+                }
+            }]);
+            return _class;
+        }(superClass);
+    };
+    window.TPageMixin = TPageMixin;
+})();</script>

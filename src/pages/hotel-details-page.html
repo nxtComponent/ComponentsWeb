@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../nxt-shared-styles.html">
+<link rel="import" href="../mixin/t-page-mixin.html">
 
 <dom-module id="hotel-details-page">
   <template>
@@ -11,8 +12,8 @@
 
   </template>
 
-  <script>var HotelDetailsPage = function (_Polymer$Element) {
-  babelHelpers.inherits(HotelDetailsPage, _Polymer$Element);
+  <script>var HotelDetailsPage = function (_TPageMixin) {
+  babelHelpers.inherits(HotelDetailsPage, _TPageMixin);
 
   function HotelDetailsPage() {
     babelHelpers.classCallCheck(this, HotelDetailsPage);
@@ -42,7 +43,7 @@
     }
   }]);
   return HotelDetailsPage;
-}(Polymer.Element);
+}(TPageMixin(Polymer.Element));
 
 window.customElements.define(HotelDetailsPage.is, HotelDetailsPage);</script>
 </dom-module>

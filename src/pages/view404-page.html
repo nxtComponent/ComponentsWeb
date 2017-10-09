@@ -1,4 +1,5 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../mixin/t-page-mixin.html">
 
 <dom-module id="view404-page">
   <template>
@@ -13,8 +14,8 @@
     Oops you hit a 404. <a href="[[rootPath]]">Head back to home.</a>
   </template>
 
-  <script>var View404Page = function (_Polymer$Element) {
-  babelHelpers.inherits(View404Page, _Polymer$Element);
+  <script>var View404Page = function (_TPageMixin) {
+  babelHelpers.inherits(View404Page, _TPageMixin);
 
   function View404Page() {
     babelHelpers.classCallCheck(this, View404Page);
@@ -37,7 +38,7 @@
     }
   }]);
   return View404Page;
-}(Polymer.Element);
+}(TPageMixin(superClass));
 
 window.customElements.define(View404Page.is, View404Page);</script>
 </dom-module>

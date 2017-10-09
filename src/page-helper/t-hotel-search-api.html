@@ -1,0 +1,117 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="t-hotel-search-api">
+    <template>
+        <iron-ajax id="ajaxHotelSearch" url="[[apiBaseUrl]]/api/hotel/search/init" handle-as="json" last-response="{{searchRS}}" on-response="_onSearchRespone"></iron-ajax>
+
+    </template>
+
+    <script>var THotelSearchApi = function (_Polymer$Element) {
+    babelHelpers.inherits(THotelSearchApi, _Polymer$Element);
+
+    function THotelSearchApi() {
+        babelHelpers.classCallCheck(this, THotelSearchApi);
+        return babelHelpers.possibleConstructorReturn(this, (THotelSearchApi.__proto__ || Object.getPrototypeOf(THotelSearchApi)).apply(this, arguments));
+    }
+
+    babelHelpers.createClass(THotelSearchApi, [{
+        key: '_requestChanged',
+        value: function _requestChanged() {
+            this._onHotelSearchTrigger(this.request);
+        }
+
+        //This method will get executed when user click on search button
+
+    }, {
+        key: '_onHotelSearchTrigger',
+        value: function _onHotelSearchTrigger(request) {
+
+            this.$.ajaxHotelSearch.body = this.__toAjaxSearchModel(request);
+            this.$.ajaxHotelSearch.method = "POST";
+            this.$.ajaxHotelSearch.contentType = "application/json";
+            this.$.ajaxHotelSearch.generateRequest();
+        }
+    }, {
+        key: '_onSearchRespone',
+        value: function _onSearchRespone(e) {
+
+            if (this.searchRS && this.searchRS.status.isSuccessful) {
+                this.dispatchEvent(new CustomEvent("t-hotel-search-api-success", {
+                    detail: {
+                        searchId: this.searchRS.searchId
+                    },
+                    bubbles: true,
+                    composed: true
+                }));
+            } else {
+                this.dispatchEvent(new CustomEvent("t-hotel-search-api-error", {
+                    detail: {
+                        data: e
+                    },
+                    bubbles: true,
+                    composed: true
+                }));
+            }
+        }
+    }, {
+        key: '__toAjaxSearchModel',
+        value: function __toAjaxSearchModel(searchObj) {
+            if (!searchObj) return null;
+
+            var geoCodes = searchObj.destination.geoCode.split(",");
+            var model = {
+                "geoCode": {
+                    "lat": parseFloat(geoCodes[0]),
+                    "long": parseFloat(geoCodes[1])
+                },
+                "checkIn": searchObj.checkIn,
+                "checkOut": searchObj.checkOut,
+                "rooms": []
+            };
+            searchObj.rooms.forEach(function (r) {
+                var occupants = [];
+                occupants.push({
+                    "paxType": "Adult",
+                    "count": r.adult
+                });
+                if (r.children && r.children > 0) {
+                    occupants.push({
+                        "paxType": "Child",
+                        "count": r.children,
+                        "ages": r.childAges
+                    });
+                }
+                model.rooms.push({
+                    "occupants": occupants
+                });
+            });
+
+            return model;
+        }
+    }], [{
+        key: 'is',
+        get: function get() {
+            return 't-hotel-search-api';
+        }
+    }, {
+        key: 'properties',
+        get: function get() {
+            return {
+                apiBaseUrl: String,
+                request: {
+                    type: Object,
+                    observer: '_requestChanged'
+                },
+                response: {
+                    type: Object,
+                    notify: true
+                }
+            };
+        }
+    }]);
+    return THotelSearchApi;
+}(Polymer.Element);
+
+window.customElements.define(THotelSearchApi.is, THotelSearchApi);</script>
+</dom-module>

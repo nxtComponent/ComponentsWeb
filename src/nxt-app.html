@@ -37,9 +37,9 @@
 <dom-module id="nxt-app">
   <template>
     <style is="custom-style" include="shared-styles">
-      :host {
-               width: 100%;
-            }
+       :host {
+        width: 100%;
+      }
     </style>
 
     <app-location route="{{route}}" query-params="{{queryParams}}" use-hash-as-path=""></app-location>
@@ -178,6 +178,7 @@
     value: function ready() {
       babelHelpers.get(NxtApp.prototype.__proto__ || Object.getPrototypeOf(NxtApp.prototype), 'ready', this).call(this);
       this.addEventListener('page-redirect', this._redirect.bind(this));
+      this.addEventListener('t-hotel-search-api-success', this._tHotelSearchApiSuccess.bind(this));
     }
   }, {
     key: '_routePageChanged',
@@ -242,14 +243,40 @@
           "isIconMenu": true,
           "selectedItem": "0",
           "eventName": "country_changed",
-          "options": [{ "icon": "/images/af.svg", "title": "United State(English)", "value": "en-us" }, { "icon": "/images/in.svg", "title": "India(English)", "value": "en-in" }]
+          "options": [{
+            "icon": "/images/af.svg",
+            "title": "United State(English)",
+            "value": "en-us"
+          }, {
+            "icon": "/images/in.svg",
+            "title": "India(English)",
+            "value": "en-in"
+          }]
         }, {
           "code": "currency-sel",
           "isIconMenu": false,
           "label": "Currency",
           "selectedItem": "0",
           "eventName": "currency_changed",
-          "options": [{ title: "Australian Dollar", value: "AUD" }, { title: "Brazilian Real ", value: "BRL" }, { title: "Danish Krone", value: "DKK" }, { title: "Czech Koruna", value: "CZK" }, { title: "Canadian Dollar", value: "CAD" }, { title: "US Dollar", value: "USD" }]
+          "options": [{
+            title: "Australian Dollar",
+            value: "AUD"
+          }, {
+            title: "Brazilian Real ",
+            value: "BRL"
+          }, {
+            title: "Danish Krone",
+            value: "DKK"
+          }, {
+            title: "Czech Koruna",
+            value: "CZK"
+          }, {
+            title: "Canadian Dollar",
+            value: "CAD"
+          }, {
+            title: "US Dollar",
+            value: "USD"
+          }]
         }],
 
         mainToolbar: [],
@@ -322,6 +349,20 @@
       };
     }
   }, {
+    key: '_tHotelSearchApiSuccess',
+    value: function _tHotelSearchApiSuccess(e) {
+
+      var page = "hotel-result";
+      var queryString = "?sid=" + e.detail.searchId;
+
+      var url = '' + page + queryString;
+
+      var path = this._buildHashedRedirectUrl(url);
+
+      window.history.pushState({}, null, path);
+      window.dispatchEvent(new CustomEvent('location-changed'));
+    }
+  }, {
     key: '_redirectHandler',
     value: function _redirectHandler(e) {}
   }, {
@@ -329,43 +370,21 @@
     value: function _isActivePage(page, selectedPage) {
       return page === selectedPage;
     }
-    // _redirect(e) {
-
-    //   if (e.detail && e.detail.url) {
-    //     window.history.pushState({}, null, e.detail.url);
-    //     window.dispatchEvent(new CustomEvent('location-changed'));
-    //     // this.set("route.path", e.detail.url);
-    //     // this.routeModel =e.detail.routeModel;
-    //   }
-    // }
-
   }, {
     key: '_redirect',
     value: function _redirect(e) {
-      // this.set('route.path', url);
       if (!e.detail || !e.detail.url) {
         return;
       }
-      var tokens = e.detail.url.split("?");
-      var page = tokens[0];
-      var queryParams = {};
-      var queryString = "";
-      if (tokens.length == 2) {
-        queryString = "?" + tokens[1];
-        var hashes = tokens[1].split('&');
-        for (var i = 0; i < hashes.length; i++) {
-          var hash = hashes[i].split('=');
-          queryParams[hash[0]] = hash[1];
-        }
-      }
-      var path = "/" + queryString + "#" + page;
+      var path = this._buildHashedRedirectUrl(e.detail.url);
+
       window.history.pushState({}, null, path);
-      //this.set('routeModel',e.detail.routeModel);
       window.dispatchEvent(new CustomEvent('location-changed'));
     }
   }, {
     key: 'menuHandler',
     value: function menuHandler(e) {
+
       if (!this.firstTimeCalled || this.firstTimeCalled <= 2) {
         this.firstTimeCalled = this.firstTimeCalled ? this.firstTimeCalled + 1 : 1;
         if (this.page) {
@@ -376,9 +395,30 @@
       var page = e.detail.label.toLowerCase();
       page = page === "hotel" ? "home" : page;
 
-      var path = '/#/' + page;
+      var path = this._buildHashedRedirectUrl(page);
       window.history.pushState({}, null, path);
       window.dispatchEvent(new CustomEvent('location-changed'));
+    }
+  }, {
+    key: '_buildHashedRedirectUrl',
+    value: function _buildHashedRedirectUrl(url) {
+
+      if (!url || typeof url !== "string") {
+        return "/";
+      }
+
+      var tokens = url.split("?");
+      var page = tokens[0];
+      var queryString = "";
+
+      if (tokens.length == 2) {
+        queryString = "?" + tokens[1];
+        var hashes = tokens[1].split('&');
+      }
+
+      page = page.startsWith("/") ? page : '/' + page;
+
+      return '/' + queryString + '#' + page;
     }
   }]);
   return NxtApp;

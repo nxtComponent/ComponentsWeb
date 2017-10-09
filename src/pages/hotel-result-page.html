@@ -11,7 +11,7 @@
 
 <link rel="import" href="../../bower_components/app-route/app-route-converter.html">
 
-<link rel="import" href="../mixin/hotel-result-mixin.html">
+<link rel="import" href="../mixin/t-hotel-result-mixin.html">
 
 <link rel="import" href="../nxt-shared-styles.html">
 
@@ -23,8 +23,6 @@
         min-height: 200px;
         padding: 50px 20px 0px 0px;
       }
-
-
 
       t-filter {
         width: 100%;
@@ -108,8 +106,8 @@
 
   </template>
 
-  <script>var HotelResultPage = function (_HotelResultMixin) {
-  babelHelpers.inherits(HotelResultPage, _HotelResultMixin);
+  <script>var HotelResultPage = function (_THotelResultMixin) {
+  babelHelpers.inherits(HotelResultPage, _THotelResultMixin);
 
   function HotelResultPage() {
     babelHelpers.classCallCheck(this, HotelResultPage);
@@ -171,27 +169,8 @@
       }
     }
   }, {
-    key: '_loadFakeHotelData',
-    value: function _loadFakeHotelData() {
-      var hotelResult = localStorage.getItem("HotelResult");
-
-      this.searchResult = hotelResult ? JSON.parse(hotelResult) : null;
-      this._onResultLoaded();
-    }
-  }, {
-    key: '_loadFakeHotelFilterData',
-    value: function _loadFakeHotelFilterData() {
-      var HotelFilter = localStorage.getItem("HotelFilter");
-      this.filterDataRS = HotelFilter ? JSON.parse(HotelFilter) : null;
-      this._onFilterDataLoaded();
-    }
-  }, {
     key: '_loadResult',
     value: function _loadResult() {
-      if (this.loadFakeData) {
-        this._loadFakeHotelData();
-        return;
-      }
       this.$.ajaxHotelResult.body = {
         "searchId": this.searchId
       };
@@ -202,10 +181,7 @@
   }, {
     key: '_loadFilterData',
     value: function _loadFilterData() {
-      if (this.loadFakeData) {
-        this._loadFakeHotelFilterData();
-        return;
-      }
+
       this.$.ajaxFilterData.method = "GET";
       this.$.ajaxHotelResult.contentType = "application/json";
       this.$.ajaxFilterData.generateRequest();
@@ -280,18 +256,9 @@
     key: 'properties',
     get: function get() {
       return {
-        isActivePage: {
-          type: Boolean,
-          value: false
-        },
+
         pageModel: Object,
         route: String,
-
-        pageLoader: {
-          type: Boolean,
-          notify: true
-        },
-
         isPreloader: {
           type: Boolean,
           value: true
@@ -319,10 +286,6 @@
           }
         },
         supportNumber: String,
-        loadFakeData: {
-          type: Boolean,
-          value: false
-        },
         apiBaseUrl: {
           type: String,
           value: ''
@@ -332,14 +295,9 @@
           // resultSettings: Object
         } };
     }
-  }, {
-    key: 'observers',
-    get: function get() {
-      return ["_onActivePageChanged(isActivePage)"];
-    }
   }]);
   return HotelResultPage;
-}(HotelResultMixin(Polymer.Element));
+}(THotelResultMixin(Polymer.Element));
 
 window.customElements.define(HotelResultPage.is, HotelResultPage);</script>
 </dom-module>

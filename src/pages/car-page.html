@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../nxt-shared-styles.html">
+<link rel="import" href="../mixin/t-search-page-mixin.html">
 
 <dom-module id="car-page">
   <template>
@@ -30,8 +31,8 @@
 
   </template>
 
-  <script>var CarPage = function (_Polymer$Element) {
-  babelHelpers.inherits(CarPage, _Polymer$Element);
+  <script>var CarPage = function (_TSearchPageMixin) {
+  babelHelpers.inherits(CarPage, _TSearchPageMixin);
 
   function CarPage() {
     babelHelpers.classCallCheck(this, CarPage);
@@ -43,19 +44,9 @@
     get: function get() {
       return 'car-page';
     }
-  }, {
-    key: 'properties',
-    get: function get() {
-      return {
-        pageLoader: {
-          type: Boolean,
-          notify: true
-        }
-      };
-    }
   }]);
   return CarPage;
-}(Polymer.Element);
+}(TSearchPageMixin(Polymer.Element));
 
 window.customElements.define(CarPage.is, CarPage);</script>
 </dom-module>
