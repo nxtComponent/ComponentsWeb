@@ -50,7 +50,7 @@
 
     <app-header-layout>
       <app-header disabled="">
-        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="menuHandler"></t-header>
+        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
       </app-header>
 
       <template is="dom-if" if="[[pageLoader]]">
@@ -177,8 +177,8 @@
     key: 'ready',
     value: function ready() {
       babelHelpers.get(NxtApp.prototype.__proto__ || Object.getPrototypeOf(NxtApp.prototype), 'ready', this).call(this);
-      this.addEventListener('page-redirect', this._redirect.bind(this));
-      this.addEventListener('t-hotel-search-api-success', this._tHotelSearchApiSuccess.bind(this));
+      this.addEventListener('page-redirect', this._redirectHandler.bind(this));
+      this.addEventListener('search-success', this._onSearchSuccess.bind(this));
     }
   }, {
     key: '_routePageChanged',
@@ -349,13 +349,34 @@
       };
     }
   }, {
-    key: '_tHotelSearchApiSuccess',
-    value: function _tHotelSearchApiSuccess(e) {
-
-      var page = "hotel-result";
+    key: '_onSearchSuccess',
+    value: function _onSearchSuccess(e) {
+      var page = this._getResultPageName(e.detail.product);
       var queryString = "?sid=" + e.detail.searchId;
 
       var url = '' + page + queryString;
+
+      this._redirect(url);
+    }
+  }, {
+    key: '_isActivePage',
+    value: function _isActivePage(page, selectedPage) {
+      return page === selectedPage;
+    }
+  }, {
+    key: '_redirectHandler',
+    value: function _redirectHandler(e) {
+      if (!e.detail || !e.detail.url) {
+        return;
+      }
+      this._redirect(e.detail.url);
+    }
+  }, {
+    key: '_redirect',
+    value: function _redirect(url) {
+      if (!url) {
+        return;
+      }
 
       var path = this._buildHashedRedirectUrl(url);
 
@@ -363,30 +384,11 @@
       window.dispatchEvent(new CustomEvent('location-changed'));
     }
   }, {
-    key: '_redirectHandler',
-    value: function _redirectHandler(e) {}
-  }, {
-    key: '_isActivePage',
-    value: function _isActivePage(page, selectedPage) {
-      return page === selectedPage;
-    }
-  }, {
-    key: '_redirect',
-    value: function _redirect(e) {
-      if (!e.detail || !e.detail.url) {
-        return;
-      }
-      var path = this._buildHashedRedirectUrl(e.detail.url);
+    key: '_menuHandler',
+    value: function _menuHandler(e) {
 
-      window.history.pushState({}, null, path);
-      window.dispatchEvent(new CustomEvent('location-changed'));
-    }
-  }, {
-    key: 'menuHandler',
-    value: function menuHandler(e) {
-
-      if (!this.firstTimeCalled || this.firstTimeCalled <= 2) {
-        this.firstTimeCalled = this.firstTimeCalled ? this.firstTimeCalled + 1 : 1;
+      if (!this._menuTriggered || this._menuTriggered <= 2) {
+        this._menuTriggered = this._menuTriggered ? this._menuTriggered + 1 : 1;
         if (this.page) {
           return;
         }
@@ -395,9 +397,7 @@
       var page = e.detail.label.toLowerCase();
       page = page === "hotel" ? "home" : page;
 
-      var path = this._buildHashedRedirectUrl(page);
-      window.history.pushState({}, null, path);
-      window.dispatchEvent(new CustomEvent('location-changed'));
+      this._redirect(page);
     }
   }, {
     key: '_buildHashedRedirectUrl',
@@ -419,6 +419,22 @@
       page = page.startsWith("/") ? page : '/' + page;
 
       return '/' + queryString + '#' + page;
+    }
+  }, {
+    key: '_getResultPageName',
+    value: function _getResultPageName(product) {
+      if (!product) {
+        console.error("Product name is empty");
+        return;
+      }
+      product = product.toLowerCase();
+      var page = "";
+      switch (product) {
+        case "hotel":
+          page = "hotel-result";
+          break;
+      }
+      return page;
     }
   }]);
   return NxtApp;

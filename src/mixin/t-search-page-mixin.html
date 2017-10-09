@@ -23,9 +23,8 @@
                  * <p>Event handler method called when `search` event is fired</p>
                  */
                 value: function onSearch(e) {
-                    this._showProgress(true);
-                    this.searchRequest = e.detail;
-                    this._saveInSessionStore(this._sessionKeys.searchCriteria, e.detail);
+                    this.searchedData = e.detail;
+                    this._showPageLoader();
                 }
 
                 /*
@@ -35,24 +34,23 @@
             }, {
                 key: 'onSearchSuccess',
                 value: function onSearchSuccess(e) {
+                    this._hidePageLoader();
+
                     if (!e.detail) {
-                        this.$.notify.active = true;
-                        this.$.notify.message = event.detail.code + ' - ' + event.detail.message;
                         console.error('something blew up!');
                         return;
                     }
-                    //setting the search Id global for all pages in app
                     this.searchId = e.detail.searchId;
 
-                    this.queryParams = {
-                        searchId: this.searchId
-                    };
-
-                    this.fire('search-page-success', {
-                        product: this.productName,
-                        data: this.searchedData,
-                        searchId: e.detail.searchId
-                    });
+                    this.dispatchEvent(new CustomEvent("search-success", {
+                        detail: {
+                            product: this.productName,
+                            data: this.searchedData,
+                            searchId: e.detail.searchId
+                        },
+                        bubbles: true,
+                        composed: true
+                    }));
                 }
 
                 /*
@@ -62,16 +60,30 @@
             }, {
                 key: 'onSearchError',
                 value: function onSearchError(e) {
-                    this._showProgress(false);
-                    this.$.notify.active = true;
-                    this.$.notify.message = event.detail.code + ' - ' + event.detail.message;
-                    //console.error(e.detail);
-                    this.fire('search-error', e.detail);
+                    this._hidePageLoader();
+
+                    this.dispatchEvent(new CustomEvent("search-error", {
+                        detail: e.detail,
+                        bubbles: true,
+                        composed: true
+                    }));
+                }
+            }, {
+                key: '_showPageLoader',
+                value: function _showPageLoader() {
+                    this.pageLoader = true;
+                }
+            }, {
+                key: '_hidePageLoader',
+                value: function _hidePageLoader() {
+                    this.pageLoader = false;
                 }
             }], [{
                 key: 'properties',
                 get: function get() {
                     return {
+                        productName: String,
+
                         searchId: {
                             type: String,
                             notify: true

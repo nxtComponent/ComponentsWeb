@@ -37,7 +37,7 @@
         value: function _onSearchRespone(e) {
 
             if (this.searchRS && this.searchRS.status.isSuccessful) {
-                this.dispatchEvent(new CustomEvent("t-hotel-search-api-success", {
+                this.dispatchEvent(new CustomEvent("search-api-success", {
                     detail: {
                         searchId: this.searchRS.searchId
                     },
@@ -45,7 +45,7 @@
                     composed: true
                 }));
             } else {
-                this.dispatchEvent(new CustomEvent("t-hotel-search-api-error", {
+                this.dispatchEvent(new CustomEvent("search-api-error", {
                     detail: {
                         data: e
                     },

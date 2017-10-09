@@ -53,14 +53,14 @@
       <div class="search-heading">
         THE EASIEST WAY TO FIND YOUR HOTEL
       </div>
-      <t-hotel-search option="[[searchOptions]]" resources="[[searchResources]]" data-url="https://demo.travelnxt.com/api/content/autosuggest/" token-response="{{tokenResponse}}" on-do-search="_onHotelSearchTrigger">
+      <t-hotel-search option="[[searchOptions]]" resources="[[searchResources]]" data-url="https://demo.travelnxt.com/api/content/autosuggest/" token-response="{{tokenResponse}}" on-do-search="onSearch">
       </t-hotel-search>
     </div>
 
     <div classs="homepage-deal-container">
       <t-deals heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-deals>
     </div>
-    <t-hotel-search-api api-base-url="[[apiBaseUrl]]" request="[[searchRequest]]"></t-hotel-search-api>
+    <t-hotel-search-api api-base-url="[[apiBaseUrl]]" request="[[searchedData]]" on-search-api-success="onSearchSuccess" on-search-api-error="onSearchError"></t-hotel-search-api>
 
 
     <!-- <iron-ajax id="ajaxHotelSearch" url="[[apiBaseUrl]]/api/hotel/search/init" handle-as="json" last-response="{{searchRS}}" on-response="_onSearchRespone"></iron-ajax> -->
@@ -75,15 +75,7 @@
     return babelHelpers.possibleConstructorReturn(this, (HomePage.__proto__ || Object.getPrototypeOf(HomePage)).apply(this, arguments));
   }
 
-  babelHelpers.createClass(HomePage, [{
-    key: '_onHotelSearchTrigger',
-
-    //This method will get executed when user click on search button
-    value: function _onHotelSearchTrigger(e) {
-      this.searchRequest = e.detail;
-      this.set("pageLoader", true);
-    }
-  }], [{
+  babelHelpers.createClass(HomePage, null, [{
     key: 'is',
     get: function get() {
       return 'home-page';
@@ -102,7 +94,11 @@
           type: String,
           value: ''
         },
-        _searchRequest: {
+        productName: {
+          type: String,
+          value: "hotel"
+        },
+        searchRequest: {
           type: Object
         }
       };
