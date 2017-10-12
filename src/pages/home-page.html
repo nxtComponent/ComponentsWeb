@@ -10,46 +10,55 @@
 <dom-module id="home-page">
   <template>
     <style include="shared-styles">
+       :host {
+        --app-toolbar-font-size: 16px;
+      }
+
       .search-container {
         height: calc(100vh - 64px);
-        padding: 0 16px;
+        padding: 100px 16px 0 16px;
         background-image: url('/images/background.jpg');
         background-size: cover;
         color: white;
+        @apply --layout-vertical;
+        @apply --layout-center;
+        @apply --layout-start-justified;
+      }
+
+      [mobile-layout].search-container {
+        padding-top: 50px;
       }
 
       .search-heading {
         font-size: 3em;
         font-weight: bolder;
+        text-align: center;
       }
 
-      @media (max-width: 950px) {
-        .search-heading {
-          font-size: 2em;
-        }
-        t-hotel-search {
+      [tablet-layout] .search-heading,
+      [mobile-layout] .search-heading {
+        font-size: 49px;
+        line-height: 120%;
+      }
+      /* t-hotel-search {
           padding-left: 15px;
-        }
-      }
+        } */
 
-      @media (max-width: 650px) {
-        .search-heading {
-          font-size: 25px;
-        }
-      }
-
-      @media (max-width: 500px) {
-        .search-heading {
-          font-size: 15px;
-        }
+      [mobile-layout] .search-heading {
+        font-size: 25px;
       }
     </style>
 
+    <iron-media-query query="(max-width: 380px)" query-matches="{{smallMobileView}}"></iron-media-query>
+    <iron-media-query query="(max-width: 767px)" query-matches="{{mobileView}}"></iron-media-query>
+    <iron-media-query query="(max-width: 768px)" query-matches="{{tabletView}}"></iron-media-query>
+    <iron-media-query query="(max-width: 1024px)" query-matches="{{desktopView}}"></iron-media-query>
+    <iron-media-query query="(min-width: 1200px)" query-matches="{{largeDesktopView}}"></iron-media-query>
 
     <t-mystique-auth name="mystique" url="https://demo.travelnxt.com/api/authentication/authenticate/context" token-response="{{tokenResponse}}" auto="">
     </t-mystique-auth>
 
-    <div class="search-container">
+    <div class="search-container" mobile-layout$="{{mobileView}}" tablet-layout$="{{tabletView}}">
       <div class="search-heading">
         THE EASIEST WAY TO FIND YOUR HOTEL
       </div>

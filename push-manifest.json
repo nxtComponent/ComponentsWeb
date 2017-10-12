@@ -1090,6 +1090,10 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/app-layout/app-toolbar/app-toolbar.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/paper-dialog/paper-dialog.html": {
       "type": "document",
       "weight": 1

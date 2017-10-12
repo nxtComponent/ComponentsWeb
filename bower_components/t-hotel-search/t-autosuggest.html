@@ -1,5 +1,6 @@
 <link rel="import" href="../polymer/polymer-element.html">
 <link rel="import" href="../paper-spinner/paper-spinner.html">
+<link rel="import" href="../paper-input/paper-input-container.html">
 <script src="autocomplete.js"></script>
 
 <dom-module id="t-autosuggest">
@@ -9,8 +10,10 @@
                 position: relative;
                 display: block;
                 outline: none;
-                height: 500px;
+                /* height: 500px; */
             }
+
+            
 
              :host .autocomplete ul>li.liColor {
                 color: gray;
@@ -41,7 +44,7 @@
                 transition-duration: 0.3s;
                 transition-property: all;
                 transition-timing-function: cubic-bezier(0, 1, 0.5, 1);
-                margin-top: 52px;
+                margin-top: 10px;
                 z-index: 100;
             }
 
@@ -67,12 +70,12 @@
                 padding-bottom: 40px;
             }
 
-            :host .autocomplete ul .line{
+             :host .autocomplete ul .line {
                 border-bottom: 1px silver solid;
                 margin: 3px 0 10px 0;
             }
 
-            :host .autocomplete ul .line span{
+             :host .autocomplete ul .line span {
                 background-color: white;
                 padding: 4px;
             }
@@ -157,46 +160,46 @@
                     z-index: 99;
                 }
             }
+
             *,
              ::slotted( *) {
                 -webkit-text-size-adjust: none;
             }
-            
+
             #spinner {
                 margin-top: -34px;
                 float: right;
             }
-            
+
             #clearContainer {
                 width: 100%;
             }
-            
+
             #labelId {
                 color: lightgray;
             }
-            
-            #autoSuggest {
+            /* #autoSuggest {
                 width: 99%;
-            }
-            
+            } */
+/* 
             #autoInput {
                 width: 100%;
                 float: left;
-            }
-            
+            } */
+
             #clearButton {
                 float: right;
-                margin-top: -37px;
-                color: white;
+                margin-top: -24px;
+                color: #899194;
             }
-            
+
             paper-input-container {
                 --paper-input-container-focus-color: #4cb050;
                 --paper-input-container-color: lightgray;
                 --paper-input-container-input-color: white;
                 font-size: small;
             }
-            
+
             @media (min-width: 768px) and (max-width:1190px) {
                 #autoSuggest {
                     width: 99%;
@@ -207,19 +210,14 @@
 
 
         <div>
-           
+            <div id="mainBody">
+                <paper-input-container required="" auto-validate="" invalid="{{isInvalid}}" id="autoInput">
 
-            <div id="mainBody" class="layout vertical">
-                <div class="layout horizontal center">
-                    <div class="flex label-container">
-                        <paper-input-container required="" auto-validate="" invalid="{{isInvalid}}" id="autoInput" always-float-label="[[labelFloat]]">
+                    <label id="labelId" slot="label" label="">[[resource.locationPlaceholder]]</label>
 
-                            <label id="labelId" slot="label">[[resource.locationPlaceholder]]</label>
+                    <input class="suggestions" slot="input" id="autoSuggest" is="iron-input" disabled$="[[disabled]]" data-autocomplete$="{{dataUrl}}" data-autocomplete-method="GET" data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}" data-autocomplete-no-result$="{{emptyMessage}}" on-mouseup="_onFocus" bind-value$="[[selectedValue]]" on-search="_onClear" on-tap="_focusOnInput" autocapitalize="on" autocorrect="off" autocomplete="additional-name" data-autocomplete-dealy$="{{debounce}}" on-blur="_onBlur" title="[[selectedValue]]" placeholder="[[resource.locationPlaceholder]]">
+                 </paper-input-container>
 
-                            <input class="suggestions" slot="input" id="autoSuggest" is="iron-input" disabled$="[[disabled]]" data-autocomplete$="{{dataUrl}}" data-autocomplete-method="GET" data-autocomplete-type="JSON" data-autocomplete-limit="10" data-autocomplete-param-name$="{{param}}" data-autocomplete-no-result$="{{emptyMessage}}" on-mouseup="_onFocus" bind-value$="[[selectedValue]]" on-search="_onClear" on-tap="_focusOnInput" autocapitalize="on" autocorrect="off" autocomplete="additional-name" data-autocomplete-dealy$="{{debounce}}" on-blur="_onBlur" title="[[selectedValue]]" placeholder="[[resource.locationPlaceholder]]">
-                        </paper-input-container>
-                    </div>
-                </div>
                 <div id="append" class="flex"> </div>
                 <div id="dropBox" class="autocomplete flex"></div>
             </div>

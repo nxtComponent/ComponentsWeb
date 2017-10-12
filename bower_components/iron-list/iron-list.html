@@ -286,7 +286,7 @@ will only render 20.
 
   /* Polymer.OptionalMutableDataBehavior is only available with Polymer 2.0. */
   if (!Polymer.OptionalMutableDataBehavior) {
-    /* @polymerBehavior */
+    /** @polymerBehavior */
     Polymer.OptionalMutableDataBehavior = {};
   }
 
@@ -1520,7 +1520,7 @@ will only render 20.
      * depending on whether the item has already been selected.
      *
      * @method toggleSelectionForIndex
-     * @param {Object} index The index of the item in the items array.
+     * @param {number} index The index of the item in the items array.
      */
     toggleSelectionForIndex: function toggleSelectionForIndex(index) {
       var isSelected = this.$.selector.isIndexSelected ? this.$.selector.isIndexSelected(index) : this.$.selector.isSelected(this.items[index]);
