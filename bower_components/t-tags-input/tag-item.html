@@ -25,10 +25,11 @@ tag-item is a tag element used by tags-input to show tags with a closed button.
 
     <style>
        :host {
-        display: block;
+        display: inline-block;
         box-sizing: border-box;
         font-family: 'Roboto', 'Noto', sans-serif;
         --light-primary-color: #e6f0fa;
+        margin-bottom: 10px;
       }
 
       .tag-value {
@@ -38,9 +39,9 @@ tag-item is a tag element used by tags-input to show tags with a closed button.
 
       .tag-item-container {
         background-color: var(--light-primary-color);
-        float: left;
-        margin-left: 10px;
-        margin-top: 10px;
+        margin-right: 10px;
+        display: inline-block;
+        /* margin-top: 10px; */
       }
 
       .large.tag-item-container {

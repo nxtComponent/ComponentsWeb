@@ -65,7 +65,7 @@ If you want to save it in bower.json file, remember to add flag --save
       display: block;
       box-sizing: border-box;
       font-family: 'Roboto', 'Noto', sans-serif;
-      padding-top: 14px;
+      padding-top: 8px;
     }
     
     .clearfix:after {
@@ -74,11 +74,15 @@ If you want to save it in bower.json file, remember to add flag --save
       height: 0;
       clear: both;
     }
-
+    @media(max-width: 991px) {
+      :host {
+        padding-top: 5px;
+      }
+    }
   </style>
 
   
-    <h3>{{label}}</h3>
+    <!-- <h3>{{label}}</h3> -->
     <div class="clearfix">
       <template is="dom-repeat" items="{{tags}}">
         <tag-item font-color="{{fontColor}}" tag-color="{{tagColor}}" size="{{size}}" enable-remove="{{enableRemove}}" index="{{index}}" value="{{item}}"></tag-item>
