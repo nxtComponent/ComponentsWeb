@@ -219,7 +219,20 @@
                                     var flag = false;
                                     if (item.amenities) {
                                         var foundItem = item.amenities.find(function (amenity) {
-                                            return amenity.category == _this2.data[_this2.selected].primary;
+                                            var isFound = false;
+                                            if (Array.isArray(_this2.selected)) {
+                                                for (var i = 0; i < _this2.selected.length; i++) {
+
+                                                    if (amenity.category == _this2.data[_this2.selected[i]].primary) {
+                                                        isFound = true;
+                                                        break;
+                                                    }
+                                                }
+                                            } else {
+
+                                                isFound = amenity.category == _this2.data[_this2.selected].primary;
+                                            }
+                                            return isFound;
                                         });
                                         if (foundItem) flag = true;
                                     }
