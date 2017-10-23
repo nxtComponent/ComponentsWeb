@@ -1,0 +1,79 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="./t-component-api.html">
+
+<dom-module id="t-hotel-search-api">
+
+    <script>var THotelSearchApi = function (_TComponentApi) {
+    babelHelpers.inherits(THotelSearchApi, _TComponentApi);
+    babelHelpers.createClass(THotelSearchApi, null, [{
+        key: "is",
+        get: function get() {
+            return 't-hotel-search-api';
+        }
+    }]);
+
+    function THotelSearchApi() {
+        babelHelpers.classCallCheck(this, THotelSearchApi);
+        return babelHelpers.possibleConstructorReturn(this, (THotelSearchApi.__proto__ || Object.getPrototypeOf(THotelSearchApi)).call(this));
+    }
+
+    babelHelpers.createClass(THotelSearchApi, [{
+        key: "_ajaxRequest",
+        get: function get() {
+
+            var geoCodes = this.request.destination.geoCode.split(",");
+            var model = {
+                "geoCode": {
+                    "lat": parseFloat(geoCodes[0]),
+                    "long": parseFloat(geoCodes[1])
+                },
+                "checkIn": this.request.checkIn,
+                "checkOut": this.request.checkOut,
+                "rooms": []
+            };
+
+            this.request.rooms.forEach(function (r) {
+                var occupants = [];
+                occupants.push({
+                    "paxType": "Adult",
+                    "count": r.adult
+                });
+                if (r.children && r.children > 0) {
+                    occupants.push({
+                        "paxType": "Child",
+                        "count": r.children,
+                        "ages": r.childAges
+                    });
+                }
+                model.rooms.push({
+                    "occupants": occupants
+                });
+            });
+
+            return model;
+        }
+    }, {
+        key: "_validateRequest",
+        get: function get() {
+            var invalideState = null;
+            if (!(this.request && this.request.destination && this.request.destination.geoCode && this.request.rooms.length > 0)) {
+                invalideState = "The the request is not valide";
+            }
+            return invalideState;
+        }
+    }], [{
+        key: "properties",
+        get: function get() {
+            return {
+                eventPrefix: {
+                    type: String,
+                    value: "hotel-search"
+                }
+            };
+        }
+    }]);
+    return THotelSearchApi;
+}(TComponentApi);
+
+window.customElements.define(THotelSearchApi.is, THotelSearchApi);</script>
+</dom-module>

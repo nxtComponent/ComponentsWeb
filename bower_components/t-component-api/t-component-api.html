@@ -1,0 +1,261 @@
+<link rel="import" href="../polymer/polymer-element.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="t-component-api">
+  <template>
+    <iron-ajax id="ajax" url="[[url]]" handle-as="json" last-response="{{ajaxResponse}}" on-response="_onApiRespone" on-error="_onApiErrorResponse"></iron-ajax>
+  </template>
+
+  <script>var TComponentApi = function (_Polymer$Element) {
+  babelHelpers.inherits(TComponentApi, _Polymer$Element);
+
+  function TComponentApi() {
+    babelHelpers.classCallCheck(this, TComponentApi);
+    return babelHelpers.possibleConstructorReturn(this, (TComponentApi.__proto__ || Object.getPrototypeOf(TComponentApi)).apply(this, arguments));
+  }
+
+  babelHelpers.createClass(TComponentApi, [{
+    key: 'triggerAjax',
+    value: function triggerAjax() {
+      if (!this.validateRequest()) {
+        return;
+      }
+
+      var ajax = this.$.ajax;
+      ajax.body = this.ajaxRequest;
+      ajax.method = this.method;
+      ajax.contentType = "application/json";
+      ajax.generateRequest();
+
+      this._dispatchApiStartEvent();
+    }
+  }, {
+    key: 'validateRequest',
+    value: function validateRequest() {
+      var invalideState = void 0;
+      if (this.validateRequestFn && typeof this.validateRequestFn === 'function') {
+        invalideState = this.validateRequestFn(this.request);
+      } else {
+        invalideState = this._validateRequest;
+      }
+
+      if (invalideState) {
+        this._dispatchApiValidationEvent(invalideState);
+        return false;
+      }
+      return true;
+    }
+  }, {
+    key: '_onRequestChanged',
+    value: function _onRequestChanged() {
+      if (this.autoTrigger) {
+        this.triggerAjax();
+      }
+    }
+  }, {
+    key: '_onApiRespone',
+    value: function _onApiRespone(e) {
+
+      this.response = this.responseData;
+
+      if (this.isResponseSucessfull) {
+        this.dispatchEvent(new CustomEvent(this._prefix + 'success', {
+          detail: this.response,
+          bubbles: this.bubbles,
+          composed: true
+        }));
+      } else {
+        this._dispatchApiErrorEvent(this.errorData);
+      }
+
+      this._dispatchApiCompleteEvent();
+    }
+  }, {
+    key: '_onApiErrorResponse',
+    value: function _onApiErrorResponse(e) {
+      var error = "An unknown error occurred";
+      if (e.detail) {
+        if (e.detail.request && e.detail.request.xhr && e.detail.request.xhr.response) {
+          error = e.detail.request.xhr.response;
+        } else if (e.detail.error && e.detail.error.message) {
+          error = e.detail.error.message;
+        }
+      }
+      this._dispatchApiErrorEvent(error);
+    }
+  }, {
+    key: '_dispatchApiStartEvent',
+    value: function _dispatchApiStartEvent() {
+
+      this.dispatchEvent(new CustomEvent(this._prefix + 'start', {
+        detail: {
+          request: this.request
+        },
+        bubbles: this.bubbles,
+        composed: true
+      }));
+    }
+  }, {
+    key: '_dispatchApiCompleteEvent',
+    value: function _dispatchApiCompleteEvent() {
+
+      this.dispatchEvent(new CustomEvent(this._prefix + 'complete', {
+        detail: {
+          request: this.request,
+          response: this.response
+        },
+        bubbles: this.bubbles,
+        composed: true
+      }));
+    }
+  }, {
+    key: '_dispatchApiValidationEvent',
+    value: function _dispatchApiValidationEvent(invalideState) {
+      this.dispatchEvent(new CustomEvent(this._prefix + 'validate', {
+        detail: invalideState,
+        bubbles: this.bubbles,
+        composed: true
+      }));
+    }
+  }, {
+    key: '_dispatchApiErrorEvent',
+    value: function _dispatchApiErrorEvent(error) {
+
+      this.dispatchEvent(new CustomEvent(this._prefix + 'error', {
+        detail: {
+          data: error
+        },
+        bubbles: this.bubbles,
+        composed: true
+      }));
+    }
+  }, {
+    key: 'isResponseSucessfull',
+    get: function get() {
+      if (this.validateResponseFn && typeof this.validateResponseFn === 'function') {
+        return this.validateResponseFn(this.ajaxResponse);
+      }
+      return this._isResponseSucessfull;
+    }
+  }, {
+    key: 'ajaxRequest',
+    get: function get() {
+      if (this.ajaxRequestFn && typeof this.ajaxRequestFn === 'function') {
+        return this.ajaxRequestFn(this.request);
+      }
+      return this._ajaxRequest;
+    }
+  }, {
+    key: 'responseData',
+    get: function get() {
+      if (this.responseDataFn && typeof this.responseDataFn === 'function') {
+        return this.responseDataFn(this.ajaxResponse);
+      }
+      return this._responseData;
+    }
+  }, {
+    key: 'errorData',
+    get: function get() {
+      if (this.errorDataFn && typeof this.errorDataFn === 'function') {
+        return this.errorDataFn(this.ajaxResponse);
+      }
+      return this._errorData;
+    }
+  }, {
+    key: '_isResponseSucessfull',
+    get: function get() {
+      return this.ajaxResponse && this.ajaxResponse.status && this.ajaxResponse.status.isSuccessful;
+    }
+  }, {
+    key: '_ajaxRequest',
+    get: function get() {
+      return this.request;
+    }
+  }, {
+    key: '_responseData',
+    get: function get() {
+      return this.ajaxResponse;
+    }
+  }, {
+    key: '_errorData',
+    get: function get() {
+      var error = "Internal error occured";
+      if (this.ajaxResponse && this.ajaxResponse.status && this.ajaxResponse.status.message) {
+        error = this.ajaxResponse.status.message;
+      }
+      return error;
+    }
+  }, {
+    key: '_validateRequest',
+    get: function get() {
+      var invalideState = null;
+      return invalideState;
+    }
+  }, {
+    key: '_prefix',
+    get: function get() {
+      return this.eventPrefix ? this.eventPrefix + '-api-' : 'api-';
+    }
+  }], [{
+    key: 'is',
+    get: function get() {
+      return 't-component-api';
+    }
+  }, {
+    key: 'properties',
+    get: function get() {
+      return {
+        url: String,
+        request: {
+          type: Object,
+          observer: '_onRequestChanged'
+        },
+        response: {
+          type: Object,
+          notify: true
+        },
+        method: {
+          type: String,
+          value: "POST"
+        },
+        eventPrefix: {
+          type: String,
+          value: ""
+        },
+        autoTrigger: {
+          type: Boolean,
+          value: false
+        },
+        bubbles: {
+          type: Boolean,
+          value: false
+        },
+
+        ajaxRequestFn: {
+          type: Function,
+          value: null
+        },
+        responseDataFn: {
+          type: Function,
+          value: null
+        },
+        errorDataFn: {
+          type: Function,
+          value: null
+        },
+        validateRequestFn: {
+          type: Function,
+          value: null
+        },
+        validateResponseFn: {
+          type: Function,
+          value: null
+        }
+      };
+    }
+  }]);
+  return TComponentApi;
+}(Polymer.Element);
+
+window.customElements.define(TComponentApi.is, TComponentApi);</script>
+</dom-module>

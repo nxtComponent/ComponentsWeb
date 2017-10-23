@@ -42,6 +42,12 @@ Polymer({
   is: 'iron-ajax',
 
   /**
+   * Fired before a request is sent.
+   *
+   * @event iron-ajax-presend
+   */
+
+  /**
    * Fired when a request is sent.
    *
    * @event request
@@ -316,6 +322,17 @@ Polymer({
       value: false
     },
 
+    /**
+     * Changes the [`completes`](iron-request#property-completes) promise chain 
+     * from `generateRequest` to reject with an object
+     * containing the original request, as well an error message.
+     * If false (default), the promise rejects with an error message only.
+     */
+    rejectWithRequest: {
+      type: Boolean,
+      value: false
+    },
+
     _boundHandleResponse: {
       type: Function,
       value: function value() {
@@ -391,7 +408,7 @@ Polymer({
     }
     var header;
 
-    if (this.headers instanceof Object) {
+    if (babelHelpers.typeof(this.headers) === 'object') {
       for (header in this.headers) {
         headers[header] = this.headers[header].toString();
       }
@@ -424,7 +441,8 @@ Polymer({
       handleAs: this.handleAs,
       jsonPrefix: this.jsonPrefix,
       withCredentials: this.withCredentials,
-      timeout: this.timeout
+      timeout: this.timeout,
+      rejectWithRequest: this.rejectWithRequest
     };
   },
 
@@ -441,6 +459,17 @@ Polymer({
 
     request.completes.then(this._boundHandleResponse).catch(this._handleError.bind(this, request)).then(this._discardRequest.bind(this, request));
 
+    var evt = this.fire('iron-ajax-presend', {
+      request: request,
+      options: requestOptions
+    }, { bubbles: this.bubbles, cancelable: true });
+
+    if (evt.defaultPrevented) {
+      request.abort();
+      request.rejectCompletes(request);
+      return request;
+    }
+
     request.send(requestOptions);
 
     this._setLastRequest(request);
@@ -449,12 +478,18 @@ Polymer({
     this.fire('request', {
       request: request,
       options: requestOptions
-    }, { bubbles: this.bubbles });
+    }, {
+      bubbles: this.bubbles,
+      composed: true
+    });
 
     this.fire('iron-ajax-request', {
       request: request,
       options: requestOptions
-    }, { bubbles: this.bubbles });
+    }, {
+      bubbles: this.bubbles,
+      composed: true
+    });
 
     return request;
   },
@@ -465,8 +500,14 @@ Polymer({
       this._setLastError(null);
       this._setLoading(false);
     }
-    this.fire('response', request, { bubbles: this.bubbles });
-    this.fire('iron-ajax-response', request, { bubbles: this.bubbles });
+    this.fire('response', request, {
+      bubbles: this.bubbles,
+      composed: true
+    });
+    this.fire('iron-ajax-response', request, {
+      bubbles: this.bubbles,
+      composed: true
+    });
   },
 
   _handleError: function _handleError(request, error) {
@@ -490,12 +531,18 @@ Polymer({
     this.fire('iron-ajax-error', {
       request: request,
       error: error
-    }, { bubbles: this.bubbles });
+    }, {
+      bubbles: this.bubbles,
+      composed: true
+    });
 
     this.fire('error', {
       request: request,
       error: error
-    }, { bubbles: this.bubbles });
+    }, {
+      bubbles: this.bubbles,
+      composed: true
+    });
   },
 
   _discardRequest: function _discardRequest(request) {

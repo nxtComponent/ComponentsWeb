@@ -1,15 +1,16 @@
 <link rel="import" href="../../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../../bower_components/paper-spinner/paper-spinner.html">
 <link rel="import" href="../../bower_components/paper-progress/paper-progress.html">
+<!-- <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html"> -->
+<link rel="import" href="../../bower_components/app-route/app-route-converter.html">
 
 <link rel="import" href="../../bower_components/t-filter/t-filter.html">
 <link rel="import" href="../../bower_components/t-hotel-list/t-hotel-list.html">
 
 <link rel="import" href="../../bower_components/t-progress-bar/t-progress-bar.html">
 <link rel="import" href="../../bower_components/t-hotel-result-loader/t-hotel-result-loader.html">
-<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/t-component-api/t-component-api.html">
 
-<link rel="import" href="../../bower_components/app-route/app-route-converter.html">
 
 <link rel="import" href="../mixin/t-hotel-result-mixin.html">
 
@@ -100,9 +101,12 @@
     </div>
     <!--<iron-ajax auto url="/src/mock/result.json" handle-as="json" last-response="{{resultRS}}" on-response="_onResultLoaded"></iron-ajax>
     <iron-ajax auto url="/src/mock/filter.json" handle-as="json" last-response="{{filterRS}}" on-response="_onFilterDataLoaded"></iron-ajax>-->
-
-    <iron-ajax id="ajaxHotelResult" url="{{apiBaseUrl}}/api/hotel/search/result" handle-as="json" last-response="{{searchResult}}" on-response="_onResultLoaded"></iron-ajax>
-    <iron-ajax id="ajaxFilterData" url="{{apiBaseUrl}}/api/hotel/search/result/filterdata/[[searchId]]" handle-as="json" last-response="{{filterDataRS}}" on-response="_onFilterDataLoaded"></iron-ajax>
+    <t-component-api id="ajaxHotelResult" url="{{apiBaseUrl}}/api/hotel/search/result" response="{{searchResult}}" on-api-success="_onResultLoaded"></t-component-api>
+    <t-component-api id="ajaxFilterData" url="{{apiBaseUrl}}/api/hotel/search/result/filterdata/[[searchId]]" response="{{filterDataRS}}" on-api-success="_onFilterDataLoaded"></t-component-api>
+    <!-- <iron-ajax id="ajaxHotelResult" url="{{apiBaseUrl}}/api/hotel/search/result" handle-as="json" last-response="{{searchResult}}"
+      on-response="_onResultLoaded"></iron-ajax>
+    <iron-ajax id="ajaxFilterData" url="{{apiBaseUrl}}/api/hotel/search/result/filterdata/[[searchId]]" handle-as="json" last-response="{{filterDataRS}}"
+      on-response="_onFilterDataLoaded"></iron-ajax> -->
 
   </template>
 
@@ -171,20 +175,17 @@
   }, {
     key: '_loadResult',
     value: function _loadResult() {
-      this.$.ajaxHotelResult.body = {
+      this.$.ajaxHotelResult.request = {
         "searchId": this.searchId
       };
-      this.$.ajaxHotelResult.method = "POST";
-      this.$.ajaxHotelResult.contentType = "application/json";
-      this.$.ajaxHotelResult.generateRequest();
+      this.$.ajaxHotelResult.triggerAjax();
     }
   }, {
     key: '_loadFilterData',
     value: function _loadFilterData() {
 
       this.$.ajaxFilterData.method = "GET";
-      this.$.ajaxHotelResult.contentType = "application/json";
-      this.$.ajaxFilterData.generateRequest();
+      this.$.ajaxFilterData.triggerAjax();
     }
   }, {
     key: '_onFilterUpdateFromResult',
