@@ -218,7 +218,8 @@
     key: '_onFilterDataLoaded',
     value: function _onFilterDataLoaded(evt) {
 
-      this.set("filterData", this.getFilterSection(this.filterDataRS, "US"));
+      var filterData = this.filterDataRS && this.filterDataRS.data;
+      this.set("filterData", this.getFilterSection(filterData, "US"));
       var tFilter = this.shadowRoot.querySelector("#tFilter");
       tFilter && tFilter.init();
     }
