@@ -228,7 +228,7 @@
 
       _onFilterUpdateFromResult() {
         console.log("_onFilterUpdateFromResult", this.filterData);
-        var cloned = this._clone(this.filterData);
+        let cloned = this._clone(this.filterData);
         this.filterData = [];
         this.filterData = cloned;
       }
@@ -252,9 +252,10 @@
       }
 
       _onFilterDataLoaded(evt) {
-
-        this.set("filterData", this.getFilterSection(this.filterDataRS, "US"));
-        var tFilter = this.shadowRoot.querySelector("#tFilter")
+      
+        let filterData = this.filterDataRS&& this.filterDataRS.data;
+        this.set("filterData", this.getFilterSection(filterData, "US"));
+        let tFilter = this.shadowRoot.querySelector("#tFilter")
         tFilter && tFilter.init();
       }
 
