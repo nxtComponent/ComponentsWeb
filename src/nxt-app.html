@@ -177,7 +177,7 @@
       ready() {
         super.ready();
         this.addEventListener('page-redirect', this._redirectHandler.bind(this));
-        this.addEventListener('search-success', this._onSearchSuccess.bind(this));
+        this.addEventListener('hotel-search-api-success', this._onSearchSuccess.bind(this));
       }
 
       _routePageChanged(page) {
@@ -379,7 +379,7 @@
       }
 
       _onSearchSuccess(e) {
-        let page = this._getResultPageName(e.detail.product);
+        let page = "hotel-result";
         let queryString = "?sid=" + e.detail.searchId;
 
         let url = `${page}${queryString}`;
