@@ -67,11 +67,7 @@
     <div classs="homepage-deal-container">
       <t-deals heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-deals>
     </div>
-    <!-- <t-hotel-search-api api-base-url="[[apiBaseUrl]]" request="[[searchedData]]" on-search-api-success="onSearchSuccess" on-search-api-error="onSearchError"></t-hotel-search-api> -->
     <t-hotel-search-api url="[[apiBaseUrl]]/api/hotel/search/init" request="[[searchedData]]" auto-trigger=""></t-hotel-search-api>
-
-    <!-- <iron-ajax id="ajaxHotelSearch" url="[[apiBaseUrl]]/api/hotel/search/init" handle-as="json" last-response="{{searchRS}}" on-response="_onSearchRespone"></iron-ajax> -->
-
   </template>
 
   <script>var HomePage = function (_TSearchPageMixin) {
