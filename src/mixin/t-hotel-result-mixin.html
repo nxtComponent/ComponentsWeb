@@ -188,10 +188,10 @@
 
                 getFilterSection(filterData, currencyCode) {
 
-                    var priceRange = [];
+                    let priceRange = [];
                     if (filterData.priceRanges)
                         filterData.priceRanges.forEach(function (p) {
-                            var obj = {};
+                            let obj = {};
                             if (p.min == 0) {
                                 obj.primary = "Less than " + currencyCode + " " + p.max;
                                 obj.filterBy = "item.fare.totalFare.amount < " + p.max;
@@ -205,31 +205,43 @@
                             priceRange.push(obj);
                         });
 
-                    var ratingFilterData = [];
+                    let ratingFilterData = [];
                     if (filterData.starRatings)
                         filterData.starRatings.forEach(function (r) {
                             // "primary": 5,
                             // "secondary": "150",
                             // "filterBy": "item.rating === 5"
-                            var obj = {
+                            let obj = {
                                 "primary": r.rating,
                                 "secondary": r.count,
                                 "filterBy": `item.rating===${r.rating}`
                             }
                             ratingFilterData.push(obj);
                         });
-                    var amenityFilterData = [];
+                    let amenityFilterData = [];
                     if (filterData.amenities) {
                         filterData.amenities.forEach(function (a) {
-                            var obj = {
+                            let obj = {
                                 "primary": a.name,
                                 "secondary": a.count,
                                 "filterBy": function (item) {
-                                    var flag = false;
+                                    let flag = false;
                                     if (item.amenities) {
-                                        var foundItem = item.amenities.find(amenity => {
-                                            return amenity.category == this.data[
-                                                this.selected].primary;
+                                        let foundItem = item.amenities.find(amenity => {
+                                            let isFound = false;
+                                            if (Array.isArray(this.selected)) {
+                                                for (let i = 0; i <this.selected.length;i++ ) {
+                                                    
+                                                  if(  amenity.category ==this.data[this.selected[i]].primary){
+                                                    isFound = true;
+                                                    break;
+                                                  }
+                                                }
+                                            } else {
+
+                                                isFound = amenity.category ==this.data[this.selected].primary;
+                                            }
+                                            return isFound;
                                         });
                                         if (foundItem)
                                             flag = true;
