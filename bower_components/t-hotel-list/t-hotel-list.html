@@ -238,7 +238,7 @@ Custom property | Description | Default
 
         <div class="container">
 
-            <t-list-title-tags filtered-item-count="{{_itemsToShow.length}}" show-no-result-bar="{{showNoResultBar}}" on-t-tags-input-updated="_tagsUpdated" tags="{{filterTags}}" title="[[resources.title]]" total="[[items.length]]" filteredtitle="[[resources.filteredTitle]]">
+            <t-list-title-tags filtered-item-count="{{_sortedItems.length}}" show-no-result-bar="{{showNoResultBar}}" on-t-tags-input-updated="_tagsUpdated" tags="{{filterTags}}" title="[[resources.title]]" total="[[items.length]]" filteredtitle="[[resources.filteredTitle]]">
             </t-list-title-tags>
 
             <div class="utility-bar">
@@ -687,11 +687,18 @@ Polymer({
     _filtersChanged: function _filtersChanged(filters) {
         var self = this;
         Array.isArray(filters) ? this.filters = filters : undefined;
-        this.filterTags = this._findSelectedFilters(this.filters);
+        var filterTags = this._findSelectedFilters(this.filters);
 
         // Filter data && sort based on selection
         this.debounce('filter', function () {
-            self._reflectSortedView();
+            var attr = null;
+            var type = null;
+            if (this.sortDetails) {
+                attr = this.sortDetails.attr;
+                type = this.sortDetails.type;
+            }
+            self._reflectSortedView(attr, type);
+            this.filterTags = filterTags;
         }, 300);
     },
 

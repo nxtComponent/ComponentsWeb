@@ -184,12 +184,15 @@
                     var priceRange = [];
                     if (filterData.priceRanges) filterData.priceRanges.forEach(function (p) {
                         var obj = {};
-                        if (p.min == 0) {
+                        if (p.min === 0) {
                             obj.primary = "Less than " + currencyCode + " " + p.max;
-                            obj.filterBy = "item.fare.totalFare.amount < " + p.max;
+                            obj.filterBy = "item.fare.totalFare <= " + p.max;
+                        } else if (p.max === -1) {
+                            obj.primary = "More than " + currencyCode + " " + p.min;
+                            obj.filterBy = "item.fare.totalFare >= " + p.min;
                         } else {
                             obj.primary = currencyCode + " " + p.min + " to " + currencyCode + " " + p.max;
-                            obj.filterBy = "item.fare.totalFare.amount > " + p.min + " && item.fare.totalFare.amount < " + p.max;
+                            obj.filterBy = "item.fare.totalFare >= " + p.min + " && item.fare.totalFare <= " + p.max;
                         }
                         obj.secondary = p.count;
                         priceRange.push(obj);

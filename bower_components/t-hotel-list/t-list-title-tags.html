@@ -54,8 +54,8 @@
         </style>
 
         <div class="container">
-            <h2 class="list-title">{{compiledTitle}}</h2>
-            <h3 class="filter-error-message" hidden$="{{!showNoResultBar}}"><i class="icon-alert"></i>No results meet your filter criteria. Try removing some filters to see more results. <a href="#.">Remove all</a></h3>
+            <h2 class="list-title" hidden$="{{showNoResultBar}}">{{compiledTitle}}</h2>
+            <h3 class="filter-error-message" hidden$="{{!showNoResultBar}}"><i class="icon-alert"></i>No results meet your filter criteria. Try removing some filters to see more results. <a href="javascript:void(0);" on-tap="_removeAll">Remove all</a></h3>
             <t-tags-input on-tag-item-remove="_removedTag" class="hidden-xs" tags="{{tags}}" size="medium" tag-color="#E6F0FA" font-color="#90959C">
             </t-tags-input>
         </div>
@@ -108,6 +108,10 @@ Polymer({
                 total: this.total
             });
         }
+    },
+    _removeAll: function _removeAll() {
+        this.tags = [];
+        this.fire("t-tags-input-updated");
     },
     attached: function attached() {
         this._tagsChanged();
