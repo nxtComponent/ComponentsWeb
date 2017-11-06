@@ -360,6 +360,10 @@
       "type": "script",
       "weight": 1
     },
+    "src/nxt-app.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/t-header/t-header.html": {
       "type": "document",
       "weight": 1
@@ -481,6 +485,10 @@
       "weight": 1
     },
     "bower_components/iron-overlay-behavior/iron-overlay-backdrop.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-overlay-behavior/iron-scroll-manager.html": {
       "type": "document",
       "weight": 1
     },
@@ -704,6 +712,58 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-light.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-themable-mixin/vaadin-themable-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-overlay.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-text-field/vaadin-text-field.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-control-state-mixin/vaadin-control-state-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-text-field/vaadin-form-element-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-button/vaadin-button.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-month-calendar.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-helper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-infinite-scroller.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/t-hotel-search/t-hotel-search-style.html": {
       "type": "document",
       "weight": 1
@@ -726,6 +786,10 @@
     },
     "bower_components/t-hotel-search/autocomplete.js": {
       "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-date-picker.html": {
+      "type": "document",
       "weight": 1
     },
     "bower_components/t-component-api/t-hotel-search-api.html": {
@@ -1122,6 +1186,10 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/iron-overlay-behavior/iron-scroll-manager.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/iron-overlay-behavior/iron-focusables-helper.html": {
       "type": "document",
       "weight": 1
@@ -1298,6 +1366,58 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-light.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-themable-mixin/vaadin-themable-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-overlay.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-text-field/vaadin-text-field.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-control-state-mixin/vaadin-control-state-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-text-field/vaadin-form-element-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-button/vaadin-button.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-month-calendar.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-helper.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-styles.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-infinite-scroller.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker-mixin.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/vaadin-date-picker/vaadin-date-picker.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/t-hotel-search/t-hotel-search-style.html": {
       "type": "document",
       "weight": 1
@@ -1320,6 +1440,10 @@
     },
     "bower_components/t-hotel-search/autocomplete.js": {
       "type": "script",
+      "weight": 1
+    },
+    "bower_components/t-hotel-search/t-date-picker.html": {
+      "type": "document",
       "weight": 1
     },
     "bower_components/t-component-api/t-hotel-search-api.html": {
@@ -1748,10 +1872,6 @@
       "type": "document",
       "weight": 1
     },
-    "bower_components/iron-resizable-behavior/iron-resizable-behavior.html": {
-      "type": "document",
-      "weight": 1
-    },
     "bower_components/iron-overlay-behavior/iron-overlay-behavior.html": {
       "type": "document",
       "weight": 1
@@ -1760,11 +1880,19 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/iron-resizable-behavior/iron-resizable-behavior.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/iron-overlay-behavior/iron-overlay-manager.html": {
       "type": "document",
       "weight": 1
     },
     "bower_components/iron-overlay-behavior/iron-overlay-backdrop.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/iron-overlay-behavior/iron-scroll-manager.html": {
       "type": "document",
       "weight": 1
     },

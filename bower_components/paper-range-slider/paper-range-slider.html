@@ -161,8 +161,10 @@ Polymer({
          * the style attribute of the element.
          */
         style: {
-            type: String,
-            value: "",
+            type: Object,
+            value: function value() {
+                return {};
+            },
             notify: true,
             reflectToAttribute: true
         },

@@ -170,7 +170,7 @@
       <!-- Adding a hidden input to integrate with iron-form, if required -->
       <input type="hidden" name$="[[name]]" value$="[[value]]">
 
-      <paper-input id="autocompleteInput" label="[[label]]" autocapitalize="[[autocapitalize]]" no-label-float="[[noLabelFloat]]" disabled="{{disabled}}" auto-validate$="[[autoValidate]]" error-message$="[[errorMessage]]" required$="[[required]]" value="{{text}}" allowed-pattern="[[allowedPattern]]" pattern="[[pattern]]" always-float-label="[[alwaysFloatLabel]]" char-counter$="[[charCounter]]" maxlength$="[[maxlength]]" placeholder="[[placeholder]]" role="textbox" aria-autocomplete="list" aria-multiline="false" aria-activedescendant$="[[_highlightedSuggestion.elementId]]" aria-disabled$="[[disabled]]" aria-controls="autocompleteStatus suggestionsWrapper">
+      <paper-input id="autocompleteInput" label="[[label]]" autocapitalize="[[autocapitalize]]" no-label-float="[[noLabelFloat]]" disabled="{{disabled}}" readonly="[[readonly]]" auto-validate$="[[autoValidate]]" error-message$="[[errorMessage]]" required$="[[required]]" value="{{text}}" allowed-pattern="[[allowedPattern]]" pattern="[[pattern]]" always-float-label="[[alwaysFloatLabel]]" char-counter$="[[charCounter]]" maxlength$="[[maxlength]]" placeholder="[[placeholder]]" role="textbox" aria-autocomplete="list" aria-multiline="false" aria-activedescendant$="[[_highlightedSuggestion.elementId]]" aria-disabled$="[[disabled]]" aria-controls="autocompleteStatus suggestionsWrapper">
 
         <slot name="prefix" slot="prefix"></slot>
         <!-- TODO: remove tabindex workaround when  is fixed https://github.com/PolymerElements/paper-input/issues/324 -->
@@ -255,6 +255,14 @@
        * `required` Set to true to mark the input as required.
        */
       required: {
+        type: Boolean,
+        value: false
+      },
+
+      /**
+       * `readonly` Set to true to mark the input as readonly.
+       */
+      readonly: {
         type: Boolean,
         value: false
       },
