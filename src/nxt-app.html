@@ -37,9 +37,10 @@
 <dom-module id="nxt-app">
   <template>
     <style is="custom-style" include="shared-styles">
-       :host {
+      :host {
         width: 100%;
       }
+
       app-header {
         min-height: 50px;
         height: 108px;
@@ -53,9 +54,9 @@
 
 
     <app-header-layout>
-      <app-header disabled>
-        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
-      </app-header>
+
+      <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
+
 
       <template is="dom-if" if="[[pageLoader]]">
         <paper-progress indeterminate class="blue"></paper-progress>
@@ -71,8 +72,7 @@
             api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute=[[subroute]] page-model=[[routeModel]]></hotel-result-page>
           <hotel-details-page name="hotel-details" page-loader="{{pageLoader}}" subroute=[[subroute]] page-model=[[routeModel]]></hotel-details-page>
 
-          <view404-page name="view404">
-            </my-view404>
+          <view404-page name="view404"></view404-page>
 
         </iron-pages>
 
@@ -220,76 +220,76 @@
           primaryMenu: {
             selectedIndex: 0,
             items: [{
-                label: 'Hotel',
-                icon: 'maps:hotel'
-              },
-              {
-                label: 'Car',
-                icon: 'maps:car'
-              }
+              label: 'Hotel',
+              icon: 'maps:hotel'
+            },
+            {
+              label: 'Car',
+              icon: 'maps:car'
+            }
             ]
           },
           topLeftToolbar: [{
-              "title": "1800-958-1000",
-              "icon": "communication:phone",
-              "url": "tel:18009581000"
-            },
-            {
-              "title": "enquiry@travelnxt.com",
-              "icon": "mail",
-              "url": "mailto:enquiry@travelnxt.com"
-            }
+            "title": "1800-958-1000",
+            "icon": "communication:phone",
+            "url": "tel:18009581000"
+          },
+          {
+            "title": "enquiry@travelnxt.com",
+            "icon": "mail",
+            "url": "mailto:enquiry@travelnxt.com"
+          }
           ],
           topEndMenu: [{
-              "code": "ctr-sel",
-              "label": "Country",
-              "isIconMenu": true,
-              "selectedItem": "0",
-              "eventName": "country_changed",
-              "options": [{
-                  "icon": "/images/af.svg",
-                  "title": "United State(English)",
-                  "value": "en-us"
-                },
-                {
-                  "icon": "/images/in.svg",
-                  "title": "India(English)",
-                  "value": "en-in"
-                }
-              ]
+            "code": "ctr-sel",
+            "label": "Country",
+            "isIconMenu": true,
+            "selectedItem": "0",
+            "eventName": "country_changed",
+            "options": [{
+              "icon": "/images/af.svg",
+              "title": "United State(English)",
+              "value": "en-us"
             },
             {
-              "code": "currency-sel",
-              "isIconMenu": false,
-              "label": "Currency",
-              "selectedItem": "0",
-              "eventName": "currency_changed",
-              "options": [{
-                  title: "Australian Dollar",
-                  value: "AUD"
-                },
-                {
-                  title: "Brazilian Real ",
-                  value: "BRL"
-                },
-                {
-                  title: "Danish Krone",
-                  value: "DKK"
-                },
-                {
-                  title: "Czech Koruna",
-                  value: "CZK"
-                },
-                {
-                  title: "Canadian Dollar",
-                  value: "CAD"
-                },
-                {
-                  title: "US Dollar",
-                  value: "USD"
-                }
-              ]
+              "icon": "/images/in.svg",
+              "title": "India(English)",
+              "value": "en-in"
             }
+            ]
+          },
+          {
+            "code": "currency-sel",
+            "isIconMenu": false,
+            "label": "Currency",
+            "selectedItem": "0",
+            "eventName": "currency_changed",
+            "options": [{
+              title: "Australian Dollar",
+              value: "AUD"
+            },
+            {
+              title: "Brazilian Real ",
+              value: "BRL"
+            },
+            {
+              title: "Danish Krone",
+              value: "DKK"
+            },
+            {
+              title: "Czech Koruna",
+              value: "CZK"
+            },
+            {
+              title: "Canadian Dollar",
+              value: "CAD"
+            },
+            {
+              title: "US Dollar",
+              value: "USD"
+            }
+            ]
+          }
           ],
 
           mainToolbar: [
@@ -307,70 +307,70 @@
           "primaryLinks": {
             "title": "Contact Us",
             "options": [{
-                "title": "Ph.:",
-                "options": [{
-                    "title": "+215 (801) 4567",
-                    "url": "tel:+2158014567"
-                  },
-                  {
-                    "title": "+215 (802) 6789",
-                    "url": "tel:+2158026789"
-                  }
-                ]
+              "title": "Ph.:",
+              "options": [{
+                "title": "+215 (801) 4567",
+                "url": "tel:+2158014567"
               },
               {
-                "title": "Fax:",
-                "options": [{
-                  "title": "215-123-7890",
-                  "url": "tel:+2151237890"
-                }]
-              },
-              {
-                "title": "Email:",
-                "options": [{
-                  "title": "enquiry@travelnxt.com",
-                  "url": "mailto:enquiry@travelnxt.com"
-                }]
+                "title": "+215 (802) 6789",
+                "url": "tel:+2158026789"
               }
+              ]
+            },
+            {
+              "title": "Fax:",
+              "options": [{
+                "title": "215-123-7890",
+                "url": "tel:+2151237890"
+              }]
+            },
+            {
+              "title": "Email:",
+              "options": [{
+                "title": "enquiry@travelnxt.com",
+                "url": "mailto:enquiry@travelnxt.com"
+              }]
+            }
             ]
           },
           "secondaryLinks": {
             "title": "Follow Us",
             "options": [{
-                "icon": 'https://image.flaticon.com/icons/svg/174/174855.svg',
-                "url": ""
-              },
-              {
-                "icon": 'https://image.flaticon.com/icons/svg/174/174848.svg',
-                "url": ""
-              }
+              "icon": 'https://image.flaticon.com/icons/svg/174/174855.svg',
+              "url": ""
+            },
+            {
+              "icon": 'https://image.flaticon.com/icons/svg/174/174848.svg',
+              "url": ""
+            }
             ]
           },
           "bottomStartLinks": [{
-              "title": "About Us",
-              "url": ""
-            },
-            {
-              "title": "About Us",
-              "url": ""
-            },
-            {
-              "title": "Privacy Policy",
-              "url": ""
-            },
-            {
-              "title": "Terms Of Use",
-              "url": ""
-            },
-            {
-              "title": "Legal Disclamer",
-              "url": ""
-            },
-            {
-              "title": "Contact Us",
-              "url": "",
-              "openInNewTab": false
-            }
+            "title": "About Us",
+            "url": ""
+          },
+          {
+            "title": "About Us",
+            "url": ""
+          },
+          {
+            "title": "Privacy Policy",
+            "url": ""
+          },
+          {
+            "title": "Terms Of Use",
+            "url": ""
+          },
+          {
+            "title": "Legal Disclamer",
+            "url": ""
+          },
+          {
+            "title": "Contact Us",
+            "url": "",
+            "openInNewTab": false
+          }
           ],
           "bottomEndLinks": [{
             "title": "@ 2017 Mystique All rights reserved"
