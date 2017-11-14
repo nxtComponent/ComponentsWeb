@@ -656,6 +656,10 @@
       "type": "document",
       "weight": 1
     },
+    "bower_components/paper-card/paper-card.html": {
+      "type": "document",
+      "weight": 1
+    },
     "bower_components/t-hotel-search/t-input-date-picker/t-input-date-picker.html": {
       "type": "document",
       "weight": 1
@@ -1299,6 +1303,10 @@
       "weight": 1
     },
     "bower_components/paper-listbox/paper-listbox.html": {
+      "type": "document",
+      "weight": 1
+    },
+    "bower_components/paper-card/paper-card.html": {
       "type": "document",
       "weight": 1
     },

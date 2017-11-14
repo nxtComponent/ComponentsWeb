@@ -37,9 +37,10 @@
 <dom-module id="nxt-app">
   <template>
     <style is="custom-style" include="shared-styles">
-       :host {
+      :host {
         width: 100%;
       }
+
       app-header {
         min-height: 50px;
         height: 108px;
@@ -53,9 +54,9 @@
 
 
     <app-header-layout>
-      <app-header disabled="">
-        <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
-      </app-header>
+
+      <t-header data="[[_headerData]]" user="[[_user]]" on-t-header-primary-item-selected="_menuHandler"></t-header>
+
 
       <template is="dom-if" if="[[pageLoader]]">
         <paper-progress indeterminate="" class="blue"></paper-progress>
@@ -70,10 +71,9 @@
           <hotel-result-page name="hotel-result" is-active-page="[[_isActivePage('hotel-result',page)]]" support-number="[[hotelSupportNumber]]" api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-result-page>
           <hotel-details-page name="hotel-details" page-loader="{{pageLoader}}" subroute="[[subroute]]" page-model="[[routeModel]]"></hotel-details-page>
 
-          <view404-page name="view404">
-            
+          <view404-page name="view404"></view404-page>
 
-        </view404-page></iron-pages>
+        </iron-pages>
 
       </div>
 
