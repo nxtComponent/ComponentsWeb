@@ -15,48 +15,82 @@ Loader element for t-hotel search result page
     <style>
       :host {
         display: block;
+
+        --result-loader-animation: {
+          animation-duration: 3s;
+          animation-fill-mode: forwards;
+          animation-iteration-count: infinite;
+          animation-name: placeHolderShimmer;
+          animation-timing-function: linear;
+          background: #ebebeb;
+          background: -moz-linear-gradient(left, #ebebeb 0%, #d4d4d4 50%, #ebebeb 100%);
+          background: -webkit-gradient(left top, right top, color-stop(0%, #ebebeb), color-stop(50%, #d4d4d4), color-stop(100%, #ebebeb));
+          background: -webkit-linear-gradient(left, #ebebeb 0%, #d4d4d4 50%, #ebebeb 100%);
+          background: -o-linear-gradient(left, #ebebeb 0%, #d4d4d4 50%, #ebebeb 100%);
+          background: -ms-linear-gradient(left, #ebebeb 0%, #d4d4d4 50%, #ebebeb 100%);
+          background: linear-gradient(to right, #ebebeb 0%, #d4d4d4 50%, #ebebeb 100%);
+          filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ebebeb', endColorstr='#ebebeb', GradientType=1 );
+          background-size: 500px 200px;
+          position: relative;
+        }
+        ;
       }
-      paper-progress{
+
+      @keyframes placeHolderShimmer {
+        0% {
+          background-position: -500px 0
+        }
+        100% {
+          background-position: 500px 0
+        }
+      }
+
+      paper-progress {
         width: 100%;
         --paper-progress-height: 20px;
       }
+
       .filters {
         width: 290px;
         float: left;
         padding-top: 15px;
       }
-      .filter-item{
+
+      .filter-item {
         border: 1px solid #e5e5e5;
         margin-bottom: 16px;
       }
-      .filter-header{
-        color: var(--v-t-font-dark,rgba(0,0,0,0.87));
+
+      .filter-header {
+        color: var(--v-t-font-dark, rgba(0, 0, 0, 0.87));
         background-color: #f5f5f5;
         padding: 0 24px;
         height: 48px;
         line-height: 48px;
       }
 
-      .filter-header h3{
+      .filter-header h3 {
         padding: 0;
         margin: 0;
         font-weight: 400;
         font-size: 16px;
       }
-      
-      .chevron{
+
+      .chevron {
         font-size: 24px;
         cursor: pointer;
         color: #717171;
         display: inline-block;
         line-height: 52px;
       }
+
       h1 {
         font-size: 20px;
         line-height: 48px;
-        color: rgba(0,0,0,0.87);
+        color: rgba(0, 0, 0, 0.87);
         font-weight: normal;
       }
+
       .result-list {
         margin-left: 24px;
         width: calc(100% - 314px);
@@ -64,58 +98,71 @@ Loader element for t-hotel search result page
         border: 1px solid #e5e5e5;
         box-sizing: border-box;
       }
+
       .result-list * {
         box-sizing: border-box;
       }
-      .section1{
+
+      .section1 {
         height: 83px;
         border-bottom: 1px solid #e5e5e5;
         padding: 26px 24px 0;
       }
-      .section1 div{
+
+      .section1 div {
         height: 32px;
         background: #f2f2f2;
       }
-      .section2{
+
+      .section2 {
         height: 97px;
         border-bottom: 1px solid #e5e5e5;
         padding: 24px 24px 0;
       }
-      .section2 div{
+
+      .section2 div {
         height: 48px;
         border: 1px solid #e5e5e5;
       }
-      .section2 .buttons{
+
+      .section2 .buttons {
         float: left;
         width: 202px;
         border: none;
         margin-right: 24px;
       }
-      .section2 .right-div{
+
+      .section2 .right-div {
         float: left;
         width: calc(100% - 226px);
         background: #f2f2f2;
       }
-      .section2 .buttons div{
+
+      .section2 .buttons div {
         float: left;
         background: #f2f2f2;
       }
-      .section2 .buttons div:first-child{
+
+      .section2 .buttons div:first-child {
         border-right: none;
         width: 96px;
       }
-      .section2 .buttons div:last-child{
+
+      .section2 .buttons div:last-child {
         width: 106px;
       }
+
       .section3 {
         padding: 24px 24px 8px;
       }
-      .section3 .result-block{
+
+      .section3 .result-block {
         border: 1px solid #e5e5e5;
         height: 260px;
         margin-bottom: 16px;
       }
-      .section3 .result-block .image{
+
+      .section3 .result-block .image {
         background: #f2f2f2;
         width: 221px;
         float: left;
@@ -123,46 +170,100 @@ Loader element for t-hotel search result page
         height: 258px;
         float: left;
       }
+
       .cont1 {
         width: 335px;
         float: left;
         margin-right: 79px;
         margin-top: 24px;
       }
-      .price{
+
+      .price {
         width: 150px;
         float: left;
         margin-top: 24px;
       }
-      .cont1 div, .price div{
+
+      .cont1 div,
+      .price div {
         height: 16px;
-        background-color: #f2f2f2;
+        @apply --result-loader-animation;
       }
-      .price div.h32{
+
+      .price div.h32 {
         height: 32px;
       }
-      .cont1 div.clearfix,.price div.clearfix{
+
+      .cont1 div.clearfix,
+      .price div.clearfix {
         background: none;
       }
-      .cont1 div{
+
+      .cont1 div {
         margin-bottom: 16px;
       }
-      .cont1 .w150{ width: 150px; }
-      .cont1 .w100{ width: 100px; }
-      .cont1 .w140{ width: 140px; }
-      .cont1 .w16{ width: 16px; }
-      .cont1 .w80{ width: 80px; }
-      .price .w95{ width: 95px; }
-      .price .w40{ width: 40px; }
-      .mr-5{ margin-right: 5px; }
-      .mr-10{ margin-right: 10px; }
-      .mr-16{ margin-right: 16px; }
-      .mr-15{ margin-right: 15px; }
-      .mb-10 { margin-bottom: 10px; }
-      .mb-24 { margin-bottom: 24px; }
-      .mb-18 { margin-bottom: 18px; }
-      .cont1 div.mb-24{ margin-bottom: 24px; }
-      .cont1 .div1{
+
+      .cont1 .w150 {
+        width: 150px;
+      }
+
+      .cont1 .w100 {
+        width: 100px;
+      }
+
+      .cont1 .w140 {
+        width: 140px;
+      }
+
+      .cont1 .w16 {
+        width: 16px;
+      }
+
+      .cont1 .w80 {
+        width: 80px;
+      }
+
+      .price .w95 {
+        width: 95px;
+      }
+
+      .price .w40 {
+        width: 40px;
+      }
+
+      .mr-5 {
+        margin-right: 5px;
+      }
+
+      .mr-10 {
+        margin-right: 10px;
+      }
+
+      .mr-16 {
+        margin-right: 16px;
+      }
+
+      .mr-15 {
+        margin-right: 15px;
+      }
+
+      .mb-10 {
+        margin-bottom: 10px;
+      }
+
+      .mb-24 {
+        margin-bottom: 24px;
+      }
+
+      .mb-18 {
+        margin-bottom: 18px;
+      }
+
+      .cont1 div.mb-24 {
+        margin-bottom: 24px;
+      }
+
+      .cont1 .div1 {
         margin-bottom: 10px;
       }
     </style>
@@ -171,13 +272,15 @@ Loader element for t-hotel search result page
         <h1>Filter hotels by</h1>
         <template is="dom-repeat" items="{{data}}">
           <div class="filter-item">
-            
+
             <header class="filter-header clearfix">
-              
+
               <h3 class="float-left">{{item.title}}</h3>
 
-              <span class="float-right chevron"><i class="icon-drop-down"></i></span>  
-              
+              <span class="float-right chevron">
+                <i class="icon-drop-down"></i>
+              </span>
+
             </header>
           </div>
         </template>
@@ -194,6 +297,7 @@ Loader element for t-hotel search result page
           <div class="right-div"></div>
         </div>
         <div class="section3">
+
           <div class="result-block">
             <div class="image"></div>
             <div class="cont1">
@@ -236,6 +340,7 @@ Loader element for t-hotel search result page
               <div class="h32"></div>
             </div>
           </div>
+
           <div class="result-block">
             <div class="image"></div>
             <div class="cont1">
