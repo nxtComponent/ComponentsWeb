@@ -229,7 +229,7 @@
             icon: 'maps:hotel'
           }, {
             label: 'Car',
-            icon: 'maps:car'
+            icon: 'maps:directions-car'
           }]
         },
         topLeftToolbar: [{
@@ -284,7 +284,12 @@
         }],
 
         mainToolbar: [],
-        recentSearch: {}
+        recentSearch: {
+          label: "Recent Searches",
+          icon: "search",
+          eventName: "Recent search clicked",
+          count: 0
+        }
       };
       return data;
     }
