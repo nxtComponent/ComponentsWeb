@@ -25,6 +25,12 @@
         }
       }
 
+      .content-wrapper {
+        max-width: var(--t-header-content-max-width, 1280px);
+        margin: 0 auto;
+        padding: 0 10px;
+      }
+
       paper-button {
         font-weight: normal !important;
         font-size: 12px;
@@ -38,10 +44,10 @@
         ;
       }
 
-      :host {
+       :host {
         display: block;
         font-size: 12px;
-        
+
         margin: 0 auto;
         font-family: "Roboto";
 
@@ -82,8 +88,7 @@
       }
 
       .dropdown {
-        margin: 0 24px;
-        margin-left: 0;
+        margin: 0 0 0 10px;
         padding: 0;
         max-width: 140px;
         --paper-input-container-label: {
@@ -107,6 +112,10 @@
 
       .small {
         width: 50px;
+      }
+
+      .top-end-menu.small {
+        margin-left: 20px;
       }
 
       .signup-section {
@@ -141,7 +150,7 @@
         color: var(--t-header-color, #a9afdf);
         height: 48px;
         line-height: 48px;
-        padding: 0 24px;
+        padding: 0;
       }
 
       .item {
@@ -149,13 +158,11 @@
       }
 
       .secondary-menu {
-        /* position: absolute; */
         float: right;
-        /* right: 0; */
       }
 
       .notification-count {
-        @apply(--t-header-notification-bubble)
+        @apply --t-header-notification-bubble;
       }
 
       .drawer {
@@ -181,7 +188,7 @@
       }
 
       .menu-content {
-        margin: 0 8px;
+        margin: 0;
         padding: 0;
         color: var(--t-header-color, #a9afdf);
         height: 60px;
@@ -253,9 +260,6 @@
           margin: 0;
           height: 60px;
         }
-        .topbar {
-          padding: 0 16px;
-        }
 
         .dropdown-trigger {
           margin: 0;
@@ -295,7 +299,9 @@
         .drawer {
           z-index: 3;
         }
-
+        .drawer-search {
+          top: 12px;
+        }
         .item {
           margin-right: 10px;
           padding-top: 4px;
@@ -304,7 +310,9 @@
         #drawer[selected="drawer"] {
           z-index: 4;
         }
-
+        .content-wrapper {
+          padding: 0 5px;
+        }
         app-header {
           z-index: 2;
         }
@@ -331,7 +339,6 @@
 
         .topbar {
           z-index: 2;
-          padding: 0 5px;
         }
 
         .dropdown {

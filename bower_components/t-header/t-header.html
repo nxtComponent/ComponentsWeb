@@ -5,7 +5,7 @@
 <link rel="import" href="../paper-button/paper-button.html">
 <link rel="import" href="../paper-tabs/paper-tabs.html">
 <link rel="import" href="../paper-tabs/paper-tab.html">
- <link rel="import" href="../neon-animation/web-animations.html">
+<link rel="import" href="../neon-animation/web-animations.html">
 <link rel="import" href="../iron-media-query/iron-media-query.html">
 <link rel="import" href="../paper-dropdown-menu/paper-dropdown-menu.html">
 <link rel="import" href="../paper-listbox/paper-listbox.html">
@@ -53,111 +53,126 @@
     <iron-media-query query="(max-width: 1024px) and (min-width: 768px)" query-matches="{{_isTablet}}"></iron-media-query>
     <iron-media-query query="(min-width : 320px) and (max-width : 767px)" query-matches="{{_isMobile}}"></iron-media-query>
 
-    <div class="layout horizontal topbar end-justified">
-      <div id="topLeftToolbar" hidden$="[[_hideIfNullOrEmpty(data.topLeftToolbar)]]" class="flex layout horizontal topbar-left">
-        <template is="dom-repeat" items="[[_getTopStartMenu(_isMobile,data.topLeftToolbar)]]">
-          <div class="item">
-            <iron-icon class="icon" icon="[[item.icon]]"></iron-icon>
-            <a href$="[[item.url]]">[[item.title]]</a>
-          </div>
-        </template>
-      </div>
-
-      <div class="layout horizontal right-topbar end-justified" id="recentSearch" hidden$="[[!data.recentSearch]]">
-        <paper-button class="recent-search right-item layout horizontal" hidden$="[[ _isMobile ]]" data-event="[[data.recentSearch.eventName]]" on-tap="_recentSearchTapped">
-          <div class="button-icon">
-            <iron-icon class="icon" icon="[[data.recentSearch.icon]]"></iron-icon>
-            <div hidden$="[[_hideCount(data.recentSearch.count)]]" class="notification-count recent-search-count">[[data.recentSearch.count]]</div>
-          </div>
-          <div class="right-text" hidden$="[[_notDesktop]]">[[data.recentSearch.label]]</div>
-        </paper-button>
-
-        <template is="dom-if" if="[[_containsMoreThanZeroItems(data.topEndMenu)]]">
-          <div class="layout horizontal top-end-menu " id="topEndMenu" hidden$="[[_isMobile]]">
-            <template is="dom-repeat" items="[[data.topEndMenu]]">
-              <div hidden$="[[!item.isIconMenu]]">
-                <iron-icon hidden$="[[_notDesktop]]" class="flag" src="[[_getCurrentIcon(item.options, item.selectedItem)]]"></iron-icon></div>
-              <div>
-                <paper-dropdown-menu hidden$="[[_hideIfResponsiveScreenAndIconMenu(_notDesktop, item.isIconMenu)]]" no-label-float="" class$="top-end-menu [[_getDropdownClasses(item.isIconMenu)]]" on-iron-select="_topEndMenuChanged">
-                  <paper-listbox slot="dropdown-content" class="dropdown-content" selected="{{ item.selectedItem }}">
-                    <template is="dom-repeat" items="[[item.options]]" as="option">
-                      <template is="dom-if" if="[[item.isIconMenu]]">
-                        <paper-item data-icon$="[[option.icon]]" data-label$="[[option.value]]">
-                          <iron-icon hidden$="[[!item.isIconMenu]]" class="icon" src="[[option.icon]]"></iron-icon>
-                  [[option.title]]
-                        </paper-item>
-                      </template>
-                      <template is="dom-if" if="[[!item.isIconMenu]]">
-                        <paper-item label="[[option.value]]" data-value$="[[option.value]]">
-                          [[_getDropdownLabel(option.value, option.title)]]
-                        </paper-item>
-                      </template>
-                    </template>
-                  </paper-listbox>
-                </paper-dropdown-menu>
-              </div>
-
-              <div hidden$="[[!item.isIconMenu]]">
-                <paper-menu-button dynamic-align="" hidden$="[[!_notDesktop]]" class="dropdown icon-menu" data-index$="[[index]]" on-iron-select="_topEndMenuChanged">
-                  <paper-icon-button src="[[_getCurrentIcon(item.options, item.selectedItem)]]" class="dropdown-trigger"></paper-icon-button>
-                  <paper-menu class="dropdown-content">
-                    <template is="dom-repeat" items="[[item.options]]">
-                      <paper-item data-icon$="[[item.icon]]" data-label$="[[item.value]]"><iron-icon class="icon" src="[[item.icon]]"></iron-icon>[[item.title]]</paper-item>
-                    </template>
-                  </paper-menu>
-                </paper-menu-button>
-                <iron-icon hidden$="[[!_isTablet]]" icon="paper-dropdown-menu:arrow-drop-down" suffix="" class="dropdown style-scope paper-dropdown-menu x-scope iron-icon-0"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g class="style-scope iron-icon"><path d="M7 10l5 5 5-5z" class="style-scope iron-icon"></path></g></svg> </iron-icon>
-              </div>
-            </template>
-
-          </div>
-        </template>
-        <div hidden$="[[!user]]" class="signup-section">
-          <div id="userSection" hidden$="[[!user.isLoggedIn]]">
-            <div hidden$="[[!_hasUrlTrigger(user.postLogin)]]">
-              <paper-button icon="[[user.postLogin.icon]]" class="action-button" on-tap="_userSectionTapped">
-                <iron-icon icon="[[user.postLogin.icon]]" class="icon"></iron-icon>
-          [[user.postLogin.title]]
-              </paper-button>
+    <!-- TOPBAR -->
+    <div class="topbar">
+      <div class="content-wrapper layout horizontal end-justified">
+        <div id="topLeftToolbar" hidden$="[[_hideIfNullOrEmpty(data.topLeftToolbar)]]" class="flex layout horizontal topbar-left">
+          <template is="dom-repeat" items="[[_getTopStartMenu(_isMobile,data.topLeftToolbar)]]">
+            <div class="item">
+              <iron-icon class="icon" icon="[[item.icon]]"></iron-icon>
+              <a href$="[[item.url]]">[[item.title]]</a>
             </div>
-            <div hidden$="[[_hasUrlTrigger(user.postLogin)]]">
-              <paper-menu-button dynamic-align="">
-                <paper-button icon="[[user.preLogin.icon]]" class="dropdown-trigger action-button">
-                  <iron-icon icon="[[user.preLogin.icon]]" class="icon"></iron-icon>
+          </template>
+        </div>
+
+        <div class="layout horizontal right-topbar end-justified" id="recentSearch" hidden$="[[!data.recentSearch]]">
+          <paper-button class="recent-search right-item layout horizontal" hidden$="[[ _isMobile ]]" data-event="[[data.recentSearch.eventName]]" on-tap="_recentSearchTapped">
+            <div class="button-icon">
+              <iron-icon class="icon" icon="[[data.recentSearch.icon]]"></iron-icon>
+              <div hidden$="[[_hideCount(data.recentSearch.count)]]" class="notification-count recent-search-count">[[data.recentSearch.count]]</div>
+            </div>
+            <div class="right-text" hidden$="[[_notDesktop]]">[[data.recentSearch.label]]</div>
+          </paper-button>
+
+          <template is="dom-if" if="[[_containsMoreThanZeroItems(data.topEndMenu)]]">
+            <div class="layout horizontal center top-end-menu" id="topEndMenu" hidden$="[[_isMobile]]">
+              <template is="dom-repeat" items="[[data.topEndMenu]]">
+                <div hidden$="[[!item.isIconMenu]]">
+                  <iron-icon hidden$="[[_isMobile]]" class="flag" src="[[_getCurrentIcon(item.options, item.selectedItem)]]"></iron-icon>
+                </div>
+                <div>
+                  <paper-dropdown-menu dynamic-align="" data-item="[[data.topEndMenu]]" hidden$="[[_hideIfResponsiveScreenAndIconMenu(_isMobile, item.isIconMenu)]]" no-label-float="" class$="top-end-menu [[_getDropdownClasses(item.isIconMenu)]]" on-iron-select="_topEndMenuChanged">
+                    <paper-listbox slot="dropdown-content" class="dropdown-content" selected="{{ item.selectedItem }}">
+                      <template is="dom-repeat" items="[[item.options]]" as="option">
+                        <template is="dom-if" if="[[item.isIconMenu]]">
+                          <paper-item data-icon$="[[option.icon]]" data-label$="[[option.value]]">
+                            <iron-icon hidden$="[[!item.isIconMenu]]" class="icon" src="[[option.icon]]"></iron-icon>
+                            [[option.title]]
+                          </paper-item>
+                        </template>
+                        <template is="dom-if" if="[[!item.isIconMenu]]">
+                          <paper-item label="[[option.value]]" data-value$="[[option.value]]">
+                            [[_getDropdownLabel(option.value, option.title)]]
+                          </paper-item>
+                        </template>
+                      </template>
+                    </paper-listbox>
+                  </paper-dropdown-menu>
+                </div>
+
+                <div hidden$="[[!item.isIconMenu]]">
+                  <paper-menu-button dynamic-align="" hidden$="[[!_notDesktop]]" class="dropdown icon-menu" data-index$="[[index]]" on-iron-select="_topEndMenuChanged">
+                    <paper-icon-button src="[[_getCurrentIcon(item.options, item.selectedItem)]]" class="dropdown-trigger"></paper-icon-button>
+                    <paper-menu class="dropdown-content">
+                      <template is="dom-repeat" items="[[item.options]]">
+                        <paper-item data-icon$="[[item.icon]]" data-label$="[[item.value]]">
+                          <iron-icon class="icon" src="[[item.icon]]"></iron-icon>[[item.title]]</paper-item>
+                      </template>
+                    </paper-menu>
+                  </paper-menu-button>
+                  <!-- DETECT -->
+                  <!-- <iron-icon hidden$="[[!_isTablet]]" icon="paper-dropdown-menu:arrow-drop-down" suffix="" class="dropdown style-scope paper-dropdown-menu x-scope iron-icon-0">
+                    <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;">
+                      <g class="style-scope iron-icon">
+                        <path d="M7 10l5 5 5-5z" class="style-scope iron-icon"></path>
+                      </g>
+                    </svg>
+                  </iron-icon> -->
+                </div>
+              </template>
+
+            </div>
+          </template>
+          <div hidden$="[[!user]]" class="signup-section">
+            <div id="userSection" hidden$="[[!user.isLoggedIn]]">
+              <div hidden$="[[!_hasUrlTrigger(user.postLogin)]]">
+                <paper-button icon="[[user.postLogin.icon]]" class="action-button" on-tap="_userSectionTapped">
+                  <iron-icon icon="[[user.postLogin.icon]]" class="icon"></iron-icon>
                   [[user.postLogin.title]]
                 </paper-button>
-                <div class="dropdown-content user-section-content">
-                  <content select=".prelogin-content"></content>
-                </div>
-              </paper-menu-button>
+              </div>
+              <div hidden$="[[_hasUrlTrigger(user.postLogin)]]">
+                <paper-menu-button dynamic-align="">
+                  <paper-button icon="[[user.preLogin.icon]]" class="dropdown-trigger action-button">
+                    <iron-icon icon="[[user.preLogin.icon]]" class="icon"></iron-icon>
+                    [[user.postLogin.title]]
+                  </paper-button>
+                  <div class="dropdown-content user-section-content">
+                    <content select=".prelogin-content"></content>
+                  </div>
+                </paper-menu-button>
+              </div>
             </div>
-          </div>
-          <div id="anonymousSection" hidden$="[[user.isLoggedIn]]">
-            <div hidden$="[[!_hasUrlTrigger(user.preLogin)]]">
-              <paper-button icon="[[user.preLogin.icon]]" class="action-button" on-tap="_userSectionTapped">
-                <iron-icon icon="[[user.preLogin.icon]]" class="icon"></iron-icon>
-                [[user.preLogin.title]]
-              </paper-button>
-            </div>
-            <div hidden$="[[_hasUrlTrigger(user.preLogin)]]">
-              <paper-menu-button>
-                <paper-button icon="[[user.preLogin.icon]]" class="dropdown-trigger action-button">
+            <div id="anonymousSection" hidden$="[[user.isLoggedIn]]">
+              <div hidden$="[[!_hasUrlTrigger(user.preLogin)]]">
+                <paper-button icon="[[user.preLogin.icon]]" class="action-button" on-tap="_userSectionTapped">
                   <iron-icon icon="[[user.preLogin.icon]]" class="icon"></iron-icon>
                   [[user.preLogin.title]]
                 </paper-button>
-                <content select=".prelogin-content" class="dropdown-content"></content>
-              </paper-menu-button>
+              </div>
+              <div hidden$="[[_hasUrlTrigger(user.preLogin)]]">
+                <paper-menu-button>
+                  <paper-button icon="[[user.preLogin.icon]]" class="dropdown-trigger action-button">
+                    <iron-icon icon="[[user.preLogin.icon]]" class="icon"></iron-icon>
+                    [[user.preLogin.title]]
+                  </paper-button>
+                  <content select=".prelogin-content" class="dropdown-content"></content>
+                </paper-menu-button>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </div>
+
+    <!-- HEADER WITH LOGO -->
     <app-header class="flex paper-header-panel" disabled="">
+        <div class="content-wrapper">
       <app-toolbar class="menu-content">
         <div>
           <iron-icon class="icon" icon="icons:menu" on-tap="_openDrawer" hidden$="[[!_isMobile]]"></iron-icon>
-          
+
           <paper-button class="logo" on-tap="_logoTapped">
             <img class="logo" src="[[data.logo.imageUrl]]">
           </paper-button>
@@ -167,7 +182,8 @@
           <div class="flex tabs" hidden$="[[_isMobile]]">
             <paper-tabs noink="" hidden$="[[_isMobile]]" class="flex primary-menu" scrollable="" selected="{{data.primaryMenu.selectedIndex}}" on-iron-select="_tabChanged">
               <template is="dom-repeat" items="[[data.primaryMenu.items]]">
-                <paper-tab><iron-icon class="icon" icon="[[item.icon]]"></iron-icon>[[item.label]]</paper-tab>
+                <paper-tab>
+                  <iron-icon class="icon" icon="[[item.icon]]"></iron-icon>[[item.label]]</paper-tab>
               </template>
             </paper-tabs>
           </div>
@@ -185,13 +201,16 @@
 
         </div>
       </app-toolbar>
+    </div>
     </app-header>
 
+    <!-- DRAWER FOR MOBILE -->
     <app-drawer disable-edge-swipe="" id="drawer" hidden$="[[!_isMobile]]" drawer="">
       <div drawer="" class="drawer">
         <iron-selector selected="{{data.primaryMenu.selectedIndex}}" on-iron-select="_primaryMenuChanged">
           <template is="dom-repeat" items="[[data.primaryMenu.items]]">
-            <paper-item class="drawer-item"><iron-icon class="icon" icon="[[item.icon]]"></iron-icon>[[item.label]]</paper-item>
+            <paper-item class="drawer-item">
+              <iron-icon class="icon" icon="[[item.icon]]"></iron-icon>[[item.label]]</paper-item>
           </template>
         </iron-selector>
 
@@ -219,17 +238,25 @@
                 <paper-icon-button src="[[_getCurrentIcon(item.options, item.selectedItem)]]" class="dropdown-trigger"></paper-icon-button>
                 <paper-menu dynamic-align="" class="dropdown-content" selected="{{item.selectedItem}}">
                   <template is="dom-repeat" items="[[item.options]]" as="option">
-                    <paper-item data-icon$="[[option.icon]]" data-label$="[[option.value]]"><iron-icon class="icon" src="[[option.icon]]"></iron-icon>[[option.title]]</paper-item>
+                    <paper-item data-icon$="[[option.icon]]" data-label$="[[option.value]]">
+                      <iron-icon class="icon" src="[[option.icon]]"></iron-icon>[[option.title]]</paper-item>
                   </template>
                 </paper-menu>
               </paper-menu-button>
-              <iron-icon icon="paper-dropdown-menu:arrow-drop-down" suffix="" class="style-scope paper-dropdown-menu x-scope iron-icon-0"><svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;"><g class="style-scope iron-icon"><path d="M7 10l5 5 5-5z" class="style-scope iron-icon"></path></g></svg> </iron-icon>
+              <iron-icon icon="paper-dropdown-menu:arrow-drop-down" suffix="" class="style-scope paper-dropdown-menu x-scope iron-icon-0">
+                <svg viewBox="0 0 24 24" preserveAspectRatio="xMidYMid meet" class="style-scope iron-icon" style="pointer-events: none; display: block; width: 100%; height: 100%;">
+                  <g class="style-scope iron-icon">
+                    <path d="M7 10l5 5 5-5z" class="style-scope iron-icon"></path>
+                  </g>
+                </svg>
+              </iron-icon>
             </template>
           </paper-item>
         </template>
 
       </div>
     </app-drawer>
+
   </template>
 
   <script>

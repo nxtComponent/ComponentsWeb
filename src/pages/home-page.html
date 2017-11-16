@@ -19,7 +19,7 @@
         padding: 100px 16px 0 16px;
         background-image: url('/images/background.jpg');
         background-size: cover;
-      
+
         @apply --layout-vertical;
         @apply --layout-center;
         @apply --layout-start-justified;
@@ -27,7 +27,6 @@
 
       [mobile-layout].search-container {
         padding-top: 10px;
-      
       }
 
       .search-heading {
@@ -66,7 +65,9 @@
     </div>
 
     <div classs="homepage-deal-container">
-      <t-deals heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-deals>
+      <div class="content-wrapper">
+        <t-deals heading="EXPLORE POPULAR DESTINATIONS" data="[[dealData]]"></t-deals>
+      </div>
     </div>
     <t-hotel-search-api url="[[apiBaseUrl]]/api/hotel/search/init" request="[[searchedData]]" auto-trigger="" bubbles=""></t-hotel-search-api>
   </template>

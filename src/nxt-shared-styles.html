@@ -31,6 +31,12 @@
         min-height: 400px;
       }
 
+      .content-wrapper {
+        max-width: var(--app-content-max-width, 1280px);
+        margin: 0 auto;
+        padding: 0 10px;
+      }
+
       .drawer-list {
         margin: 0 20px;
       }
@@ -62,6 +68,12 @@
         width: 100%;
         --paper-progress-height: 5px;
         --paper-progress-indeterminate-cycle-duration: 9s;
+      }
+
+      @media (max-width: 767px) {
+        .content-wrapper {
+          padding: 0 5px;
+        }
       }
     </style>
   </template>
