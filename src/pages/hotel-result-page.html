@@ -19,7 +19,7 @@
 
 <dom-module id="hotel-result-page">
   <template>
-    <style include="nxt-shared-styles">
+    <style include="shared-styles">
       .preloader-content {
         min-height: 200px;
         padding: 50px 20px 0px 0px;
@@ -45,9 +45,9 @@
           width: calc(100% - 318px);
           float: left;
         }
-        .container {
+        /* .container {
           margin: auto 20px;
-        }
+        } */
       }
 
       @media screen and (max-width: 1024px) {
@@ -70,7 +70,7 @@
     <app-route route="{{route}}" data="{{routeData}}">
     </app-route>
 
-    <div class="container">
+    <div class="container content-wrapper">
       <template is="dom-if" if="[[isPreloader]]">
         <t-progress-bar value="[[progressValue]]" text="LOADING YOUR RESULTS"></t-progress-bar>
 
