@@ -6,15 +6,18 @@
         <style include="t-style-utils"></style>
         <style>
              :host {
+                font-size: var(--v-t-hotel-item-info-font-size, 14px);
+                font-weight: var(--v-t-hotel-font-weight-bold, 500);
                 color: var(--v-t-hotel-item-font-color, #999);
+                
                 --t-rating-stars-host: {
                     margin: 0;
                     height: auto;
                     padding-bottom: 5px;
                 }
                 ;
-                --m-t-hotel-item-info-text: {
-                    padding-bottom: 14px;
+                --v-t-hotel-item-info-bottom-spacing: {
+                    padding-bottom: 10px;
                 }
                 ;
                 --v-t-hotel-item-font-color: rgba(0, 0, 0, 0.54);
@@ -40,11 +43,11 @@
                 color: var(--v-t-hotel-item-anchor-color,#1976d3);
                 text-decoration: none;
             }
-            
+
             .text-lighter {
                 color: var(--v-t-hotel-item-font-color-disable);
             }
-            
+
             .container {
                 display: block;
                 box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -155,27 +158,26 @@
             }
             
             .hotel-content-section {
-                width: 58%;
+                width: 60%;
             }
             
             .hotel-price-section {
-                width: 42%;
+                width: 40%;
                 padding-left: 10px;
             }
             
             .itinerary-title {
                 margin: 0;
-                padding-bottom: 5px;
+                padding-bottom: 7px;
                 text-transform: capitalize;
                 text-align: left;
-                font-weight: 100;
+                font-weight: var(--v-t-hotel-font-weight-bold, 500);
                 line-height: 22px;
-                font-size: 18px;
+                font-size: var(--v-t-hotel-item-name-font-size, 18px);
             }
             
             .location {
-                @apply(--m-t-hotel-item-info-text);
-                padding-top: 5px;
+                @apply --v-t-hotel-item-info-bottom-spacing;
             }
             
             .location-area {
@@ -195,21 +197,18 @@
             
             .location-distance i {
                 color: var(--v-t-hotel-item-anchor-color, #1976d3);
-                font-size: 20px;
+                font-size: 18px;
                 vertical-align: text-bottom;
                 line-height: 18px;
             }
             
-            .phone {
-                @apply(--m-t-hotel-item-info-text);
+            .phone,
+            .room,.breakfast {
+                @apply --v-t-hotel-item-info-bottom-spacing;
             }
             
-            .room {
-                @apply(--m-t-hotel-item-info-text);
-            }
-            
+            .breakfast,
             .facilities {
-                @apply(--m-t-hotel-item-info-text);
                 color: var(--v-t-hotel-item-label-bg);
             }
             
@@ -219,6 +218,7 @@
             
             .amenities {
                 color: var(--v-t-hotel-item-font-color);
+                padding-top: 25px;
             }
             
             .amenities-content {
@@ -244,9 +244,10 @@
                 border: 1px dashed var(--v-t-hotel-item-offer-color, #f54339);
                 padding: 8px 10px;
                 color: var(--v-t-hotel-item-offer-color, #f54339);
-                margin-bottom: 10px;
+                margin-bottom: 15px;
                 display: inline-block;
                 border-radius: 2px;
+                font-weight: 500;
             }
             
             .offer-text i {
@@ -305,12 +306,7 @@
             
             .room-price {
                 padding-top: 5px;
-                padding-bottom: 20px;
-            }
-            
-            .room-price span {
-                display: inline-block;
-                vertical-align: middle;
+                padding-bottom: 35px;
             }
             
             .room-price span.price-off {
@@ -323,7 +319,9 @@
             
             .room-price span.actual-price {
                 position: relative;
-                margin: 0 10px
+                margin: 0 20px;
+                font-size: 16px;
+                color: var(--v-t-hotel-item-font-color-disable);
             }
             
             .room-price span.actual-price::before {
@@ -336,23 +334,37 @@
             }
             
             .room-price span.price {
+                color: var(--v-t-hotel-item-price-color, var(--v-t-hotel-item-label-bg));
+                font-size: 24px;
+                font-weight: var(--v-t-hotel-font-weight-bold, 500);
+            }
+            .room-price span.price.increased {
                 color: var(--v-t-hotel-item-offer-color, #f54339);
                 font-size: 24px;
-                font-weight: bold;
+                font-weight: var(--v-t-hotel-font-weight-bold, 500);
             }
             
+            .price-component {
+                @apply --layout-horizontal;
+                @apply --layout-end-justified;
+                @apply --layout-center;
+            }
+
             .other-facility {
                 padding-bottom: 10px;
+                @apply --layout-vertical;
+                @apply --layout-end-justified;
             }
             
             .other-facility span {
                 background: var(--v-t-hotel-item-label-bg, #4baf4f);
                 color: var(--v-t-hotel-item-label-color, white);
                 font-size: 11px;
-                margin-bottom: 5px;
+                margin-bottom: 8px;
                 padding: 3px 5px;
                 display: inline-block;
                 text-transform: uppercase;
+                border-radius: 2px;
             }
             
             .other-facility br:first-child {
@@ -389,9 +401,9 @@
                 color: white;
             }
             
-            .container:hover .itinerary-title {
+            /* .container:hover .itinerary-title {
                 text-decoration: underline;
-            }
+            } */
             
             .container:hover .btn-default {
                 background: #1976d3;

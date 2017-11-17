@@ -6,7 +6,6 @@
 <link rel="import" href="../t-font-icons/t-font-icons.html">
 <link rel="import" href="../t-clamp/t-clamp.html">
 
-
 <link rel="import" href="./t-hotel-item-styles.html">
 
 <!--
@@ -233,8 +232,10 @@ Custom property | Description | Default
                     <div class="location">
                         <span id="locationArea" class="location-area">[[_getLocationName(data)]]</span>
                         <template if="dom-if"> if="[[data.distance]]"&gt;
-                            <span class="pipeline hidden-md">|</span>
-                            <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]] <i class="icon-map-pin"></i></span>
+                        <span class="pipeline hidden-md">|</span>
+                        <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]]
+                            <i class="icon-map-pin"></i>
+                        </span>
                         </template>
                         <paper-tooltip for="loction_area" position="top">[[data.address]]</paper-tooltip>
                     </div>
@@ -243,20 +244,20 @@ Custom property | Description | Default
                     <div class="room">
                         <span class="room-name">[[_room.name]]</span>
                         <template is="dom-if" if="[[_room.maxOccupancy]]">
-                            <span class="pipeline hidden-xs">|</span>
-                            <span class="occupancy">Max [[_room.maxOccupancy]] guest(s)</span>
+                        <span class="pipeline hidden-xs">|</span>
+                        <span class="occupancy">Max [[_room.maxOccupancy]] guest(s)</span>
                         </template>
                     </div>
                     <template is="dom-if" if="[[_breakfast]]">
-                            <span>[[_breakfast]]</span>
-                        </template>
+                        <div class="breakfast">[[_breakfast]]</div>
+                    </template>
                     <template is="dom-if" if="[[_room.roomRate.inclusions]]">
-                        <div class="facilities">                           
-                            <template is="dom-repeat" items="[[_room.roomRate.inclusions]]">
-                                <span class="pipeline">|</span>
-                                <span>[[item]]</span>
-                            </template>
-                        </div>
+                    <div class="facilities">
+                        <template is="dom-repeat" items="[[_room.roomRate.inclusions]]">
+                        <span class="pipeline">|</span>
+                        <span>[[item]]</span>
+                        </template>
+                    </div>
                     </template>
                     <div class="amenities hidden-xs">
                         <template is="dom-repeat" items="[[_getPrimaryAmenities(data.amenities)]]">
@@ -270,13 +271,16 @@ Custom property | Description | Default
                         </template>
                     </div>
                 </div>
+                <!-- RIGHT PRICING SECTION -->
                 <div class="hotel-price-section">
                     <template is="dom-if" if="[[data.userReview]]">
+                        <!-- TRUSTYOU RATING -->
                         <div class="user-review-section">
                             <div class="inline-block clearfix">
                                 <span class="review float-left">[[data.userReview.rating]]</span>
                                 <div class="star-rating float-left left">
-                                    <p>[[data.userReview.type]] <img class="hidden-xs" src="./assets/review-icon.png">
+                                    <p>[[data.userReview.type]]
+                                        <img class="hidden-xs" src="./assets/review-icon.png">
                                     </p>
                                     <div class="review-stars hidden-xs ">
                                         <t-rating-stars height="18" font-size="14" value="{{data.userReview.rating}}" color="#7cb342"></t-rating-stars>
@@ -296,14 +300,15 @@ Custom property | Description | Default
                                 <span class="price-off">-[[offPercent]]%</span>
                                 <span class="actual-price">[[calculatedActualPrice]]</span>
                             </template>
-                            <span class="price"><span>[[data.fare.currency]]</span> [[_toFixed(data.fare.totalFare)]]</span>
+                             <span class="price"> <!-- ADD CLASS INCREASED TO SHOW RED -->
+                                <span>[[data.fare.currency]]</span> [[_toFixed(data.fare.totalFare)]]</span>
                         </div>
                         <span class="text-lighter">avg. per night</span>
                     </div>
                     <template is="dom-if" if="[[data.room.benefits]]">
-                        <div class="other-facility right">
+                        <div class="other-facility">
                             <template is="dom-repeat" items="[[data.room.benefits]]">
-                                <br><span>[[item]]</span>
+                                <span>[[item]]</span>
                             </template>
                         </div>
                     </template>
@@ -465,14 +470,24 @@ Polymer({
         if (this.data && this.data.fare && this.data.fare.totalFare) {
             if (this.data.fare.discount != null && this.data.fare.discount.length > 0) {
                 this._discountText = this.data.fare.discount[0].text;
-                this.calculatedActualPrice = Math.round(+this.data.fare.amount + +this.data.fare.fare.discount[0].amount).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                this.offPercent = Math.round(+this.data.fare.discount[0].amount / (+this.data.fare.totalFare + +this.data.fare.discount[0].amount) * 100).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                this.calculatedActualPrice = Math.round(+this.data.fare.amount + +this.data.fare.fare.discount[0].amount).toLocaleString('en-US', {
+                    minimumFractionDigits: 0
+                });
+                this.offPercent = Math.round(+this.data.fare.discount[0].amount / (+this.data.fare.totalFare + +this.data.fare.discount[0].amount) * 100).toLocaleString('en-US', {
+                    minimumFractionDigits: 0
+                });
             } else {
-                this.calculatedActualPrice = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
-                this.offPercent = Math.round(0).toLocaleString('en-US', { minimumFractionDigits: 0 });
+                this.calculatedActualPrice = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', {
+                    minimumFractionDigits: 0
+                });
+                this.offPercent = Math.round(0).toLocaleString('en-US', {
+                    minimumFractionDigits: 0
+                });
             }
 
-            this.fromattedAmount = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', { minimumFractionDigits: 0 });
+            this.fromattedAmount = Math.round(+this.data.fare.totalFare).toLocaleString('en-US', {
+                minimumFractionDigits: 0
+            });
         }
 
         this.notifyPath('data.rating');

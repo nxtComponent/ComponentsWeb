@@ -180,7 +180,7 @@ Polymer.IronSelectableBehavior = {
    * @returns Returns the index of the item
    */
   indexOf: function indexOf(item) {
-    return this.items.indexOf(item);
+    return this.items ? this.items.indexOf(item) : -1;
   },
 
   /**
@@ -340,7 +340,10 @@ Polymer.IronSelectableBehavior = {
     if (!item) {
       return null;
     }
-
+    if (!this.attrForSelected) {
+      var i = this.indexOf(item);
+      return i === -1 ? null : i;
+    }
     var propValue = item[Polymer.CaseMap.dashToCamelCase(this.attrForSelected)];
     return propValue != undefined ? propValue : item.getAttribute(this.attrForSelected);
   },
