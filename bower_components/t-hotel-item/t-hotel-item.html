@@ -199,12 +199,7 @@ Custom property | Description | Default
             </template>
             <!--Hero image container-->
             <div class="content-img" on-tap="_heroImageTap">
-                <iron-image class="hero-image" sizing="cover" src="[[data.heroImageUrl]]" id="heroCover"></iron-image>
-                <div class="image-container">
-                    <div class="image-container-inside" id="imagecontainer">
-                        <img src="[[data.heroImageUrl]]" id="heroimage">
-                    </div>
-                </div>
+                <iron-image class="hero-image" sizing="cover" src="[[data.heroImageUrl]]" id="heroCover"></iron-image>               
                 <template is="dom-if" if="[[_discountText]]">
                     <div class="hero-offer">
                         <!-- <span class="hidden-xs">[[data.otherDiscount.day]]</span>  -->
@@ -273,19 +268,19 @@ Custom property | Description | Default
                 </div>
                 <!-- RIGHT PRICING SECTION -->
                 <div class="hotel-price-section">
-                    <template is="dom-if" if="[[data.userReview]]">
+                    <template is="dom-if" if="![[data.userReview]]">
                         <!-- TRUSTYOU RATING -->
                         <div class="user-review-section">
                             <div class="inline-block clearfix">
-                                <span class="review float-left">[[data.userReview.rating]]</span>
+                                <span class="review float-left"><!--[[data.userReview.rating]]--> 3.4</span>
                                 <div class="star-rating float-left left">
-                                    <p>[[data.userReview.type]]
-                                        <img class="hidden-xs" src="./assets/review-icon.png">
+                                    <p>
+                                        <!--[[data.userReview.type]]--> Excellent <img class="hidden-xs" src="./assets/review-icon.png">
                                     </p>
                                     <div class="review-stars hidden-xs ">
-                                        <t-rating-stars height="18" font-size="14" value="{{data.userReview.rating}}" color="#7cb342"></t-rating-stars>
+                                        <t-rating-stars height="18" font-size="14" value="3.4" color="#7cb342"></t-rating-stars>
                                     </div>
-                                    <span class="total-reviews hidden-xs">[[data.userReview.count]] [[resources.reviewText]]</span>
+                                    <span class="total-reviews hidden-xs"><!--[[data.userReview.count]] [[resources.reviewText]]--> 500 [[resources.reviewText]]</span>
                                 </div>
                             </div>
                         </div>
