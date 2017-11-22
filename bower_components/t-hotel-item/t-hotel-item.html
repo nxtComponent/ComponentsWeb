@@ -255,7 +255,7 @@ Custom property | Description | Default
                         </template>
                     </div>
                     </template>
-                    <div class="amenities hidden-xs">
+                    <div class="flex-row flex-auto flex-align-items-bottom hidden-xs">
                         <template is="dom-repeat" items="[[_getPrimaryAmenities(data.amenities)]]">
                             <span id$="amenities_{{index}}" class="amenities-content">
                                 <i class$="[[_getAmenitiesIcon(item.name)]]"></i>
@@ -313,7 +313,7 @@ Custom property | Description | Default
                             Reserve Now, Pay Later
                         </div>
                     </template>
-                    <div class="flex-row flex-align-items-bottom flex-align-items-last hidden-xs">
+                    <div class="flex-row flex-auto flex-align-items-bottom flex-align-items-last hidden-xs">
                         <a href="#" on-tap="_showDetails" class="btn btn-default">[[resources.buttonText]]</a>
                     </div>
                 </div>

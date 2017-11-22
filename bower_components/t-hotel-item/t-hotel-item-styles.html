@@ -216,11 +216,6 @@
                 display: none;
             }
             
-            .amenities {
-                color: var(--v-t-hotel-item-font-color);
-                padding-top: 25px;
-            }
-            
             .amenities-content {
                 display: inline-block;
                 margin-right: 5px;
@@ -479,7 +474,7 @@
                     height: auto;
                     width: auto;
                     line-height: 16px;
-                    border-radius: 2px;
+                    border-radius: 2px; 
                 }
                 .hotel-price-section {
                     width: 100%;
@@ -518,6 +513,9 @@
             }   
             .flex-align-items-last {
                @apply --layout-end-justified;
+            }
+            .flex-auto{
+                @apply --layout-flex-auto;
             }          
         </style>
     </template>
