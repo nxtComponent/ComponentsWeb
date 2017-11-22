@@ -210,7 +210,7 @@ Custom property | Description | Default
 
             <!--Hotel Details-->
             <div class="content">
-                <div class="hotel-content-section">
+                <div class="hotel-content-section flex-column">
                     <template is="dom-if" if="[[_room.roomRate.offer]]">
                         <div class="offer-text clearfix">
                             <i class="icon-label"></i>
@@ -226,11 +226,12 @@ Custom property | Description | Default
                     <t-rating-stars value="{{data.rating}}" height="20" font-size="18"></t-rating-stars>
                     <div class="location">
                         <span id="locationArea" class="location-area">[[_getLocationName(data)]]</span>
-                        <template if="dom-if"> if="[[data.distance]]"&gt;
-                        <span class="pipeline hidden-md">|</span>
-                        <span class="location-distance">City Center: [[data.distance.value]] [[data.distance.unit]]
-                            <i class="icon-map-pin"></i>
-                        </span>
+                        <template is="dom-if" if="![[data.distance]]">
+                            <span class="pipeline hidden-md">|</span>
+                            <span class="location-distance">City Center: 13.54 Miles 
+                                <!-- [[data.distance.value]] [[data.distance.unit]] -->
+                                <i class="icon-map-pin"></i>
+                            </span>
                         </template>
                         <paper-tooltip for="loction_area" position="top">[[data.address]]</paper-tooltip>
                     </div>
@@ -267,7 +268,7 @@ Custom property | Description | Default
                     </div>
                 </div>
                 <!-- RIGHT PRICING SECTION -->
-                <div class="hotel-price-section">
+                <div class="hotel-price-section flex-column">
                     <template is="dom-if" if="![[data.userReview]]">
                         <!-- TRUSTYOU RATING -->
                         <div class="user-review-section">
@@ -312,7 +313,7 @@ Custom property | Description | Default
                             Reserve Now, Pay Later
                         </div>
                     </template>
-                    <div class="right hidden-xs">
+                    <div class="flex-row flex-align-items-bottom flex-align-items-last hidden-xs">
                         <a href="#" on-tap="_showDetails" class="btn btn-default">[[resources.buttonText]]</a>
                     </div>
                 </div>
@@ -387,7 +388,7 @@ Polymer({
     },
     _toFixed: function _toFixed(amount) {
         if (!amount) return "";
-        return amount.toFixed(2);
+        return amount.toFixed(0);
     },
 
     _getLocationName: function _getLocationName(hotel) {

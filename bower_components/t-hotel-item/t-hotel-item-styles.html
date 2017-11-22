@@ -4,11 +4,11 @@
 <dom-module id="t-hotel-item-styles">
     <template>
         <style include="t-style-utils"></style>
-        <style>
+        <style is="custom-style">
              :host {
                 font-size: var(--v-t-hotel-item-info-font-size, 14px);
-                font-weight: var(--v-t-hotel-font-weight-bold, 500);
-                color: var(--v-t-hotel-item-font-color, #999);
+                font-weight: var(--v-t-hotel-font-weight-bold, 400);
+                color: var(--v-t-hotel-item-font-color, #666);
                 
                 --t-rating-stars-host: {
                     margin: 0;
@@ -150,7 +150,7 @@
             
             .content {
                 width: 75%;
-                padding: 25px;
+                padding: 24px;
                 display: inline-flex;
                 box-sizing: border-box;
                 flex-wrap: wrap;
@@ -506,7 +506,19 @@
                 paper-tooltip.img-tooltip {
                     left: -10px !important;
                 }
+            }   
+            .flex-row{
+                @apply --layout-horizontal
             }
+            .flex-column{
+                @apply --layout-vertical;
+            } 
+            .flex-align-items-bottom {
+               @apply --layout-end;
+            }   
+            .flex-align-items-last {
+               @apply --layout-end-justified;
+            }          
         </style>
     </template>
 
