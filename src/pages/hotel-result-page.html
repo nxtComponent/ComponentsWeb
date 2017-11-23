@@ -69,11 +69,11 @@
 
     <app-route route="{{route}}" data="{{routeData}}">
     </app-route>
-
+    <template is="dom-if" if="[[isPreloader]]">
+      <paper-progress indeterminate class="blue"></paper-progress>
+    </template>
     <div class="container content-wrapper">
       <template is="dom-if" if="[[isPreloader]]">
-        <t-progress-bar value="[[progressValue]]" text="LOADING YOUR RESULTS"></t-progress-bar>
-
         <t-hotel-result-loader data=[[loaderFilterData]]>
         </t-hotel-result-loader>
       </template>
