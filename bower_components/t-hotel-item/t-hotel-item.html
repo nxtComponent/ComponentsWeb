@@ -332,11 +332,6 @@ Polymer({
             type: Boolean,
             value: false
         },
-        _discountText: {
-            type: String,
-            value: "",
-            computed: "_discountTextLabel(_room)"
-        },
         currencyIcon: String,
         calculatedActualPrice: Number,
         fromattedAmount: Number,
@@ -366,6 +361,12 @@ Polymer({
             type: String,
             value: null,
             computed: "_breakfastAvailable(data.amenities)"
+        },
+
+        _discountText: {
+            type: String,
+            value: "",
+            computed: "_discountTextLabel(_room)"
         }
     },
 
@@ -380,7 +381,7 @@ Polymer({
         return room && room.roomRate && !room.roomRate.isPrepaid;
     },
     _discountTextLabel: function _discountTextLabel(room) {
-        if (!room && !room.roomRate.offer) {
+        if (!room || !room.roomRate || !room.roomRate.offer) {
             return "";
         }
         if (room.roomRate.offer.desc.length <= 15) {
