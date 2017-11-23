@@ -236,9 +236,9 @@ Custom property | Description | Default
             }
             .ad-banner {
                   width: 100%;
-                  height: 100px;
-                  background: #ddd;
+                  height: 100px;    
                   margin-bottom: 15px;
+                  background: url(/images/ad-banner.jpg) 0 0;
                 }
         </style>
     
@@ -254,9 +254,7 @@ Custom property | Description | Default
 
             </div>
             <div class="list-container">
-
-                <iron-image src="banner.jpg" class="ad-banner" sizing="cover"></iron-image>
-
+                <div class="ad-banner"></div>
                 <template is="dom-if" if="[[!items.length]]">
                     <slot name="noresults"></slot>
                 </template>
