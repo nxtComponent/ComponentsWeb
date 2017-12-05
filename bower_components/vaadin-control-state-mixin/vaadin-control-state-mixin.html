@@ -85,7 +85,7 @@ Vaadin.ControlStateMixin = function (superClass) {
         babelHelpers.get(VaadinControlStateMixin.prototype.__proto__ || Object.getPrototypeOf(VaadinControlStateMixin.prototype), 'ready', this).call(this);
 
         this.addEventListener('keydown', function (e) {
-          if (e.shiftKey && e.keyCode === 9) {
+          if (!e.defaultPrevented && e.shiftKey && e.keyCode === 9) {
             // Flag is checked in _focus event handler.
             _this3._isShiftTabbing = true;
             HTMLElement.prototype.focus.apply(_this3);
