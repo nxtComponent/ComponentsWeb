@@ -419,10 +419,10 @@
         if (!this._menuTriggered || this._menuTriggered <= 2) {
           this._menuTriggered = this._menuTriggered ? this._menuTriggered + 1 : 1;
           if (this.page) {
-            return;
+            return "home";
           }
         }
-        if (!e.detail.label) return;
+        if (!e.detail.label) return "home";
         let page = e.detail.label.toLowerCase();
         page = page === "hotel" ? "home" : page;
 
