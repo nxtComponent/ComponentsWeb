@@ -66,7 +66,7 @@
 
         <iron-pages selected="[[page]]" attr-for-selected="name" fallback-selection="view404" role="main">
 
-          <home-page name="home" is-active-page="_isActivePage(home',page)" page-loader="{{pageLoader}}" api-base-url="{{apiBaseUrl}}"></home-page>
+          <home-page name="home" is-active-page="_isActivePage('home',page)" page-loader="{{pageLoader}}" api-base-url="{{apiBaseUrl}}"></home-page>
           <car-page name="car" page-loader="{{pageLoader}}"></car-page>
           <hotel-result-page name="hotel-result" is-active-page="[[_isActivePage('hotel-result',page)]]" support-number="[[hotelSupportNumber]]"
             api-base-url="{{apiBaseUrl}}" page-loader="{{pageLoader}}" subroute=[[subroute]] page-model=[[routeModel]]></hotel-result-page>
