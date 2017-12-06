@@ -36,6 +36,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   /**
    * Node API wrapper class returned from `Polymer.dom.(target)` when
    * `target` is a `Node`.
+   *
+   * @memberof Polymer
    */
 
   var DomApi = function () {
@@ -70,6 +72,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *
        * @param {Polymer.FlattenedNodesObserver} observerHandle Observer instance
        *   to disconnect.
+       * @return {void}
        */
 
     }, {
@@ -80,6 +83,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       /**
        * Provided as a backwards-compatible API only.  This method does nothing.
+       * @return {void}
        */
 
     }, {
@@ -226,9 +230,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   function forwardMethods(proto, methods) {
     var _loop = function _loop(i) {
       var method = methods[i];
+      /* eslint-disable valid-jsdoc */
       proto[method] = /** @this {DomApi} */function () {
         return this.node[method].apply(this.node, arguments);
       };
+      /* eslint-enable */
     };
 
     for (var i = 0; i < methods.length; i++) {

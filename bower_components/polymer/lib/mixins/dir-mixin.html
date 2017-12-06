@@ -15,7 +15,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   var HOST_DIR = /:host\(:dir\((ltr|rtl)\)\)/g;
   var HOST_DIR_REPLACMENT = ':host([dir="$1"])';
 
-  var EL_DIR = /([\s\w#\.\[\]\*]*):dir\((ltr|rtl)\)/g;
+  var EL_DIR = /([\s\w-#\.\[\]\*]*):dir\((ltr|rtl)\)/g;
   var EL_DIR_REPLACMENT = ':host([dir="$2"]) $1';
 
   /**
@@ -108,8 +108,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * @override
          * @suppress {missingProperties} Interfaces in closure do not inherit statics, but classes do
          */
-        value: function _processStyleText(is, template, baseURI) {
-          var cssText = babelHelpers.get(Dir.__proto__ || Object.getPrototypeOf(Dir), '_processStyleText', this).call(this, is, template, baseURI);
+        value: function _processStyleText(cssText, baseURI) {
+          cssText = babelHelpers.get(Dir.__proto__ || Object.getPrototypeOf(Dir), '_processStyleText', this).call(this, cssText, baseURI);
           cssText = this._replaceDirInCssText(cssText);
           return cssText;
         }

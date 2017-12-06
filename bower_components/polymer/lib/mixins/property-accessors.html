@@ -44,6 +44,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    *
    * @param {Object} model Prototype or instance
    * @param {string} property Name of property
+   * @return {void}
    * @private
    */
   function saveAccessorValue(model, property) {
@@ -112,6 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Attribute names are mapped to property names using the `dash-case` to
          * `camelCase` convention
          *
+         * @return {void}
          */
         value: function createPropertiesForAttributes() {
           var a$ = this.observedAttributes;
@@ -176,6 +178,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Provided as an override point for performing any setup work prior
          * to initializing the property accessor system.
          *
+         * @return {void}
          * @protected
          */
 
@@ -216,6 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * @param {Object} props Bag of property values that were overwritten
          *   when creating property accessors.
+         * @return {void}
          * @protected
          */
 
@@ -237,6 +241,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * @param {Object} props Bag of property values that were overwritten
          *   when creating property accessors.
+         * @return {void}
          * @protected
          */
 
@@ -253,6 +258,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * @param {string} attribute Name of attribute to ensure is set.
          * @param {string} value of the attribute.
+         * @return {void}
          */
 
       }, {
@@ -272,6 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * @param {string} attribute Name of attribute to deserialize.
          * @param {?string} value of the attribute.
          * @param {*=} type type to deserialize to.
+         * @return {void}
          */
 
       }, {
@@ -290,6 +297,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * @param {string} property Property name to reflect.
          * @param {string=} attribute Attribute name to reflect.
          * @param {*=} value Property value to refect.
+         * @return {void}
          */
 
       }, {
@@ -312,6 +320,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * @param {Element} node Element to set attribute to.
          * @param {*} value Value to serialize.
          * @param {string} attribute Attribute name to serialize to.
+         * @return {void}
          */
 
       }, {
@@ -412,6 +421,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               break;
 
             case Date:
+              value = isNaN(value) ? String(value) : Number(value);
               outValue = new Date(value);
               break;
 
@@ -444,6 +454,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * @param {string} property Name of the property
          * @param {boolean=} readOnly When true, no setter is created; the
          *   protected `_setProperty` function must be used to set the property
+         * @return {void}
          * @protected
          */
 
@@ -490,6 +501,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * @param {string} property Name of the property
          * @param {*} value Value to set
+         * @return {void}
          * @protected
          */
 
@@ -551,6 +563,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * Marks the properties as invalid, and enqueues an async
          * `_propertiesChanged` callback.
          *
+         * @return {void}
          * @protected
          */
 
@@ -577,6 +590,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * For elements, generally `connectedCallback` is a normal spot to do so.
          * It is safe to call this method multiple times as it only turns on
          * property accessors once.
+         *
+         * @return {void}
          */
 
       }, {
@@ -598,7 +613,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * set), and resets the pending set of changes. Generally, this method
          * should not be called in user code.
          *
-         *
+         * @return {void}
          * @protected
          */
 

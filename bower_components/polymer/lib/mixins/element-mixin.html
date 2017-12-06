@@ -219,6 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * and calling `klass.finalize()`.
      *
      * @param {PolymerElementConstructor} klass Element class
+     * @return {void}
      * @private
      */
     function finalizeClassAndSuper(klass) {
@@ -237,6 +238,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * `template` for stamping.
      *
      * @param {PolymerElementConstructor} klass Element class
+     * @return {void}
      * @private
      */
     function finalizeClass(klass) {
@@ -276,6 +278,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      *    and effects to
      * @param {Object} properties Flattened bag of property descriptors for
      *    this class
+     * @return {void}
      * @private
      */
     function finalizeProperties(proto, properties) {
@@ -294,6 +297,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * @param {Object} dynamicFns Object containing keys for any properties
      *   that are functions and should trigger the effect when the function
      *   reference is changed
+     * @return {void}
      * @private
      */
     function finalizeObservers(proto, observers, dynamicFns) {
@@ -358,6 +362,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * Supported keys:
      * @param {Object} allProps Flattened map of all properties defined in this
      *   element (including inherited properties)
+     * @return {void}
      * @private
      */
     function createPropertyFromConfig(proto, name, info, allProps) {
@@ -389,6 +394,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     }
 
     /**
+     * Process all style elements in the element template. Styles with the
+     * `include` attribute are processed such that any styles in
+     * the associated "style modules" are included in the element template.
+     * @param {PolymerElementConstructor} klass Element class
+     * @param {!HTMLTemplateElement} template Template to process
+     * @param {string} is Name of element
+     * @param {string} baseURI Base URI for element
+     * @private
+     */
+    function processElementStyles(klass, template, is, baseURI) {
+      var styles = Polymer.StyleGather.stylesFromModuleImports(is).concat(Polymer.StyleGather.stylesFromTemplate(template));
+      var templateStyles = template.content.querySelectorAll('style');
+      var lastStyle = templateStyles[templateStyles.length - 1];
+      // ensure all gathered styles are actually in this template.
+      for (var i = 0; i < styles.length; i++) {
+        var s = styles[i];
+        // if the style is not in this template, it's been "included" and
+        // we put a clone of it in the template.
+        if (s.getRootNode() != template.content) {
+          s = s.cloneNode(true);
+          template.content.insertBefore(s, lastStyle);
+        }
+        s.textContent = klass._processStyleText(s.textContent, baseURI);
+      }
+      if (window.ShadyCSS) {
+        window.ShadyCSS.prepareTemplate(template, is);
+      }
+    }
+
+    /**
      * @polymer
      * @mixinClass
      * @unrestricted
@@ -411,6 +446,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          * creating property accessors and any property effect metadata needed for
          * the features used.
          *
+         * @return {void}
          * @public
          */
         value: function finalize() {
@@ -532,7 +568,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _this.importPath;
         /** @type {StampedTemplate | HTMLElement | ShadowRoot} */
         _this.root;
-        /** @type {!Object<string, !Node>} */
+        /** @type {!Object<string, !Element>} */
         _this.$;
         return _this;
       }
@@ -587,12 +623,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
 
         /**
-         * Gather style text for the template
+         * Gather style text for a style element in the template.
          *
-         * @param {string} is Tag name for this element
-         * @param {!HTMLTemplateElement} template Template to process
+         * @param {string} cssText Text containing styling to process
          * @param {string} baseURI Base URI to rebase CSS paths against
-         * @return {string} The combined CSS text
+         * @return {string} The processed CSS text
          * @protected
          */
 
@@ -738,6 +773,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          *
          * @param {Object=} properties Bag of custom property key/values to
          *   apply to this element.
+         * @return {void}
          * @suppress {invalidCasts}
          */
 
@@ -782,8 +818,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       }], [{
         key: '_processStyleText',
-        value: function _processStyleText(is, template, baseURI) {
-          return Polymer.StyleGather.cssFromModuleImports(is) + Polymer.StyleGather.cssFromTemplate(template, baseURI);
+        value: function _processStyleText(cssText, baseURI) {
+          return Polymer.ResolveUrl.resolveCss(cssText, baseURI);
         }
 
         /**
@@ -792,29 +828,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         * style scoping.
         *
         * @param {string} is Tag name (or type extension name) for this element
-        * @param {string=} ext For type extensions, the tag name that was extended
+        * @return {void}
         * @protected
         */
 
       }, {
         key: '_finalizeTemplate',
-        value: function _finalizeTemplate(is, ext) {
+        value: function _finalizeTemplate(is) {
           /** @const {HTMLTemplateElement} */
           var template = this.prototype._template;
           if (template && !template.__polymerFinalized) {
             template.__polymerFinalized = true;
             var importPath = this.importPath;
             var baseURI = importPath ? Polymer.ResolveUrl.resolveUrl(importPath) : '';
-            // support `include="module-name"`
-            var cssText = this._processStyleText(is, template, baseURI);
-            if (cssText) {
-              var style = document.createElement('style');
-              style.textContent = cssText;
-              template.content.insertBefore(style, template.content.firstChild);
-            }
-            if (window.ShadyCSS) {
-              window.ShadyCSS.prepareTemplate(template, is, ext);
-            }
+            // e.g. support `include="module-name"`, and ShadyCSS
+            processElementStyles(this, template, is, baseURI);
             this.prototype._bindTemplate(template);
           }
         }
@@ -893,6 +921,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
    *
    * @param {Object=} props Bag of custom property key/values to
    *   apply to the document.
+   * @return {void}
    */
   Polymer.updateStyles = function (props) {
     if (window.ShadyCSS) {

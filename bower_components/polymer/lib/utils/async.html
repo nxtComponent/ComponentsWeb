@@ -85,6 +85,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * Enqueues a function called in the next task.
        *
+       * @function
        * @memberof Polymer.Async.timeOut
        * @param {Function} fn Callback to run
        * @return {number} Handle used for canceling task
@@ -93,8 +94,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * Cancels a previously enqueued `timeOut` callback.
        *
+       * @function
        * @memberof Polymer.Async.timeOut
        * @param {number} handle Handle returned from `run` of callback to cancel
+       * @return {void}
        */
       cancel: window.clearTimeout.bind(window)
     },
@@ -110,6 +113,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * Enqueues a function called at `requestAnimationFrame` timing.
        *
+       * @function
        * @memberof Polymer.Async.animationFrame
        * @param {Function} fn Callback to run
        * @return {number} Handle used for canceling task
@@ -118,8 +122,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /**
        * Cancels a previously enqueued `animationFrame` callback.
        *
+       * @function
        * @memberof Polymer.Async.timeOut
        * @param {number} handle Handle returned from `run` of callback to cancel
+       * @return {void}
        */
       cancel: window.cancelAnimationFrame.bind(window)
     },
@@ -149,6 +155,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *
        * @memberof Polymer.Async.idlePeriod
        * @param {number} handle Handle returned from `run` of callback to cancel
+       * @return {void}
        */
       cancel: function cancel(handle) {
         window.cancelIdleCallback ? window.cancelIdleCallback(handle) : window.clearTimeout(handle);
@@ -190,6 +197,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        *
        * @memberof Polymer.Async.microTask
        * @param {number} handle Handle returned from `run` of callback to cancel
+       * @return {void}
        */
       cancel: function cancel(handle) {
         var idx = handle - microtaskLastHandle;
