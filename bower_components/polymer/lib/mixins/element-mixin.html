@@ -406,15 +406,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     function processElementStyles(klass, template, is, baseURI) {
       var styles = Polymer.StyleGather.stylesFromModuleImports(is).concat(Polymer.StyleGather.stylesFromTemplate(template));
       var templateStyles = template.content.querySelectorAll('style');
-      var lastStyle = templateStyles[templateStyles.length - 1];
+      // keep track of the last "concrete" style in the template we have encountered
+      var templateStyleIndex = 0;
       // ensure all gathered styles are actually in this template.
       for (var i = 0; i < styles.length; i++) {
         var s = styles[i];
+        var templateStyle = templateStyles[templateStyleIndex];
         // if the style is not in this template, it's been "included" and
-        // we put a clone of it in the template.
-        if (s.getRootNode() != template.content) {
+        // we put a clone of it in the template before the style that included it
+        if (templateStyle !== s) {
           s = s.cloneNode(true);
-          template.content.insertBefore(s, lastStyle);
+          templateStyle.parentNode.insertBefore(s, templateStyle);
+        } else {
+          templateStyleIndex++;
         }
         s.textContent = klass._processStyleText(s.textContent, baseURI);
       }

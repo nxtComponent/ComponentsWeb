@@ -3,34 +3,44 @@
     <style>
        :host {
         --t-footer-cols: 6;
-         --paper-tabs-selection-bar: {
+        --paper-tabs-selection-bar: {
           border-bottom: 2px solid var(--t-footer-tab-bar-color, #fff);
-        };
-
-        
+        }
+        ;
+        --t-footer-content-max-width: 1280px;
 
         --t-footer-section-link: {
           color: var(--t-footer-color, #9a9ca8);
-        };
+        }
+        ;
 
         --t-footer-primary-link: {
           color: var(--t-footer-color, #9a9ca8);
-        };
+        }
+        ;
 
         --t-footer-secondary-link: {
           color: var(--t-footer-color, #9a9ca8);
-        };
+        }
+        ;
 
         --t-footer-bottom-link: {
           color: var(--t-footer-color, #9a9ca8);
-        };
+        }
+        ;
 
-        --t-footer-link-hover: {};
+        --t-footer-link-hover: {}
+        ;
       }
-     
 
-      [hidden]{
-            display:  none !important;
+      .content-wrapper {
+        max-width: var(--t-footer-content-max-width);
+        margin: 0 auto;
+        padding: 0 10px;
+      }
+
+      [hidden] {
+        display: none !important;
       }
 
       .social-links iron-icon {
@@ -123,17 +133,19 @@
         margin-right: 15px;
       }
 
-      .pages{
-        margin:0 85px;
-       }
+      /* .pages {
+        margin: 0 85px;
+      } */
 
       .primary-links div {
         margin-right: 16px;
       }
 
-      .tabs {
-        padding: 0 100px;
+      .tabs-area {
         background: var(--t-footer-tab-bg, #39434f);
+      }
+      .tabs {
+        padding: 0;
         color: var(--t-footer-tab-color, #9a9ca8);
         text-transform: uppercase;
       }
@@ -143,7 +155,6 @@
       }
 
       iron-pages {
-        margin: 20px 100px;
         padding: 20px 0;
         width: 1170px;
         margin: 20px auto;
@@ -212,9 +223,7 @@
         .bottom-end-links {
           padding: 10px 0;
         }
-        iron-pages {
-          width: 720px;
-        }
+
       }
 
       @media only screen and (min-width: 320px) and (max-width: 767px) {
@@ -224,31 +233,23 @@
         .contact-label {
           margin-right: 0;
         }
-        .social-links {
-          /* padding: 10px 0; */
+
+        .content-wrapper {
+          padding: 0 5px;
         }
 
         .link-list {
           display: block !important;
           font-size: 11px;
-          margin: 0 20px;
         }
 
-        /* .link-list li{ */
-        /*   padding: 2px 0; */
-        /*   margin: 0 12px; */
-        /*   float: left; */
-        /* } */
         .link-list li {
-          width: 31%;
+          width: 48%;
           padding: 2px 0;
           margin-right: 0;
           float: left;
         }
 
-        .pages {
-          padding: 20px 0;
-        }
         .pages {
           padding: 0;
           width: calc(100% - 40px);
@@ -258,16 +259,13 @@
         paper-tab {
           flex: none;
         }
-        .section {
-          /* margin: 0 1%; */
-        }
+
         .bottom-start-links {
-          width: calc(100%-40px);
-          height: 20px;
+          width: calc(100% - 40px);
+          /* height: 20px; */
           padding: 0;
         }
         .links-section {
-          /* padding: 20px; */
           line-height: 14px;
           height: 130px;
           width: calc(100% - 40px);

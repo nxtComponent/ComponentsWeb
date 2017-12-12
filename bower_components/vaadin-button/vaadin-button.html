@@ -24,6 +24,10 @@ This program is available under Apache License Version 2.0, available at https:/
         outline: none;
       }
 
+      :host([hidden]) {
+        display: none !important;
+      }
+
       [part="button"] {
         width: 100%;
         height: 100%;
@@ -36,10 +40,6 @@ This program is available under Apache License Version 2.0, available at https:/
     </button>
   </template>
   <script>
-if (!Polymer.Element) {
-  throw new Error('Unexpected Polymer version ' + Polymer.version + ' is used, expected v2.0.0 or later.');
-}
-
 {
   /**
    * `<vaadin-button>` is a Polymer 2 element providing an accessible and customizable button.
@@ -121,6 +121,11 @@ if (!Polymer.Element) {
       key: 'is',
       get: function get() {
         return 'vaadin-button';
+      }
+    }, {
+      key: 'version',
+      get: function get() {
+        return '1.0.4';
       }
     }]);
     return ButtonElement;
